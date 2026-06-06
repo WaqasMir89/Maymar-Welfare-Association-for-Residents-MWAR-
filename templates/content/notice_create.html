@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Broadcast a notice" %}</h1>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Title" %}</label><input type="text" name="title" required></div>
+      <div class="field"><label>{% trans "Message" %}</label><textarea name="body" rows="4" required></textarea></div>
+      <div class="field"><label>{% trans "Audience" %}</label>
+        <select name="audience">{% for v, l in audiences %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></div>
+      <div class="radio-row">
+        <label><input type="checkbox" name="via_sms"> {% trans "Also send by SMS" %}</label>
+        <label><input type="checkbox" name="via_email"> {% trans "Also send by email" %}</label>
+      </div>
+      <button class="btn" type="submit">{% trans "Publish" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

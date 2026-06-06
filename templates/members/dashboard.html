@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "My Dashboard" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "Welcome" %}, {{ user.full_name|default:user.email }}</h1>
+
+  {% if profile %}
+  <div class="grid grid-4">
+    <div class="kpi"><div class="value">{{ profile.member_number|default:"—" }}</div><div class="label">{% trans "Member No." %}</div></div>
+    <div class="kpi {% if profile.status == 'active' %}success{% endif %}"><div class="value" style="font-size:20px">{{ profile.get_status_display }}</div><div class="label">{% trans "Status" %}</div></div>
+    <div class="kpi {% if arrears %}warning{% endif %}"><div class="value">{{ arrears }}</div><div class="label">{% trans "Unpaid dues" %}</div></div>
+    <div class="kpi"><div class="value" style="font-size:18px">{% if membership %}{{ membership.get_membership_class_display }}{% else %}—{% endif %}</div><div class="label">{% trans "Class" %}</div></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:24px">
+    <div class="card">
+      <h3>{% trans "Property & residency" %}</h3>
+      {% if residency %}
+        <p><strong>{{ residency.property }}</strong></p>
+        <p class="muted">{{ residency.get_residency_type_display }}</p>
+      {% else %}<p class="muted">{% trans "No linked property." %}</p>{% endif %}
+      {% if card %}<a class="btn btn-ghost" href="{% url 'members:my_card' %}">{% trans "View my ID card" %}</a>{% endif %}
+    </div>
+    <div class="card">
+      <h3>{% trans "Recent dues" %}</h3>
+      {% for inv in invoices %}
+        <p>{{ inv.period_start|date:"M Y" }} — Rs {{ inv.amount_due|floatformat:0 }}
+           <span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></p>
+      {% empty %}<p class="muted">{% trans "No invoices yet." %}</p>{% endfor %}
+      <a href="{% url 'dues:my_dues' %}">{% trans "All my dues →" %}</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="card">
+    <p>{% trans "You don't have an approved membership yet." %}</p>
+    <a class="btn" href="{% url 'members:apply_start' %}">{% trans "Apply for membership" %}</a>
+  </div>
+  {% endif %}
+
+  <div class="card" style="margin-top:24px">
+    <div class="section-title"><h3>{% trans "My complaints" %}</h3><a class="btn btn-ghost" href="{% url 'complaints:create' %}">{% trans "+ Raise a complaint" %}</a></div>
+    {% for t in tickets %}
+      <p><a href="{% url 'complaints:detail' t.pk %}">{{ t.ticket_number }} — {{ t.title }}</a>
+         <span class="badge blue">{{ t.get_status_display }}</span></p>
+    {% empty %}<p class="muted">{% trans "No complaints raised." %}</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

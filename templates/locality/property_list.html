@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Property Registry" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "Property Registry" %}</h1>
+  <p class="muted">{% trans "Authoritative registry of Sectors → Sub-Sectors → Properties in Gulshan-e-Maymar." %} ({{ total }} {% trans "properties" %})</p>
+  <form method="get" class="grid grid-4" style="margin:18px 0">
+    <select name="sector"><option value="">{% trans "All sectors" %}</option>{% for s in sectors %}<option value="{{ s.code }}" {% if filters.sector == s.code %}selected{% endif %}>{{ s.name }} ({{ s.n }})</option>{% endfor %}</select>
+    <select name="status"><option value="">{% trans "Any status" %}</option>{% for v, l in status_choices %}<option value="{{ v }}" {% if filters.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <input type="text" name="search" placeholder="{% trans 'House no.' %}" value="{{ filters.search|default:'' }}">
+    <button class="btn" type="submit">{% trans "Filter" %}</button>
+  </form>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>{% trans "House" %}</th><th>{% trans "Sub-Sector" %}</th><th>{% trans "Type" %}</th><th>{% trans "Status" %}</th></tr></thead>
+    <tbody>
+    {% for p in properties %}
+      <tr><td>{{ p.house_number }}</td><td>{{ p.sub_sector }}</td><td>{{ p.get_property_type_display }}</td>
+      <td><span class="badge {% if p.status == 'occupied' %}green{% else %}gray{% endif %}">{{ p.get_status_display }}</span></td></tr>
+    {% empty %}<tr><td colspan="4" class="muted">{% trans "No properties." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

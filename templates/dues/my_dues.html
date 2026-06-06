@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "My Dues" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "My Dues" %}</h1>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>{% trans "Period" %}</th><th>{% trans "Plan" %}</th><th>{% trans "Due" %}</th><th>{% trans "Paid" %}</th><th>{% trans "Status" %}</th></tr></thead>
+    <tbody>
+    {% for inv in invoices %}
+      <tr><td>{{ inv.period_start|date:"M Y" }}</td><td>{{ inv.plan.name }}</td>
+      <td>Rs {{ inv.amount_due|floatformat:0 }}</td><td>Rs {{ inv.amount_paid|floatformat:0 }}</td>
+      <td><span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></td></tr>
+    {% empty %}<tr><td colspan="5" class="muted">{% trans "No dues on record." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

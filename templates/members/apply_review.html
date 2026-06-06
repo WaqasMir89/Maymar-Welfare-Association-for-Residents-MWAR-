@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page">
+  <div class="steps">
+    <div class="step done">1. {% trans "Details" %}</div>
+    <div class="step done">2. {% trans "Documents" %}</div>
+    <div class="step active">3. {% trans "Submit" %}</div>
+  </div>
+  <div class="card">
+    <h1>{% trans "Review your application" %}</h1>
+    <table class="table">
+      <tr><th>{% trans "Name" %}</th><td>{{ application.full_name }}</td></tr>
+      <tr><th>{% trans "Father/Husband" %}</th><td>{{ application.father_or_husband_name }}</td></tr>
+      <tr><th>{% trans "CNIC" %}</th><td>{{ application.masked_cnic }}</td></tr>
+      <tr><th>{% trans "Phone" %}</th><td>{{ application.phone }}</td></tr>
+      <tr><th>{% trans "Property" %}</th><td>{{ application.property }}</td></tr>
+      <tr><th>{% trans "Residency" %}</th><td>{{ application.get_residency_type_display }}</td></tr>
+      <tr><th>{% trans "Class" %}</th><td>{{ application.get_requested_class_display }}</td></tr>
+    </table>
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-lg btn-success" type="submit">{% trans "Submit application" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

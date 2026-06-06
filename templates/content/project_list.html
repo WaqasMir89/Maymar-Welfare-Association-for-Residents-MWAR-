@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Projects" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "Community Projects" %}</h1>
+  <div class="grid grid-3">
+    {% for p in projects %}
+      <div class="card">
+        <span class="badge blue">{{ p.get_status_display }}</span>
+        <h3 style="margin-top:10px"><a href="{% url 'content:project_detail' p.slug %}">{{ p.title }}</a></h3>
+        <p class="muted">{{ p.summary }}</p>
+        {% if p.budget %}<p><strong>{% trans "Budget:" %}</strong> Rs {{ p.budget|floatformat:0|intcomma }}</p>{% endif %}
+      </div>
+    {% empty %}<p class="muted">{% trans "No projects published." %}</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

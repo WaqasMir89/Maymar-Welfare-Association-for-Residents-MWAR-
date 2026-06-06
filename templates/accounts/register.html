@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Create account" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Create your account" %}</h1>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+      <div class="field">
+        <label>{{ field.label }}</label>{{ field }}
+        {% if field.help_text %}<div class="help">{{ field.help_text|safe }}</div>{% endif %}
+        {{ field.errors }}
+      </div>
+      {% endfor %}
+      <button class="btn btn-block" type="submit">{% trans "Create account" %}</button>
+    </form>
+    <p class="muted" style="margin-top:16px">{% trans "Already registered?" %} <a href="{% url 'accounts:login' %}">{% trans "Sign in" %}</a></p>
+  </div>
+</div>
+{% endblock %}

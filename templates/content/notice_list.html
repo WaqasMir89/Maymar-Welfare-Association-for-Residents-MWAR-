@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Notices" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="section-title">
+    <h1>{% trans "Notices" %}</h1>
+    {% if perms.content.broadcast_notice or user.is_superuser %}
+      <a class="btn" href="{% url 'content:notice_create' %}">{% trans "+ Broadcast" %}</a>{% endif %}
+  </div>
+  {% for n in notices %}
+    <div class="card">
+      <div class="section-title"><h3>{{ n.title }}</h3>
+        <span class="badge {% if n.audience == 'public' %}green{% else %}blue{% endif %}">{{ n.get_audience_display }}</span></div>
+      <p>{{ n.body }}</p>
+      <div class="help">{{ n.published_at|date:"d M Y, H:i" }}{% if n.via_sms %} · 📱 {% trans "SMS sent" %}{% endif %}</div>
+    </div>
+  {% empty %}<p class="muted">{% trans "No notices." %}</p>{% endfor %}
+</div>
+{% endblock %}

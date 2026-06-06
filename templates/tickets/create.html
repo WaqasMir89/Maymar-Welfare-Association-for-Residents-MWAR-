@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Raise a complaint" %}</h1>
+    <p class="muted">{% trans "Water, security, sanitation, streetlights and more. Your property is linked automatically where known." %}</p>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>
+      {% endfor %}
+      <button class="btn" type="submit">{% trans "Submit complaint" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

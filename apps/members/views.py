@@ -1,0 +1,223 @@
+"""Membership views: public application, staff queue/review, dashboard, card."""
+
+from __future__ import annotations
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
+
+from apps.accounts.permissions import staff_member_test
+
+from .forms import ApplicationForm, DocumentUploadForm, ReviewForm
+from .models import (
+    ApplicationDocument,
+    MemberCard,
+    MemberProfile,
+    MembershipApplication,
+)
+from .services import ApprovalError, chairman_approve, log_pii_access, secretary_review, submit_application
+
+
+# ---------------------------------------------------------------------------
+# Public application flow (works for self-service and assisted staff entry)
+# ---------------------------------------------------------------------------
+def apply_start(request: HttpRequest) -> HttpResponse:
+    form = ApplicationForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        application = form.save(commit=False)
+        if request.user.is_authenticated:
+            from apps.accounts.permissions import is_staff_member
+
+            if is_staff_member(request.user):
+                application.submitted_by = request.user
+            else:
+                application.applicant_user = request.user
+        application.save()
+        messages.success(request, _("Application started. Now upload your documents."))
+        return redirect("members:apply_documents", pk=application.pk)
+    return render(request, "members/apply_form.html", {"form": form})
+
+
+def apply_documents(request: HttpRequest, pk: int) -> HttpResponse:
+    application = get_object_or_404(MembershipApplication, pk=pk)
+    if request.method == "POST":
+        form = DocumentUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc = form.save(commit=False)
+            doc.application = application
+            doc.save()
+            messages.success(request, _("Document uploaded."))
+            return redirect("members:apply_documents", pk=pk)
+    else:
+        form = DocumentUploadForm()
+    return render(
+        request,
+        "members/apply_documents.html",
+        {"application": application, "form": form, "documents": application.documents.all()},
+    )
+
+
+def apply_submit(request: HttpRequest, pk: int) -> HttpResponse:
+    application = get_object_or_404(MembershipApplication, pk=pk)
+    if request.method == "POST":
+        submit_application(application)
+        return redirect("members:apply_success", pk=pk)
+    return render(request, "members/apply_review.html", {"application": application})
+
+
+def apply_success(request: HttpRequest, pk: int) -> HttpResponse:
+    application = get_object_or_404(MembershipApplication, pk=pk)
+    return render(request, "members/apply_success.html", {"application": application})
+
+
+# ---------------------------------------------------------------------------
+# Staff queue + two-step review
+# ---------------------------------------------------------------------------
+@staff_member_test
+def application_queue(request: HttpRequest) -> HttpResponse:
+    qs = MembershipApplication.objects.select_related("property__sub_sector__sector")
+    status = request.GET.get("status")
+    if status:
+        qs = qs.filter(status=status)
+    else:
+        qs = qs.exclude(status=MembershipApplication.Status.DRAFT)
+    page = Paginator(qs.order_by("-created_at"), 20).get_page(request.GET.get("page"))
+    counts = {
+        s.value: MembershipApplication.objects.filter(status=s.value).count()
+        for s in MembershipApplication.Status
+    }
+    return render(
+        request,
+        "members/queue.html",
+        {"applications": page, "counts": counts, "status": status,
+         "status_choices": MembershipApplication.Status.choices},
+    )
+
+
+@staff_member_test
+def application_detail(request: HttpRequest, pk: int) -> HttpResponse:
+    application = get_object_or_404(
+        MembershipApplication.objects.select_related("property"), pk=pk
+    )
+
+    # Showing the unmasked CNIC to a view_pii holder is a PII access event —
+    # logged on every read, whether or not a member profile exists yet.
+    can_view_pii = request.user.has_perm("members.view_pii")
+    shown_cnic = application.cnic if can_view_pii else application.masked_cnic
+    if can_view_pii:
+        from apps.core.models import AuditLog
+        from apps.core.services import record_audit
+
+        record_audit(
+            AuditLog.Action.PII_ACCESS,
+            "MembershipApplication",
+            application.pk,
+            actor=request.user,
+            metadata={"context": "application_review"},
+        )
+
+    form = ReviewForm()
+    return render(
+        request,
+        "members/application_detail.html",
+        {
+            "application": application,
+            "documents": application.documents.all(),
+            "shown_cnic": shown_cnic,
+            "can_view_pii": can_view_pii,
+            "form": form,
+            "Status": MembershipApplication.Status,
+        },
+    )
+
+
+@staff_member_test
+def application_review(request: HttpRequest, pk: int) -> HttpResponse:
+    application = get_object_or_404(MembershipApplication, pk=pk)
+    if request.method != "POST":
+        return redirect("members:application_detail", pk=pk)
+
+    stage = request.POST.get("stage")
+    if stage == "chairman":
+        if not request.user.has_perm("members.approve_membership"):
+            messages.error(request, _("You do not have final-approval rights."))
+            return redirect("members:application_detail", pk=pk)
+        try:
+            profile = chairman_approve(application, request.user,
+                                       fee_method=request.POST.get("fee_method", "cash"))
+        except ApprovalError as exc:
+            messages.error(request, str(exc))
+            return redirect("members:application_detail", pk=pk)
+        messages.success(
+            request,
+            _("Approved. Member %(num)s issued with fee receipt and ID card.")
+            % {"num": profile.member_number},
+        )
+        return redirect("members:application_detail", pk=pk)
+
+    # Secretary stage
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        secretary_review(application, request.user,
+                         decision=form.cleaned_data["decision"],
+                         notes=form.cleaned_data["notes"])
+        messages.success(request, _("Review recorded."))
+    return redirect("members:application_detail", pk=pk)
+
+
+# ---------------------------------------------------------------------------
+# Member self-service + card + public verification
+# ---------------------------------------------------------------------------
+@login_required
+def dashboard(request: HttpRequest) -> HttpResponse:
+    profile = getattr(request.user, "member_profile", None)
+    from apps.dues.models import DuesInvoice
+    from apps.tickets.models import Ticket
+
+    context = {"profile": profile}
+    if profile:
+        context["membership"] = profile.current_membership
+        context["residency"] = profile.current_residency
+        context["invoices"] = DuesInvoice.objects.filter(member=profile).order_by("-period_start")[:5]
+        context["arrears"] = DuesInvoice.objects.filter(
+            member=profile, status__in=["unpaid", "partial", "overdue"]
+        ).count()
+        context["card"] = getattr(profile, "card", None)
+    context["tickets"] = Ticket.objects.filter(created_by=request.user).order_by("-created_at")[:5]
+    return render(request, "members/dashboard.html", context)
+
+
+@login_required
+def my_card(request: HttpRequest) -> HttpResponse:
+    profile = getattr(request.user, "member_profile", None)
+    if not profile or not hasattr(profile, "card"):
+        messages.info(request, _("No member card yet — your membership may still be pending."))
+        return redirect("members:dashboard")
+    return render(request, "members/card.html", {"profile": profile, "card": profile.card})
+
+
+def card_qr(request: HttpRequest, qr_token) -> HttpResponse:
+    """Render a PNG QR code that resolves to the public verification page."""
+    import qrcode
+
+    verify_url = request.build_absolute_uri(
+        f"/members/verify/{qr_token}/"
+    )
+    img = qrcode.make(verify_url)
+    response = HttpResponse(content_type="image/png")
+    img.save(response, "PNG")
+    return response
+
+
+def verify_card(request: HttpRequest, qr_token) -> HttpResponse:
+    """PUBLIC card verification — returns only minimal, non-sensitive data."""
+    card = MemberCard.objects.select_related("member").filter(qr_token=qr_token).first()
+    valid = bool(
+        card
+        and card.status == MemberCard.Status.ACTIVE
+        and card.member.status == MemberProfile.Status.ACTIVE
+    )
+    return render(request, "members/verify.html", {"card": card, "valid": valid})

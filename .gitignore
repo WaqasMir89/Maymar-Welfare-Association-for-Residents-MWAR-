@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+db.sqlite3
+.env
+/staticfiles/
+/media/
+/private_media/
+/scripts/shots/
+node_modules/
+package-lock.json
+*.log

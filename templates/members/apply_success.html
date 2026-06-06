@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card" style="text-align:center">
+    <div style="font-size:54px">🎉</div>
+    <h1>{% trans "Application submitted" %}</h1>
+    <p class="muted">{% trans "Your application is" %} <span class="badge blue">{{ application.get_status_display }}</span></p>
+    <p>{% trans "The Secretary will review your details and documents, followed by the Chairman's final approval. You'll be notified by SMS. On approval you receive your membership number and ID card." %}</p>
+    <a class="btn" href="{% url 'core:home' %}">{% trans "Back to home" %}</a>
+  </div>
+</div>
+{% endblock %}

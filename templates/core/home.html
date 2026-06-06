@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1>{% trans "A connected, transparent Gulshan-e-Maymar" %}</h1>
+    <p>{% trans "The official digital platform of the Maymar Welfare Association for Residents — manage your membership, dues, and complaints, and see exactly how the association serves your neighbourhood." %}</p>
+    <div class="hero-actions">
+      <a href="{% url 'members:apply_start' %}" class="btn btn-lg">{% trans "Become a Member" %}</a>
+      <a href="{% url 'core:transparency' %}" class="btn btn-ghost btn-lg">{% trans "View Finances" %}</a>
+    </div>
+    <div class="reg">{{ brand.name_ur }} · {% trans "Reg. No." %} {{ brand.reg_no }}</div>
+  </div>
+</section>
+
+<div class="container page">
+  <div class="grid grid-4">
+    <div class="kpi"><div class="value">{{ member_count|intcomma }}</div><div class="label">{% trans "Active Members" %}</div></div>
+    <div class="kpi success"><div class="value">Rs 500</div><div class="label">{% trans "Registration Fee" %}</div></div>
+    <div class="kpi"><div class="value">2</div><div class="label">{% trans "Membership Classes" %}</div></div>
+    <div class="kpi warning"><div class="value">24/7</div><div class="label">{% trans "Complaint Desk" %}</div></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:24px">
+    <div class="card">
+      <h3>{% trans "Latest Projects" %}</h3>
+      {% for p in projects %}
+        <p><a href="{% url 'content:project_detail' p.slug %}"><strong>{{ p.title }}</strong></a><br>
+        <span class="muted">{{ p.summary }}</span></p>
+      {% empty %}<p class="muted">{% trans "No projects published yet." %}</p>{% endfor %}
+      <a href="{% url 'content:project_list' %}">{% trans "All projects →" %}</a>
+    </div>
+    <div class="card">
+      <h3>{% trans "Notices" %}</h3>
+      {% for n in notices %}
+        <p><strong>{{ n.title }}</strong><br><span class="muted">{{ n.body|truncatewords:18 }}</span></p>
+      {% empty %}<p class="muted">{% trans "No public notices." %}</p>{% endfor %}
+      <a href="{% url 'content:notice_list' %}">{% trans "All notices →" %}</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h3>{% trans "How membership works" %}</h3>
+    <div class="grid grid-3">
+      <div><strong>1. {% trans "Apply online" %}</strong><p class="muted">{% trans "Fill the digital form, tell us your property and whether you own or rent." %}</p></div>
+      <div><strong>2. {% trans "Upload documents" %}</strong><p class="muted">{% trans "CNIC for owners; CNIC plus tenancy agreement for tenants." %}</p></div>
+      <div><strong>3. {% trans "Get approved" %}</strong><p class="muted">{% trans "The Secretary and Chairman review; you receive a member number and ID card." %}</p></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

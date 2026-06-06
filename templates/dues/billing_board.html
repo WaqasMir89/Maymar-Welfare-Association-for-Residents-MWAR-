@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Dues & Billing" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "Dues & Billing" %}</h1>
+  <div class="grid grid-3">
+    <div class="kpi"><div class="value">Rs {{ totals.billed|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Billed" %}</div></div>
+    <div class="kpi success"><div class="value">Rs {{ totals.paid|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Collected" %}</div></div>
+    <div class="kpi"><div class="value">{{ invoices.paginator.count }}</div><div class="label">{% trans "Invoices" %}</div></div>
+  </div>
+  <div class="pill-nav" style="margin-top:18px">
+    <a href="{% url 'dues:billing_board' %}" class="{% if not status %}active{% endif %}">{% trans "All" %}</a>
+    {% for v, l in status_choices %}<a href="?status={{ v }}" class="{% if status == v %}active{% endif %}">{{ l }}</a>{% endfor %}
+  </div>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>{% trans "Property" %}</th><th>{% trans "Member" %}</th><th>{% trans "Period" %}</th><th>{% trans "Due" %}</th><th>{% trans "Paid" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+    <tbody>
+    {% for inv in invoices %}
+      <tr>
+        <td>{{ inv.property }}</td>
+        <td>{{ inv.member.full_name|default:"—" }}</td>
+        <td>{{ inv.period_start|date:"M Y" }}</td>
+        <td>Rs {{ inv.amount_due|floatformat:0 }}</td>
+        <td>Rs {{ inv.amount_paid|floatformat:0 }}</td>
+        <td><span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></td>
+        <td>{% if inv.status != 'paid' %}<a class="btn btn-ghost" href="{% url 'dues:record_payment' inv.pk %}">{% trans "Record payment" %}</a>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="muted">{% trans "No invoices. Generate a billing run from the admin or seed data." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

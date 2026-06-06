@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ ticket.ticket_number }} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <a href="{% url 'complaints:list' %}" class="muted">← {% trans "Back" %}</a>
+  <div class="section-title">
+    <h1>{{ ticket.title }}</h1>
+    <span class="badge {% if ticket.status == 'resolved' or ticket.status == 'closed' %}green{% else %}blue{% endif %}">{{ ticket.get_status_display }}</span>
+  </div>
+  <p class="muted">{{ ticket.ticket_number }} · {{ ticket.get_category_display }} · {{ ticket.get_priority_display }}</p>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>{% trans "Description" %}</h3>
+      <p>{{ ticket.description }}</p>
+      {% if ticket.property %}<p class="muted">📍 {{ ticket.property }}</p>{% endif %}
+
+      <h3 style="margin-top:24px">{% trans "Discussion" %}</h3>
+      {% for m in messages_list %}
+        <div class="card" style="margin-bottom:10px;{% if m.is_internal %}border-inline-start:4px solid var(--accent-warning){% endif %}">
+          <strong>{{ m.author|default:"—" }}</strong> {% if m.is_internal %}<span class="badge amber">{% trans "internal" %}</span>{% endif %}
+          <p style="margin:6px 0 0">{{ m.body }}</p>
+          <div class="help">{{ m.created_at }}</div>
+        </div>
+      {% empty %}<p class="muted">{% trans "No messages yet." %}</p>{% endfor %}
+
+      <form method="post" class="stack">
+        {% csrf_token %}
+        <div class="field"><label>{% trans "Add a message" %}</label>{{ form.body }}</div>
+        {% if is_staff %}<div class="radio-row"><label><input type="checkbox" name="is_internal"> {% trans "Internal staff note" %}</label></div>{% endif %}
+        <button class="btn" type="submit">{% trans "Post" %}</button>
+      </form>
+    </div>
+
+    {% if is_staff %}
+    <div class="card">
+      <h3>{% trans "Manage" %}</h3>
+      <form method="post" action="{% url 'complaints:update_status' ticket.pk %}" class="stack">
+        {% csrf_token %}
+        <div class="field"><label>{% trans "Status" %}</label>
+          <select name="status">{% for v, l in status_choices %}<option value="{{ v }}" {% if ticket.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <button class="btn" type="submit">{% trans "Update status" %}</button>
+      </form>
+      <p class="muted" style="margin-top:12px">{% trans "Assigned to:" %} {{ ticket.assigned_to|default:"—" }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

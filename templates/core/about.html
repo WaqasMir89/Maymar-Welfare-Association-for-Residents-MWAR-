@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page stack">
+  <h1>{% trans "About the Association" %}</h1>
+  <div class="card">
+    <p><strong>{{ brand.name }}</strong> ({{ brand.short }}) {% trans "is a registered Resident Welfare Association serving the residents of" %} {{ brand.locality }}. {% trans "Reg. No." %} {{ brand.reg_no }}.</p>
+    <p class="muted">{{ brand.name_ur }}</p>
+  </div>
+  <div class="card">
+    <h3>{% trans "Vision & Mission" %}</h3>
+    <p>{% trans "To maintain a safe, clean and well-served neighbourhood — through transparent management of maintenance dues, responsive handling of resident complaints, and community projects funded openly and accountably." %}</p>
+  </div>
+  <div class="card">
+    <h3>{% trans "Membership classes" %}</h3>
+    <p><strong>{% trans "Permanent Member (مستقل ممبر)" %}</strong> — {% trans "a resident who owns their plot/house." %}</p>
+    <p><strong>{% trans "Associate Member (ایسوسی ایٹ ممبر)" %}</strong> — {% trans "a resident who is a tenant." %}</p>
+  </div>
+</div>
+{% endblock %}

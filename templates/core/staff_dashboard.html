@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Staff Dashboard" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <h1>{% trans "Staff Dashboard" %}</h1>
+  <div class="grid grid-4">
+    <div class="kpi"><div class="value">{{ member_count|intcomma }}</div><div class="label">{% trans "Active Members" %}</div></div>
+    <a href="{% url 'members:application_queue' %}" class="kpi warning" style="text-decoration:none">
+      <div class="value">{{ pending_apps }}</div><div class="label">{% trans "Applications in Queue" %}</div></a>
+    <a href="{% url 'complaints:list' %}" class="kpi" style="text-decoration:none">
+      <div class="value">{{ open_tickets }}</div><div class="label">{% trans "Open Complaints" %}</div></a>
+    <a href="{% url 'dues:billing_board' %}" class="kpi" style="text-decoration:none">
+      <div class="value">{{ arrears }}</div><div class="label">{% trans "Unpaid Invoices" %}</div></a>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:24px">
+    <div class="card">
+      <h3>{% trans "Quick actions" %}</h3>
+      <div class="stack">
+        <a class="btn btn-block" href="{% url 'members:application_queue' %}">{% trans "Membership Queue" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'members:apply_start' %}">{% trans "Assisted Registration (walk-in)" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:billing_board' %}">{% trans "Dues & Billing" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'locality:property_list' %}">{% trans "Property Registry" %}</a>
+        {% if perms.content.broadcast_notice or user.is_superuser %}
+        <a class="btn btn-ghost btn-block" href="{% url 'content:notice_create' %}">{% trans "Broadcast a Notice" %}</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card">
+      <h3>{% trans "Finance snapshot" %}</h3>
+      <p>{% trans "Dues collected:" %} <strong>Rs {{ finance.dues_collected|floatformat:0|intcomma }}</strong></p>
+      <p>{% trans "Donations:" %} <strong>Rs {{ finance.donations_total|floatformat:0|intcomma }}</strong></p>
+      <p>{% trans "Expenses:" %} <strong>Rs {{ finance.expenses_total|floatformat:0|intcomma }}</strong></p>
+      <p>{% trans "Balance:" %} <strong>Rs {{ finance.balance|floatformat:0|intcomma }}</strong></p>
+      <p>{% trans "Collection rate:" %} <strong>{{ finance.collection_rate }}%</strong></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

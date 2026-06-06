@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Upload Documents" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="steps">
+    <div class="step done">1. {% trans "Details" %}</div>
+    <div class="step active">2. {% trans "Documents" %}</div>
+    <div class="step">3. {% trans "Submit" %}</div>
+  </div>
+  <div class="card">
+    <h1>{% trans "Upload documents" %}</h1>
+    <p class="muted">
+      {% trans "Required:" %} <strong>{% trans "CNIC (front)" %}</strong>
+      {% if application.requires_tenancy_agreement %} + <strong>{% trans "Tenancy agreement" %}</strong>{% endif %}
+    </p>
+    <form method="post" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Document type" %}</label>{{ form.doc_type }}</div>
+      <div class="field"><label>{% trans "File" %}</label>{{ form.file }}</div>
+      <button class="btn" type="submit">{% trans "Upload" %}</button>
+    </form>
+  </div>
+  <div class="card">
+    <h3>{% trans "Uploaded" %}</h3>
+    {% for d in documents %}
+      <p>✅ {{ d.get_doc_type_display }} <span class="muted">({{ d.file.name }})</span></p>
+    {% empty %}<p class="muted">{% trans "No documents uploaded yet." %}</p>{% endfor %}
+  </div>
+  <form method="post" action="{% url 'members:apply_submit' application.pk %}">
+    {% csrf_token %}
+    <a class="btn btn-ghost" href="{% url 'members:apply_documents' application.pk %}">{% trans "Add another" %}</a>
+    <button class="btn btn-success" type="submit">{% trans "Review & submit →" %}</button>
+  </form>
+</div>
+{% endblock %}

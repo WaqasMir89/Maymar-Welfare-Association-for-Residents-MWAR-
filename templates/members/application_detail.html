@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Application" %} #{{ application.id }} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <a href="{% url 'members:application_queue' %}" class="muted">← {% trans "Back to queue" %}</a>
+  <div class="section-title">
+    <h1>{% trans "Application" %} #{{ application.id }}</h1>
+    <span class="badge blue">{{ application.get_status_display }}</span>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>{% trans "Applicant details" %}</h3>
+      <table class="table">
+        <tr><th>{% trans "Name" %}</th><td>{{ application.full_name }}</td></tr>
+        <tr><th>{% trans "Father/Husband" %}</th><td>{{ application.father_or_husband_name }}</td></tr>
+        <tr><th>{% trans "CNIC" %}</th><td>{{ shown_cnic }}
+          {% if not can_view_pii %}<span class="badge gray">{% trans "masked" %}</span>{% else %}<span class="badge amber">{% trans "PII access logged" %}</span>{% endif %}</td></tr>
+        <tr><th>{% trans "Phone" %}</th><td>{{ application.phone }}</td></tr>
+        <tr><th>{% trans "Profession" %}</th><td>{{ application.profession|default:"—" }}</td></tr>
+        <tr><th>{% trans "Household size" %}</th><td>{{ application.household_size }}</td></tr>
+        <tr><th>{% trans "Property" %}</th><td>{{ application.property|default:"—" }}</td></tr>
+        <tr><th>{% trans "Residency" %}</th><td>{{ application.get_residency_type_display }} → {{ application.get_requested_class_display }}</td></tr>
+        <tr><th>{% trans "Declaration" %}</th><td>{% if application.declaration_accepted %}✅ {% trans "accepted" %}{% else %}—{% endif %}</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>{% trans "Documents" %}</h3>
+      {% for d in documents %}
+        <p>📎 {{ d.get_doc_type_display }} <span class="muted">{{ d.file.name }}</span>
+           {% if d.verified %}<span class="badge green">{% trans "verified" %}</span>{% endif %}</p>
+      {% empty %}<p class="muted">{% trans "No documents." %}</p>{% endfor %}
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0">
+
+      {% if application.status == Status.APPROVED %}
+        <p class="badge green">{% trans "Approved" %}</p>
+        {% if application.member_profile %}
+          <p>{% trans "Member number:" %} <strong>{{ application.member_profile.member_number }}</strong></p>
+          <a class="btn btn-ghost" href="{% url 'members:verify_card' application.member_profile.card.qr_token %}">{% trans "View issued card (public verify)" %}</a>
+        {% endif %}
+      {% elif application.status == Status.REJECTED %}
+        <p class="badge red">{% trans "Rejected" %}</p>
+        <p class="muted">{{ application.review_notes }}</p>
+      {% elif application.status == Status.SECRETARY_APPROVED %}
+        <p class="badge amber">{% trans "Secretary approved — awaiting Chairman" %}</p>
+        {% if perms.members.approve_membership or user.is_superuser %}
+        <form method="post" action="{% url 'members:application_review' application.pk %}" class="stack">
+          {% csrf_token %}
+          <input type="hidden" name="stage" value="chairman">
+          <div class="field"><label>{% trans "Registration fee method (Rs 500)" %}</label>
+            <select name="fee_method"><option value="cash">{% trans "Cash" %}</option><option value="bank_transfer">{% trans "Bank transfer" %}</option><option value="jazzcash">JazzCash</option><option value="easypaisa">EasyPaisa</option></select>
+          </div>
+          <button class="btn btn-success" type="submit">{% trans "Final approve — issue number, receipt & card" %}</button>
+        </form>
+        {% else %}<p class="muted">{% trans "Final approval requires the Chairman." %}</p>{% endif %}
+      {% else %}
+        {% if perms.members.review_application or user.is_superuser %}
+        <form method="post" action="{% url 'members:application_review' application.pk %}" class="stack">
+          {% csrf_token %}
+          <input type="hidden" name="stage" value="secretary">
+          <div class="field radio-row"><label>{% trans "Secretary decision" %}</label>{{ form.decision }}</div>
+          <div class="field"><label>{% trans "Notes" %}</label>{{ form.notes }}</div>
+          <button class="btn" type="submit">{% trans "Record review" %}</button>
+        </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

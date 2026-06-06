@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Membership Queue" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="section-title">
+    <h1>{% trans "Membership Queue" %}</h1>
+    <a class="btn btn-ghost" href="{% url 'members:apply_start' %}">{% trans "+ Assisted registration" %}</a>
+  </div>
+  <div class="pill-nav">
+    <a href="{% url 'members:application_queue' %}" class="{% if not status %}active{% endif %}">{% trans "All open" %}</a>
+    {% for value, label in status_choices %}
+      <a href="?status={{ value }}" class="{% if status == value %}active{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>#</th><th>{% trans "Applicant" %}</th><th>{% trans "Property" %}</th><th>{% trans "Class" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+    <tbody>
+    {% for app in applications %}
+      <tr>
+        <td>{{ app.id }}</td>
+        <td>{{ app.full_name }}<br><span class="muted">{{ app.phone }}</span></td>
+        <td>{{ app.property|default:"—" }}</td>
+        <td>{{ app.get_requested_class_display }}</td>
+        <td><span class="badge blue">{{ app.get_status_display }}</span></td>
+        <td><a class="btn btn-ghost" href="{% url 'members:application_detail' app.pk %}">{% trans "Review" %}</a></td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="muted">{% trans "Queue is empty." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

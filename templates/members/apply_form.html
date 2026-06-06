@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Membership Application" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="steps">
+    <div class="step active">1. {% trans "Details" %}</div>
+    <div class="step">2. {% trans "Documents" %}</div>
+    <div class="step">3. {% trans "Submit" %}</div>
+  </div>
+  <div class="card">
+    <h1>{% trans "Membership Application" %}</h1>
+    <p class="muted">{% trans "حلفیہ اقرار — Please provide accurate information. Owners become Permanent Members; tenants become Associate Members." %}</p>
+    <form method="post" class="stack" x-data="{ rt: '{{ form.residency_type.value|default:'' }}' }">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="grid grid-2">
+        <div class="field"><label>{% trans "Full name" %}</label>{{ form.full_name }}{{ form.full_name.errors }}</div>
+        <div class="field"><label>{% trans "Father's / Husband's name" %}</label>{{ form.father_or_husband_name }}{{ form.father_or_husband_name.errors }}</div>
+      </div>
+      <div class="grid grid-2">
+        <div class="field"><label>{% trans "CNIC" %}</label>{{ form.cnic }}<div class="help">{% trans "Format: 42101-1234567-1" %}</div>{{ form.cnic.errors }}</div>
+        <div class="field"><label>{% trans "Phone" %}</label>{{ form.phone }}{{ form.phone.errors }}</div>
+      </div>
+      <div class="grid grid-2">
+        <div class="field"><label>{% trans "Profession (پیشہ)" %}</label>{{ form.profession }}{{ form.profession.errors }}</div>
+        <div class="field"><label>{% trans "Household size (تعداد اہلِ خانہ)" %}</label>{{ form.household_size }}{{ form.household_size.errors }}</div>
+      </div>
+      <div class="field"><label>{% trans "Property (House → Sub-Sector → Sector)" %}</label>{{ form.property }}{{ form.property.errors }}</div>
+      <div class="field">
+        <label>{% trans "Are you the owner or a tenant?" %}</label>
+        <div class="radio-row" @change="rt = $event.target.value">{{ form.residency_type }}</div>
+        <div class="help" x-show="rt === 'tenant'" x-cloak>{% trans "Tenants (Associate Members) must also upload a tenancy agreement in the next step." %}</div>
+        {{ form.residency_type.errors }}
+      </div>
+      <div class="field radio-row">{{ form.declaration_accepted }} <label style="display:inline">{{ form.declaration_accepted.label }}</label>{{ form.declaration_accepted.errors }}</div>
+      <button class="btn btn-lg" type="submit">{% trans "Continue to documents" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

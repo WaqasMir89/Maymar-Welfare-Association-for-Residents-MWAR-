@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Member ID Card" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <h1>{% trans "Member ID Card" %}</h1>
+  <div class="id-card">
+    <div class="head">
+      <span class="brand-logo">🏘️</span>
+      <div><strong>{{ brand.short }}</strong><br><small>{% trans "Reg. No." %} {{ brand.reg_no }}</small></div>
+    </div>
+    <div class="body">
+      <div class="photo">{% if profile.photo %}<img src="{{ profile.photo.url }}" width="84">{% else %}👤{% endif %}</div>
+      <div>
+        <div class="num">{{ profile.member_number }}</div>
+        <p style="margin:6px 0"><strong>{{ profile.full_name }}</strong></p>
+        <p class="muted" style="margin:2px 0">{{ profile.current_membership.get_membership_class_display }}</p>
+        <p class="muted" style="margin:2px 0">{{ profile.current_residency.property }}</p>
+        <span class="badge green">{{ profile.get_status_display }}</span>
+      </div>
+    </div>
+    <div class="qr">
+      <img src="{% url 'members:qr' card.qr_token %}" alt="QR">
+      <div class="help">{% trans "Scan to verify at" %} /members/verify/</div>
+    </div>
+  </div>
+  <p style="margin-top:18px"><a class="btn btn-ghost" href="javascript:print()">{% trans "Print card" %}</a></p>
+</div>
+{% endblock %}

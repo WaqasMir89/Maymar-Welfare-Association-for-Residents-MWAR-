@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sign in" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Sign in" %}</h1>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="field"><label>{% trans "Email" %}</label>{{ form.email }}{{ form.email.errors }}</div>
+      <div class="field"><label>{% trans "Password" %}</label>{{ form.password }}{{ form.password.errors }}</div>
+      <button class="btn btn-block" type="submit">{% trans "Sign in" %}</button>
+    </form>
+    <p class="muted" style="margin-top:16px">{% trans "New resident?" %} <a href="{% url 'accounts:register' %}">{% trans "Create an account" %}</a></p>
+  </div>
+</div>
+{% endblock %}

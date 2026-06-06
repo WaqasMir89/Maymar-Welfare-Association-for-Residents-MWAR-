@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Verify Member Card" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card" style="text-align:center">
+    {% if valid %}
+      <div style="font-size:54px">✅</div>
+      <h1>{% trans "Valid member" %}</h1>
+      <p class="num" style="font-size:24px;font-weight:800;color:var(--brand-700)">{{ card.member_number }}</p>
+      <p><strong>{{ card.member.full_name }}</strong></p>
+      <p class="muted">{{ card.member.current_membership.get_membership_class_display }}</p>
+      <span class="badge green">{{ card.member.get_status_display }}</span>
+    {% else %}
+      <div style="font-size:54px">⚠️</div>
+      <h1>{% trans "Card not valid" %}</h1>
+      <p class="muted">{% trans "This card could not be verified, or the membership is not active." %}</p>
+    {% endif %}
+  </div>
+  <p class="muted" style="text-align:center">{% trans "Public verification only shows membership status — no personal data is revealed." %}</p>
+</div>
+{% endblock %}

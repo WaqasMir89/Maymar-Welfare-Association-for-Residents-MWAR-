@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container narrow page stack">
+  <h1>{% trans "Contact" %}</h1>
+  <div class="card">
+    <p><strong>{{ brand.name }}</strong></p>
+    <p class="muted">{{ brand.locality }} · {% trans "Reg. No." %} {{ brand.reg_no }}</p>
+    <p>{% trans "Office hours: Mon–Sat, 10am–6pm. Walk in for assisted registration and to pay dues at the desk." %}</p>
+  </div>
+</div>
+{% endblock %}

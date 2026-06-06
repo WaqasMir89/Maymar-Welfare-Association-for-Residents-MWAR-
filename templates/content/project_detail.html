@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{{ project.title }} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page stack">
+  <a href="{% url 'content:project_list' %}" class="muted">← {% trans "All projects" %}</a>
+  <div class="card">
+    <span class="badge blue">{{ project.get_status_display }}</span>
+    <h1 style="margin-top:10px">{{ project.title }}</h1>
+    <p>{{ project.description|default:project.summary }}</p>
+    {% if project.budget %}<p><strong>{% trans "Budget:" %}</strong> Rs {{ project.budget|floatformat:0|intcomma }}</p>{% endif %}
+  </div>
+  {% for u in updates %}
+    <div class="card"><h3>{{ u.title }}</h3><p class="muted">{{ u.published_at|date }}</p><p>{{ u.body }}</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

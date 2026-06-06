@@ -1,0 +1,69 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ active_lang }}" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ brand.short }} — {{ brand.tagline }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/mwar.css' %}">
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a href="{% url 'core:home' %}" class="brand-mark">
+        <span class="brand-logo">🏘️</span>
+        <span class="brand-text">
+          {{ brand.short }}
+          <small>{% trans "Reg. No." %} {{ brand.reg_no }} · {{ brand.locality }}</small>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="{% url 'content:project_list' %}">{% trans "Projects" %}</a>
+        <a href="{% url 'content:notice_list' %}">{% trans "Notices" %}</a>
+        <a href="{% url 'core:transparency' %}">{% trans "Transparency" %}</a>
+        <a href="{% url 'members:apply_start' %}">{% trans "Become a Member" %}</a>
+        {% if user.is_authenticated %}
+          {% if perms.members.review_application or user.is_superuser %}
+            <a href="{% url 'staff_dashboard' %}">{% trans "Staff" %}</a>
+          {% endif %}
+          <a href="{% url 'members:dashboard' %}">{% trans "My Dashboard" %}</a>
+          <a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">{% trans "Sign in" %}</a>
+        {% endif %}
+        <form class="lang-switch" method="post" action="{% url 'core:set_language' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          {% if is_rtl %}
+            <button name="language" value="en">English</button>
+          {% else %}
+            <button name="language" value="ur">اردو</button>
+          {% endif %}
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {% if messages %}
+    <div class="container"><div class="messages">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div></div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site">
+    <div class="container">
+      <strong>{{ brand.name }}</strong> · {{ brand.name_ur }}<br>
+      {% trans "Reg. No." %} {{ brand.reg_no }} — {{ brand.locality }} · “{{ brand.tagline }}”
+    </div>
+  </footer>
+</body>
+</html>
