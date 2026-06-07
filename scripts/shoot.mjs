@@ -27,6 +27,7 @@ const PAGES = [
   ["/transparency/", "03-transparency.png", {}],
   ["/members/apply/", "04-apply.png", {}],
   ["/accounts/login/", "05-login.png", {}],
+  ["/accounts/password-reset/", "05a-password-reset.png", {}],
   ["/staff/", "06-staff-dashboard.png", { login: "secretary" }],
   ["/members/staff/queue/", "07-membership-queue.png", { login: "secretary" }],
   ["/dues/staff/billing/", "08-billing-board.png", { login: "finance" }],

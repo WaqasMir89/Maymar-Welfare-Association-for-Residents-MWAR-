@@ -9,7 +9,13 @@
       {% csrf_token %}
       {{ form.non_field_errors }}
       <div class="field"><label>{% trans "Email" %}</label>{{ form.email }}{{ form.email.errors }}</div>
-      <div class="field"><label>{% trans "Password" %}</label>{{ form.password }}{{ form.password.errors }}</div>
+      <div class="field">
+        <div class="row-between">
+          <label>{% trans "Password" %}</label>
+          <a class="muted" href="{% url 'password_reset' %}">{% trans "Forgot password?" %}</a>
+        </div>
+        {{ form.password }}{{ form.password.errors }}
+      </div>
       <button class="btn btn-block" type="submit">{% trans "Sign in" %}</button>
     </form>
     <p class="muted" style="margin-top:16px">{% trans "New resident?" %} <a href="{% url 'accounts:register' %}">{% trans "Create an account" %}</a></p>

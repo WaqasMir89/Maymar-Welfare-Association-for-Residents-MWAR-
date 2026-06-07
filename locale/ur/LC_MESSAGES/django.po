@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 16:48+0500\n"
+"POT-Creation-Date: 2026-06-07 17:05+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -18,10 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/accounts/forms.py:16 templates/accounts/login.html:11
+#: templates/accounts/password_reset_form.html:13
 msgid "Email"
 msgstr "ای میل"
 
-#: apps/accounts/forms.py:17 templates/accounts/login.html:12
+#: apps/accounts/forms.py:17 templates/accounts/login.html:14
 msgid "Password"
 msgstr "پاس ورڈ"
 
@@ -381,6 +382,7 @@ msgid "Invoice balance"
 msgstr "انوائس بقایا"
 
 #: apps/dues/views.py:209 apps/members/views.py:309
+#: templates/accounts/password_reset_email.html:12
 msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
 msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
 
@@ -629,18 +631,140 @@ msgid "Status updated."
 msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
-#: templates/accounts/login.html:13 templates/accounts/register.html:20
-#: templates/base.html:41
+#: templates/accounts/login.html:19
+#: templates/accounts/password_reset_complete.html:9
+#: templates/accounts/register.html:20 templates/base.html:41
 msgid "Sign in"
 msgstr "سائن اِن"
 
 #: templates/accounts/login.html:15
+msgid "Forgot password?"
+msgstr "پاس ورڈ بھول گئے؟"
+
+#: templates/accounts/login.html:21
 msgid "New resident?"
 msgstr "نئے رہائشی؟"
 
-#: templates/accounts/login.html:15
+#: templates/accounts/login.html:21
 msgid "Create an account"
 msgstr "اکاؤنٹ بنائیں"
+
+#: templates/accounts/password_reset_complete.html:3
+#: templates/accounts/password_reset_complete.html:7
+msgid "Password changed"
+msgstr "پاس ورڈ تبدیل ہو گیا"
+
+#: templates/accounts/password_reset_complete.html:8
+msgid ""
+"Your password has been set. You can now sign in with your new password."
+msgstr ""
+"آپ کا پاس ورڈ سیٹ ہو گیا ہے۔ اب آپ اپنے نئے پاس ورڈ سے سائن اِن کر سکتے ہیں۔"
+
+#: templates/accounts/password_reset_confirm.html:3
+#: templates/accounts/password_reset_confirm.html:8
+msgid "Set a new password"
+msgstr "نیا پاس ورڈ سیٹ کریں"
+
+#: templates/accounts/password_reset_confirm.html:13
+msgid "New password"
+msgstr "نیا پاس ورڈ"
+
+#: templates/accounts/password_reset_confirm.html:18
+msgid "Confirm new password"
+msgstr "نئے پاس ورڈ کی تصدیق کریں"
+
+#: templates/accounts/password_reset_confirm.html:21
+msgid "Change password"
+msgstr "پاس ورڈ تبدیل کریں"
+
+#: templates/accounts/password_reset_confirm.html:24
+msgid "Link expired"
+msgstr "لنک کی میعاد ختم"
+
+#: templates/accounts/password_reset_confirm.html:25
+msgid ""
+"This password reset link is invalid or has already been used. Please request"
+" a new one."
+msgstr ""
+"یہ پاس ورڈ ری سیٹ لنک غلط ہے یا پہلے استعمال ہو چکا ہے۔ براہِ کرم نیا لنک "
+"طلب کریں۔"
+
+#: templates/accounts/password_reset_confirm.html:26
+msgid "Request a new link"
+msgstr "نیا لنک طلب کریں"
+
+#: templates/accounts/password_reset_done.html:3
+#: templates/accounts/password_reset_done.html:7
+msgid "Check your email"
+msgstr "اپنا ای میل چیک کریں"
+
+#: templates/accounts/password_reset_done.html:8
+msgid ""
+"If an account exists for the address you entered, we've sent it a link to "
+"reset the password. It may take a few minutes to arrive — please check your "
+"spam folder too."
+msgstr ""
+"اگر آپ کے درج کردہ پتے پر کوئی اکاؤنٹ موجود ہے تو ہم نے اسے پاس ورڈ ری سیٹ "
+"کرنے کا لنک بھیج دیا ہے۔ پہنچنے میں چند منٹ لگ سکتے ہیں — براہِ کرم اپنا "
+"اسپام فولڈر بھی دیکھیں۔"
+
+#: templates/accounts/password_reset_done.html:9
+#: templates/accounts/password_reset_form.html:18
+msgid "Back to sign in"
+msgstr "سائن اِن پر واپس جائیں"
+
+#: templates/accounts/password_reset_email.html:2
+#, python-format
+msgid "Assalam-o-Alaikum %(user)s,"
+msgstr "السلام علیکم %(user)s،"
+
+#: templates/accounts/password_reset_email.html:4
+msgid ""
+"We received a request to reset the password for your M.W.A.R (Maymar Welfare"
+" Association for Residents) account."
+msgstr ""
+"ہمیں آپ کے M.W.A.R (میمار ویلفیئر ایسوسی ایشن فار ریزیڈنٹس) اکاؤنٹ کا پاس "
+"ورڈ ری سیٹ کرنے کی درخواست موصول ہوئی۔"
+
+#: templates/accounts/password_reset_email.html:6
+msgid "To choose a new password, open the link below:"
+msgstr "نیا پاس ورڈ منتخب کرنے کے لیے نیچے دیا گیا لنک کھولیں:"
+
+#: templates/accounts/password_reset_email.html:10
+msgid ""
+"If you didn't request this, you can safely ignore this email — your password"
+" will stay the same."
+msgstr ""
+"اگر آپ نے یہ درخواست نہیں کی تو اس ای میل کو نظر انداز کر دیں — آپ کا پاس "
+"ورڈ وہی رہے گا۔"
+
+#: templates/accounts/password_reset_email.html:13
+msgid "Hands of Hope"
+msgstr "امید کے ہاتھ"
+
+#: templates/accounts/password_reset_form.html:3
+msgid "Reset password"
+msgstr "پاس ورڈ ری سیٹ کریں"
+
+#: templates/accounts/password_reset_form.html:7
+msgid "Reset your password"
+msgstr "اپنا پاس ورڈ ری سیٹ کریں"
+
+#: templates/accounts/password_reset_form.html:8
+msgid ""
+"Enter the email address linked to your account and we'll send you a link to "
+"set a new password."
+msgstr ""
+"اپنے اکاؤنٹ سے منسلک ای میل ایڈریس درج کریں، ہم آپ کو نیا پاس ورڈ سیٹ کرنے "
+"کا لنک بھیج دیں گے۔"
+
+#: templates/accounts/password_reset_form.html:16
+msgid "Send reset link"
+msgstr "ری سیٹ لنک بھیجیں"
+
+#: templates/accounts/password_reset_subject.txt:1
+msgid "Reset your M.W.A.R account password"
+msgstr "اپنے M.W.A.R اکاؤنٹ کا پاس ورڈ ری سیٹ کریں"
 
 #: templates/accounts/register.html:3 templates/accounts/register.html:18
 msgid "Create account"
