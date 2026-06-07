@@ -3,7 +3,10 @@
 {% block title %}{% trans "My Dues" %} — {{ brand.short }}{% endblock %}
 {% block content %}
 <div class="container page">
-  <h1>{% trans "My Dues" %}</h1>
+  <div class="row-between">
+    <h1>{% trans "My Dues" %}</h1>
+    <a class="btn" href="{% url 'dues:pay_dues' %}">{% trans "Pay dues / donate" %}</a>
+  </div>
   <div class="table-wrap"><table class="table">
     <thead><tr><th>{% trans "Period" %}</th><th>{% trans "Plan" %}</th><th>{% trans "Due" %}</th><th>{% trans "Paid" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
     <tbody>

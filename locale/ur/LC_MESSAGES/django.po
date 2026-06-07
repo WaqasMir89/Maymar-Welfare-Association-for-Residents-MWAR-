@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 17:05+0500\n"
+"POT-Creation-Date: 2026-06-07 17:25+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -213,7 +213,7 @@ msgid "Approve"
 msgstr "منظور کریں"
 
 #: apps/core/models.py:59 apps/members/forms.py:62
-#: templates/dues/expenses.html:38
+#: templates/dues/expenses.html:38 templates/dues/submission_queue.html:35
 msgid "Reject"
 msgstr "مسترد کریں"
 
@@ -291,8 +291,8 @@ msgstr "غیر ادا شدہ"
 msgid "Partial"
 msgstr "جزوی"
 
-#: apps/dues/models.py:55 apps/dues/models.py:150
-#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+#: apps/dues/models.py:55 apps/dues/models.py:196
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:11
 msgid "Paid"
 msgstr "ادا شدہ"
 
@@ -304,106 +304,152 @@ msgstr "معاف"
 msgid "Overdue"
 msgstr "واجب الادا"
 
-#: apps/dues/models.py:147 apps/members/models.py:53
-msgid "Pending"
-msgstr "زیر التوا"
+#: apps/dues/models.py:152
+msgid "Pending verification"
+msgstr "تصدیق زیر التوا"
 
-#: apps/dues/models.py:148 apps/members/models.py:185
-#: templates/members/application_detail.html:45
-msgid "Approved"
-msgstr "منظور شدہ"
+#: apps/dues/models.py:153
+msgid "Verified"
+msgstr "تصدیق شدہ"
 
-#: apps/dues/models.py:149 apps/members/models.py:57
+#: apps/dues/models.py:154 apps/dues/models.py:195 apps/members/models.py:57
 #: apps/members/models.py:186 templates/members/application_detail.html:51
 msgid "Rejected"
 msgstr "مسترد شدہ"
 
-#: apps/dues/views.py:57
+#: apps/dues/models.py:193 apps/members/models.py:53
+msgid "Pending"
+msgstr "زیر التوا"
+
+#: apps/dues/models.py:194 apps/members/models.py:185
+#: templates/members/application_detail.html:45
+msgid "Approved"
+msgstr "منظور شدہ"
+
+#: apps/dues/views.py:65
 msgid "Enter a valid amount."
 msgstr "درست رقم درج کریں۔"
 
-#: apps/dues/views.py:67
+#: apps/dues/views.py:75
 #, python-format
 msgid "Payment recorded. Receipt %(r)s."
 msgstr "ادائیگی درج کر دی گئی۔ رسید %(r)s۔"
 
-#: apps/dues/views.py:101
+#: apps/dues/views.py:108 templates/members/dashboard.html:40
+msgid "You don't have an approved membership yet."
+msgstr "آپ کے پاس ابھی تک منظور شدہ رکنیت نہیں ہے۔"
+
+#: apps/dues/views.py:123
+msgid "Please attach a proof of payment (image or PDF)."
+msgstr "براہِ کرم ادائیگی کا ثبوت منسلک کریں (تصویر یا پی ڈی ایف)۔"
+
+#: apps/dues/views.py:127
+msgid "Proof must be a PDF or an image (JPG, PNG, WEBP)."
+msgstr "ثبوت پی ڈی ایف یا تصویر (JPG, PNG, WEBP) ہونا چاہیے۔"
+
+#: apps/dues/views.py:141
+msgid ""
+"There is nothing to pay. Add a donation amount or wait for the next invoice."
+msgstr ""
+"ادا کرنے کے لیے کچھ نہیں ہے۔ عطیہ کی رقم شامل کریں یا اگلے بل کا انتظار "
+"کریں۔"
+
+#: apps/dues/views.py:153
+#, python-format
+msgid ""
+"Payment of Rs %(amt)s submitted for verification. You'll be notified once "
+"confirmed."
+msgstr ""
+"Rs %(amt)s کی ادائیگی تصدیق کے لیے جمع کر دی گئی۔ تصدیق ہوتے ہی آپ کو مطلع "
+"کر دیا جائے گا۔"
+
+#: apps/dues/views.py:215
+msgid "Payment verified and posted to the ledger."
+msgstr "ادائیگی کی تصدیق ہو گئی اور کھاتے میں درج کر دی گئی۔"
+
+#: apps/dues/views.py:219
+msgid "Payment submission rejected."
+msgstr "ادائیگی کی درخواست مسترد کر دی گئی۔"
+
+#: apps/dues/views.py:241
 msgid "Enter a donor name and a valid amount."
 msgstr "عطیہ دہندہ کا نام اور درست رقم درج کریں۔"
 
-#: apps/dues/views.py:112
+#: apps/dues/views.py:252
 #, python-format
 msgid "Donation recorded. Receipt %(r)s."
 msgstr "عطیہ درج کر دیا گیا۔ رسید %(r)s۔"
 
-#: apps/dues/views.py:147
+#: apps/dues/views.py:287
 msgid "Enter a category and a valid amount."
 msgstr "زمرہ اور درست رقم درج کریں۔"
 
-#: apps/dues/views.py:157
+#: apps/dues/views.py:297
 #, python-format
 msgid "Expense #%(id)s logged, pending approval."
 msgstr "اخراجات #%(id)s درج کر دیا گیا، منظوری زیر التوا۔"
 
-#: apps/dues/views.py:170
+#: apps/dues/views.py:310
 #, python-format
 msgid "Expense #%(id)s %(d)s."
 msgstr "اخراجات #%(id)s %(d)s۔"
 
-#: apps/dues/views.py:194
+#: apps/dues/views.py:334
 msgid "Maintenance Dues Receipt"
 msgstr "مینٹیننس واجبات کی رسید"
 
-#: apps/dues/views.py:198 templates/dues/billing_board.html:18
+#: apps/dues/views.py:338 templates/dues/billing_board.html:18
 #: templates/members/application_detail.html:23
 #: templates/members/apply_review.html:17 templates/members/queue.html:17
 msgid "Property"
 msgstr "جائیداد"
 
-#: apps/dues/views.py:201 apps/members/views.py:300
+#: apps/dues/views.py:341 apps/members/views.py:300
 #: templates/dues/billing_board.html:18
+#: templates/dues/submission_queue.html:16
 msgid "Member"
 msgstr "رکن"
 
-#: apps/dues/views.py:202
+#: apps/dues/views.py:342
 msgid "Billing period"
 msgstr "بلنگ مدت"
 
-#: apps/dues/views.py:203 apps/dues/views.py:229 apps/members/views.py:304
+#: apps/dues/views.py:343 apps/dues/views.py:369 apps/members/views.py:304
+#: templates/dues/pay_dues.html:58
 msgid "Payment method"
 msgstr "ادائیگی کا طریقہ"
 
-#: apps/dues/views.py:204 apps/dues/views.py:230 apps/members/views.py:305
+#: apps/dues/views.py:344 apps/dues/views.py:370 apps/members/views.py:305
 msgid "Reference"
 msgstr "حوالہ"
 
-#: apps/dues/views.py:205
+#: apps/dues/views.py:345
 msgid "Invoice balance"
 msgstr "انوائس بقایا"
 
-#: apps/dues/views.py:209 apps/members/views.py:309
+#: apps/dues/views.py:349 apps/members/views.py:309
 #: templates/accounts/password_reset_email.html:12
 msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
 msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
 
-#: apps/dues/views.py:221
+#: apps/dues/views.py:361
 msgid "Donation Receipt"
 msgstr "عطیہ کی رسید"
 
-#: apps/dues/views.py:225 templates/dues/donations.html:18
+#: apps/dues/views.py:365 templates/dues/donations.html:18
 msgid "Donor"
 msgstr "عطیہ دہندہ"
 
-#: apps/dues/views.py:228 apps/members/views.py:303
+#: apps/dues/views.py:368 apps/members/views.py:303
 #: templates/dues/donations.html:18
 msgid "Purpose"
 msgstr "مقصد"
 
-#: apps/dues/views.py:228
+#: apps/dues/views.py:368
 msgid "General fund"
 msgstr "عمومی فنڈ"
 
-#: apps/dues/views.py:234
+#: apps/dues/views.py:374
 msgid "Thank you for supporting M.W.A.R — “Hands of Hope”."
 msgstr "M.W.A.R کی معاونت کا شکریہ — ”اُمید کے ہاتھ“۔"
 
@@ -804,7 +850,7 @@ msgstr "تقریبات"
 msgid "Documents"
 msgstr "دستاویزات"
 
-#: templates/base.html:29 templates/dues/_finance_nav.html:6
+#: templates/base.html:29 templates/dues/_finance_nav.html:7
 msgid "Transparency"
 msgstr "شفافیت"
 
@@ -1206,13 +1252,13 @@ msgid "Dues & Billing"
 msgstr "واجبات اور بلنگ"
 
 #: templates/core/staff_dashboard.html:24 templates/core/transparency.html:11
-#: templates/dues/_finance_nav.html:4 templates/dues/donations.html:3
+#: templates/dues/_finance_nav.html:5 templates/dues/donations.html:3
 #: templates/dues/donations.html:8 templates/dues/donations.html:15
 msgid "Donations"
 msgstr "عطیات"
 
 #: templates/core/staff_dashboard.html:25 templates/core/transparency.html:12
-#: templates/dues/_finance_nav.html:5 templates/dues/expenses.html:3
+#: templates/dues/_finance_nav.html:6 templates/dues/expenses.html:3
 #: templates/dues/expenses.html:8
 msgid "Expenses"
 msgstr "اخراجات"
@@ -1296,6 +1342,10 @@ msgstr "عطیہ دہندگان کی دیوار"
 msgid "No public donations yet."
 msgstr "ابھی تک کوئی عوامی عطیہ نہیں۔"
 
+#: templates/dues/_finance_nav.html:4 templates/dues/submission_queue.html:3
+msgid "Payment Approvals"
+msgstr "ادائیگیوں کی منظوری"
+
 #: templates/dues/billing_board.html:9
 msgid "Billed"
 msgstr "بل کیا گیا"
@@ -1309,20 +1359,21 @@ msgid "Invoices"
 msgstr "انوائسز"
 
 #: templates/dues/billing_board.html:14 templates/dues/expenses.html:19
-#: templates/tickets/list.html:11
+#: templates/dues/submission_queue.html:12 templates/tickets/list.html:11
 msgid "All"
 msgstr "تمام"
 
-#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:11
 msgid "Period"
 msgstr "مدت"
 
-#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:11
 msgid "Due"
 msgstr "واجب"
 
 #: templates/dues/billing_board.html:18 templates/dues/expenses.html:23
-#: templates/dues/my_dues.html:8 templates/locality/property_list.html:15
+#: templates/dues/my_dues.html:11 templates/dues/submission_queue.html:16
+#: templates/locality/property_list.html:15
 #: templates/members/dashboard.html:11 templates/members/queue.html:17
 #: templates/tickets/detail.html:41 templates/tickets/list.html:15
 msgid "Status"
@@ -1334,7 +1385,7 @@ msgstr "ادائیگی درج کریں"
 
 #: templates/dues/billing_board.html:30 templates/dues/donations.html:18
 #: templates/dues/donations.html:29 templates/dues/expenses.html:28
-#: templates/dues/my_dues.html:14
+#: templates/dues/my_dues.html:17
 msgid "Receipt"
 msgstr "رسید"
 
@@ -1353,6 +1404,7 @@ msgstr "کل وصول شدہ"
 
 #: templates/dues/donations.html:18 templates/dues/record_donation.html:13
 #: templates/dues/record_payment.html:13
+#: templates/dues/submission_queue.html:16
 msgid "Method"
 msgstr "طریقہ"
 
@@ -1423,17 +1475,101 @@ msgstr "درخواست کنندہ"
 msgid "No expenses logged."
 msgstr "کوئی اخراجات درج نہیں۔"
 
-#: templates/dues/my_dues.html:3 templates/dues/my_dues.html:6
+#: templates/dues/my_dues.html:3 templates/dues/my_dues.html:7
 msgid "My Dues"
 msgstr "میرے واجبات"
 
-#: templates/dues/my_dues.html:8
+#: templates/dues/my_dues.html:8 templates/members/dashboard.html:34
+msgid "Pay dues / donate"
+msgstr "واجبات ادا کریں / عطیہ دیں"
+
+#: templates/dues/my_dues.html:11
 msgid "Plan"
 msgstr "پلان"
 
-#: templates/dues/my_dues.html:15
+#: templates/dues/my_dues.html:18
 msgid "No dues on record."
 msgstr "ریکارڈ پر کوئی واجبات نہیں۔"
+
+#: templates/dues/pay_dues.html:3
+msgid "Pay dues"
+msgstr "واجبات ادا کریں"
+
+#: templates/dues/pay_dues.html:13
+msgid "Pay my dues"
+msgstr "میرے واجبات ادا کریں"
+
+#: templates/dues/pay_dues.html:16
+msgid "You already have a payment of"
+msgstr "آپ کی پہلے سے ایک ادائیگی ہے بقدر"
+
+#: templates/dues/pay_dues.html:17
+msgid ""
+"awaiting verification. You can submit another, but please avoid paying "
+"twice."
+msgstr ""
+"جو تصدیق کے منتظر ہے۔ آپ مزید جمع کر سکتے ہیں، مگر دو بار ادائیگی سے گریز "
+"کریں۔"
+
+#: templates/dues/pay_dues.html:24
+msgid "What you're paying"
+msgstr "آپ کیا ادا کر رہے ہیں"
+
+#: templates/dues/pay_dues.html:31
+msgid "No outstanding maintenance dues — you're all caught up."
+msgstr "کوئی واجب الادا مینٹیننس باقی نہیں — آپ مکمل ادا شدہ ہیں۔"
+
+#: templates/dues/pay_dues.html:34
+msgid "Maintenance dues subtotal"
+msgstr "مینٹیننس واجبات کا ذیلی میزان"
+
+#: templates/dues/pay_dues.html:40
+msgid "Registration fee"
+msgstr "رجسٹریشن فیس"
+
+#: templates/dues/pay_dues.html:43
+msgid "Add a donation (optional)"
+msgstr "عطیہ شامل کریں (اختیاری)"
+
+#: templates/dues/pay_dues.html:48
+msgid "Total to pay"
+msgstr "کل قابلِ ادا"
+
+#: templates/dues/pay_dues.html:55
+msgid "Payment details & proof"
+msgstr "ادائیگی کی تفصیل اور ثبوت"
+
+#: templates/dues/pay_dues.html:56
+msgid ""
+"Transfer the total to the association account, then upload your "
+"receipt/screenshot below. Finance will verify and post it to your ledger."
+msgstr ""
+"کل رقم ایسوسی ایشن کے اکاؤنٹ میں منتقل کریں، پھر اپنی رسید/اسکرین شاٹ نیچے "
+"اپ لوڈ کریں۔ فنانس تصدیق کر کے اسے آپ کے کھاتے میں درج کر دے گا۔"
+
+#: templates/dues/pay_dues.html:64
+msgid "Transaction / reference no."
+msgstr "ٹرانزیکشن / حوالہ نمبر"
+
+#: templates/dues/pay_dues.html:65
+msgid "e.g. bank/JazzCash transaction ID"
+msgstr "مثلاً بینک/جاز کیش ٹرانزیکشن آئی ڈی"
+
+#: templates/dues/pay_dues.html:68
+msgid "Proof of payment (PDF or image)"
+msgstr "ادائیگی کا ثبوت (پی ڈی ایف یا تصویر)"
+
+#: templates/dues/pay_dues.html:72
+msgid "Note (optional)"
+msgstr "نوٹ (اختیاری)"
+
+#: templates/dues/pay_dues.html:76
+msgid "Pay now"
+msgstr "ابھی ادا کریں"
+
+#: templates/dues/pay_dues.html:81
+msgid "View my dues history →"
+msgstr "میری واجبات کی تاریخ دیکھیں ←"
 
 #: templates/dues/record_donation.html:8
 msgid ""
@@ -1471,6 +1607,54 @@ msgstr "درج کریں اور رسید جاری کریں"
 #: templates/dues/record_payment.html:8
 msgid "Balance due:"
 msgstr "واجب الادا بقایا:"
+
+#: templates/dues/submission_queue.html:7
+msgid "Member Payment Approvals"
+msgstr "اراکین کی ادائیگیوں کی منظوری"
+
+#: templates/dues/submission_queue.html:8
+msgid ""
+"Members submit payments with a proof slip; verify to post them to the "
+"ledger."
+msgstr ""
+"اراکین ثبوت کی پرچی کے ساتھ ادائیگیاں جمع کراتے ہیں؛ کھاتے میں درج کرنے کے "
+"لیے تصدیق کریں۔"
+
+#: templates/dues/submission_queue.html:16
+msgid "Breakdown"
+msgstr "تفصیل"
+
+#: templates/dues/submission_queue.html:16
+msgid "Total"
+msgstr "کل"
+
+#: templates/dues/submission_queue.html:16
+msgid "Proof"
+msgstr "ثبوت"
+
+#: templates/dues/submission_queue.html:23
+msgid "Dues"
+msgstr "واجبات"
+
+#: templates/dues/submission_queue.html:24
+msgid "Registration"
+msgstr "رجسٹریشن"
+
+#: templates/dues/submission_queue.html:25
+msgid "Donation"
+msgstr "عطیہ"
+
+#: templates/dues/submission_queue.html:29
+msgid "View"
+msgstr "دیکھیں"
+
+#: templates/dues/submission_queue.html:34
+msgid "Verify"
+msgstr "تصدیق کریں"
+
+#: templates/dues/submission_queue.html:40
+msgid "No payment submissions."
+msgstr "کوئی ادائیگی جمع نہیں ہوئی۔"
 
 #: templates/locality/property_list.html:7
 msgid ""
@@ -1792,27 +1976,23 @@ msgstr "حالیہ واجبات"
 msgid "No invoices yet."
 msgstr "ابھی تک کوئی انوائس نہیں۔"
 
-#: templates/members/dashboard.html:34
+#: templates/members/dashboard.html:35
 msgid "All my dues →"
 msgstr "میرے تمام واجبات ←"
 
-#: templates/members/dashboard.html:39
-msgid "You don't have an approved membership yet."
-msgstr "آپ کے پاس ابھی تک منظور شدہ رکنیت نہیں ہے۔"
-
-#: templates/members/dashboard.html:40
+#: templates/members/dashboard.html:41
 msgid "Apply for membership"
 msgstr "رکنیت کے لیے درخواست دیں"
 
-#: templates/members/dashboard.html:45
+#: templates/members/dashboard.html:46
 msgid "My complaints"
 msgstr "میری شکایات"
 
-#: templates/members/dashboard.html:45 templates/tickets/list.html:8
+#: templates/members/dashboard.html:46 templates/tickets/list.html:8
 msgid "+ Raise a complaint"
 msgstr "+ شکایت درج کریں"
 
-#: templates/members/dashboard.html:49
+#: templates/members/dashboard.html:50
 msgid "No complaints raised."
 msgstr "کوئی شکایت درج نہیں کی گئی۔"
 

@@ -15,7 +15,7 @@ from apps.core.services import record_audit
 from apps.locality.models import Property
 from apps.members.models import ResidencyType
 
-from .models import Donation, DuesInvoice, DuesPayment, DuesPlan, Expense
+from .models import Donation, DuesInvoice, DuesPayment, DuesPlan, Expense, PaymentSubmission
 
 
 def _period_bounds(plan: DuesPlan, year: int, month: int) -> tuple[date, date, date]:
@@ -141,6 +141,115 @@ def record_donation(*, donor_name: str, amount: Decimal, user, method: str = "ca
                  metadata={"amount": str(amount), "receipt": donation.receipt_number,
                            "public": is_public})
     return donation
+
+
+@transaction.atomic
+def create_payment_submission(*, member, user, invoices=None, pays_registration=False,
+                              registration_amount=Decimal("0"),
+                              donation_amount=Decimal("0"), method="bank_transfer",
+                              reference="", proof, note="") -> PaymentSubmission:
+    """Record a member's payment claim (with proof) for verification.
+
+    Bundles outstanding dues invoices, the registration fee, and/or a donation
+    into one submission — the member's 'pay everything in one click' action.
+    Nothing is posted to the ledger yet; that happens on verification.
+    """
+    invoices = list(invoices or [])
+    dues_amount = sum((inv.balance for inv in invoices), Decimal("0"))
+    registration_amount = registration_amount if pays_registration else Decimal("0")
+    total = dues_amount + registration_amount + (donation_amount or Decimal("0"))
+
+    submission = PaymentSubmission.objects.create(
+        member=member, submitted_by=user,
+        pays_registration=pays_registration, registration_amount=registration_amount,
+        dues_amount=dues_amount, donation_amount=donation_amount or Decimal("0"),
+        total_amount=total, method=method, reference=reference.strip(),
+        proof=proof, note=note.strip(),
+    )
+    if invoices:
+        submission.invoices.set(invoices)
+
+    record_audit(AuditLog.Action.CREATE, "PaymentSubmission", submission.pk, actor=user,
+                 metadata={"total": str(total), "dues": str(dues_amount),
+                           "registration": str(registration_amount),
+                           "donation": str(donation_amount)})
+    return submission
+
+
+@transaction.atomic
+def verify_payment_submission(submission: PaymentSubmission, *, user) -> PaymentSubmission:
+    """Approve a pending submission: post the real receipts and notify the member.
+
+    Idempotent — a submission that is already verified/rejected is returned
+    unchanged so a double-click can't double-post.
+    """
+    from apps.content.services import notify
+
+    if submission.status != PaymentSubmission.Status.PENDING:
+        return submission
+
+    member = submission.member
+
+    if submission.pays_registration and submission.registration_amount > 0:
+        from django.db.models import Max
+
+        from apps.members.models import FeePayment
+
+        year = timezone.now().year
+        prefix = f"FEE-{year}-"
+        last = (FeePayment.objects.filter(receipt_number__startswith=prefix)
+                .aggregate(m=Max("receipt_number")).get("m"))
+        seq = int(last.split("-")[-1]) + 1 if last else 1
+        FeePayment.objects.create(
+            member=member, amount=submission.registration_amount,
+            method=submission.method, reference=submission.reference,
+            receipt_number=f"{prefix}{seq:05d}", received_by=user,
+        )
+
+    for invoice in submission.invoices.all():
+        if invoice.balance > 0:
+            record_dues_payment(invoice, amount=invoice.balance, method=submission.method,
+                                user=user, reference=submission.reference)
+
+    if submission.donation_amount > 0:
+        record_donation(donor_name=member.full_name, amount=submission.donation_amount,
+                        user=user, method=submission.method, purpose="Member donation",
+                        reference=submission.reference, donor_member=member)
+
+    submission.status = PaymentSubmission.Status.VERIFIED
+    submission.reviewed_by = user
+    submission.reviewed_at = timezone.now()
+    submission.save(update_fields=["status", "reviewed_by", "reviewed_at", "updated_at"])
+
+    record_audit(AuditLog.Action.PAYMENT, "PaymentSubmission", submission.pk, actor=user,
+                 metadata={"decision": "verified", "total": str(submission.total_amount)})
+    if member.user_id:
+        notify(member.user, title="Payment verified",
+               body=f"Your payment of Rs {submission.total_amount:.0f} has been verified. Thank you.",
+               url="/dues/my-dues/", level="success")
+    return submission
+
+
+@transaction.atomic
+def reject_payment_submission(submission: PaymentSubmission, *, user, reason="") -> PaymentSubmission:
+    """Reject a pending submission and notify the member with the reason."""
+    from apps.content.services import notify
+
+    if submission.status != PaymentSubmission.Status.PENDING:
+        return submission
+    submission.status = PaymentSubmission.Status.REJECTED
+    submission.reviewed_by = user
+    submission.reviewed_at = timezone.now()
+    submission.review_note = (reason or "").strip()
+    submission.save(update_fields=["status", "reviewed_by", "reviewed_at",
+                                   "review_note", "updated_at"])
+    record_audit(AuditLog.Action.UPDATE, "PaymentSubmission", submission.pk, actor=user,
+                 metadata={"decision": "rejected", "reason": submission.review_note})
+    if submission.member.user_id:
+        notify(submission.member.user, title="Payment could not be verified",
+               body=(submission.review_note or "Please re-submit with a clearer proof of payment."),
+               url="/dues/pay/", level="warning")
+    return submission
 
 
 @transaction.atomic

@@ -14,8 +14,16 @@ from django.utils.translation import gettext as _
 
 from apps.accounts.permissions import staff_member_test
 
-from .models import Donation, DuesInvoice, DuesPayment, Expense
-from .services import create_expense, decide_expense, record_donation, record_dues_payment
+from .models import Donation, DuesInvoice, DuesPayment, Expense, PaymentSubmission
+from .services import (
+    create_expense,
+    create_payment_submission,
+    decide_expense,
+    record_donation,
+    record_dues_payment,
+    reject_payment_submission,
+    verify_payment_submission,
+)
 
 
 def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> HttpResponse:
@@ -78,6 +86,138 @@ def my_dues(request: HttpRequest) -> HttpResponse:
         if profile else DuesInvoice.objects.none()
     )
     return render(request, "dues/my_dues.html", {"invoices": invoices.order_by("-period_start")})
+
+
+def _outstanding_invoices(profile):
+    return list(
+        DuesInvoice.objects.filter(
+            member=profile,
+            status__in=[DuesInvoice.Status.UNPAID, DuesInvoice.Status.PARTIAL,
+                        DuesInvoice.Status.OVERDUE],
+        ).select_related("plan", "property").order_by("period_start")
+    )
+
+
+@login_required
+def pay_dues(request: HttpRequest) -> HttpResponse:
+    """Member 'pay everything in one click' page with proof-of-payment upload."""
+    from django.conf import settings
+
+    profile = getattr(request.user, "member_profile", None)
+    if not profile:
+        messages.info(request, _("You don't have an approved membership yet."))
+        return redirect("members:dashboard")
+
+    invoices = [inv for inv in _outstanding_invoices(profile) if inv.balance > 0]
+    dues_total = sum((inv.balance for inv in invoices), Decimal("0"))
+    registration_due = (
+        Decimal(settings.REGISTRATION_FEE) if not profile.fee_payments.exists() else Decimal("0")
+    )
+    pending = profile.payment_submissions.filter(
+        status=PaymentSubmission.Status.PENDING
+    ).first()
+
+    if request.method == "POST":
+        proof = request.FILES.get("proof")
+        if not proof:
+            messages.error(request, _("Please attach a proof of payment (image or PDF)."))
+            return redirect("dues:pay_dues")
+        name = (proof.name or "").lower()
+        if not name.endswith((".pdf", ".jpg", ".jpeg", ".png", ".webp")):
+            messages.error(request, _("Proof must be a PDF or an image (JPG, PNG, WEBP)."))
+            return redirect("dues:pay_dues")
+
+        include_registration = bool(request.POST.get("include_registration")) and registration_due > 0
+        try:
+            donation_amount = Decimal(request.POST.get("donation_amount") or "0")
+        except (InvalidOperation, TypeError):
+            donation_amount = Decimal("0")
+        if donation_amount < 0:
+            donation_amount = Decimal("0")
+
+        reg_amount = registration_due if include_registration else Decimal("0")
+        total = dues_total + reg_amount + donation_amount
+        if total <= 0:
+            messages.error(request, _("There is nothing to pay. Add a donation amount or wait for the next invoice."))
+            return redirect("dues:pay_dues")
+
+        submission = create_payment_submission(
+            member=profile, user=request.user, invoices=invoices,
+            pays_registration=include_registration, registration_amount=reg_amount,
+            donation_amount=donation_amount, method=request.POST.get("method", "bank_transfer"),
+            reference=request.POST.get("reference", ""), proof=proof,
+            note=request.POST.get("note", ""),
+        )
+        messages.success(
+            request,
+            _("Payment of Rs %(amt)s submitted for verification. You'll be notified once confirmed.")
+            % {"amt": f"{submission.total_amount:.0f}"},
+        )
+        return redirect("dues:my_dues")
+
+    return render(request, "dues/pay_dues.html", {
+        "invoices": invoices,
+        "dues_total": dues_total,
+        "registration_due": registration_due,
+        "grand_total": dues_total + registration_due,
+        "pending": pending,
+        "methods": PaymentSubmission._meta.get_field("method").choices,
+    })
+
+
+def _may_access_submission(user, submission) -> bool:
+    if not user.is_authenticated:
+        return False
+    return user.has_perm("dues.record_payment") or (
+        submission.member.user_id and user.id == submission.member.user_id
+    )
+
+
+@login_required
+def proof_download(request: HttpRequest, pk: int) -> HttpResponse:
+    """Serve a payment proof to its owner or to Finance staff."""
+    submission = get_object_or_404(PaymentSubmission.objects.select_related("member"), pk=pk)
+    if not _may_access_submission(request.user, submission):
+        from django.core.exceptions import PermissionDenied
+
+        raise PermissionDenied
+    from django.http import FileResponse
+
+    response = FileResponse(submission.proof.open("rb"))
+    response["Content-Disposition"] = (
+        f'inline; filename="{submission.proof.name.rsplit("/", 1)[-1]}"'
+    )
+    return response
+
+
+@permission_required("dues.record_payment", raise_exception=True)
+def submission_queue(request: HttpRequest) -> HttpResponse:
+    status = request.GET.get("status", PaymentSubmission.Status.PENDING)
+    qs = PaymentSubmission.objects.select_related("member", "reviewed_by")
+    if status:
+        qs = qs.filter(status=status)
+    page = Paginator(qs, 25).get_page(request.GET.get("page"))
+    status_tabs = [
+        (s, label, PaymentSubmission.objects.filter(status=s).count())
+        for s, label in PaymentSubmission.Status.choices
+    ]
+    return render(request, "dues/submission_queue.html", {
+        "submissions": page, "status": status, "status_tabs": status_tabs,
+    })
+
+
+@permission_required("dues.record_payment", raise_exception=True)
+def submission_decide(request: HttpRequest, pk: int) -> HttpResponse:
+    submission = get_object_or_404(PaymentSubmission, pk=pk)
+    if request.method == "POST":
+        if request.POST.get("decision") == "verify":
+            verify_payment_submission(submission, user=request.user)
+            messages.success(request, _("Payment verified and posted to the ledger."))
+        else:
+            reject_payment_submission(submission, user=request.user,
+                                      reason=request.POST.get("reason", ""))
+            messages.info(request, _("Payment submission rejected."))
+    return redirect("dues:submission_queue")
 
 
 # ---------------------------------------------------------------- donations --

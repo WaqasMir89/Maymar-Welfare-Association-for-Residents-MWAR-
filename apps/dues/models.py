@@ -142,6 +142,52 @@ class Donation(TimeStampedModel):
         return f"{self.donor_name} — {self.amount} {self.currency}"
 
 
+class PaymentSubmission(TimeStampedModel):
+    """A member-initiated payment for outstanding dues / registration fee /
+    donation, with an uploaded proof of payment (bank/JazzCash/EasyPaisa slip).
+    Stays ``pending`` until a Finance officer verifies it, which then applies
+    the real receipts (FeePayment / DuesPayment / Donation)."""
+
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Pending verification")
+        VERIFIED = "verified", _("Verified")
+        REJECTED = "rejected", _("Rejected")
+
+    member = models.ForeignKey(
+        MemberProfile, on_delete=models.CASCADE, related_name="payment_submissions"
+    )
+    submitted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        related_name="payment_submissions",
+    )
+    invoices = models.ManyToManyField(DuesInvoice, blank=True, related_name="submissions")
+    pays_registration = models.BooleanField(default=False)
+    registration_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    dues_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    donation_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    method = models.CharField(max_length=16, choices=PaymentMethod, default="bank_transfer")
+    reference = models.CharField(max_length=64, blank=True)
+    proof = models.FileField(upload_to="payment_proofs/%Y/%m/")
+    note = models.CharField(max_length=300, blank=True)
+
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name="reviewed_submissions",
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    review_note = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["status"])]
+
+    def __str__(self) -> str:
+        return f"Payment {self.total_amount} by {self.member} — {self.status}"
+
+
 class Expense(TimeStampedModel):
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")

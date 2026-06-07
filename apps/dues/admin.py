@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Donation, DuesInvoice, DuesPayment, DuesPlan, Expense
+from .models import Donation, DuesInvoice, DuesPayment, DuesPlan, Expense, PaymentSubmission
 
 
 @admin.register(DuesPlan)
@@ -31,3 +31,10 @@ class DonationAdmin(admin.ModelAdmin):
 class ExpenseAdmin(admin.ModelAdmin):
     list_display = ("category", "amount", "status", "incurred_on")
     list_filter = ("status",)
+
+
+@admin.register(PaymentSubmission)
+class PaymentSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("member", "total_amount", "method", "status", "created_at", "reviewed_by")
+    list_filter = ("status", "method")
+    readonly_fields = ("created_at", "reviewed_at")

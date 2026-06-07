@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Pay dues" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page"
+     x-data="{
+       dues: {{ dues_total|stringformat:'.0f' }},
+       reg: {{ registration_due|stringformat:'.0f' }},
+       includeReg: {% if registration_due %}true{% else %}false{% endif %},
+       donation: 0,
+       get total() { return this.dues + (this.includeReg ? this.reg : 0) + (parseFloat(this.donation) || 0); }
+     }">
+  <h1>{% trans "Pay my dues" %}</h1>
+
+  {% if pending %}
+  <div class="alert info">{% trans "You already have a payment of" %} Rs {{ pending.total_amount|floatformat:0 }}
+    {% trans "awaiting verification. You can submit another, but please avoid paying twice." %}</div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+      <h3>{% trans "What you're paying" %}</h3>
+      <table class="table">
+        <tbody>
+        {% for inv in invoices %}
+          <tr><td>{{ inv.plan.name }} <span class="muted">({{ inv.period_start|date:"M Y" }})</span></td>
+              <td style="text-align:end">Rs {{ inv.balance|floatformat:0 }}</td></tr>
+        {% empty %}
+          <tr><td class="muted" colspan="2">{% trans "No outstanding maintenance dues — you're all caught up." %}</td></tr>
+        {% endfor %}
+        {% if dues_total %}
+          <tr><td><strong>{% trans "Maintenance dues subtotal" %}</strong></td>
+              <td style="text-align:end"><strong>Rs {{ dues_total|floatformat:0 }}</strong></td></tr>
+        {% endif %}
+        {% if registration_due %}
+          <tr><td>
+            <label><input type="checkbox" name="include_registration" x-model="includeReg" checked>
+              {% trans "Registration fee" %}</label>
+          </td><td style="text-align:end">Rs {{ registration_due|floatformat:0 }}</td></tr>
+        {% endif %}
+        <tr><td>{% trans "Add a donation (optional)" %}</td>
+            <td style="text-align:end">Rs <input type="number" name="donation_amount" min="0" step="1"
+                   x-model="donation" placeholder="0" style="width:110px;text-align:end"></td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td><strong>{% trans "Total to pay" %}</strong></td>
+              <td style="text-align:end;font-size:20px"><strong>Rs <span x-text="total.toLocaleString()"></span></strong></td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3>{% trans "Payment details & proof" %}</h3>
+      <p class="muted">{% trans "Transfer the total to the association account, then upload your receipt/screenshot below. Finance will verify and post it to your ledger." %}</p>
+      <div class="field">
+        <label>{% trans "Payment method" %}</label>
+        <select name="method">
+          {% for value, label in methods %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>{% trans "Transaction / reference no." %}</label>
+        <input type="text" name="reference" placeholder="{% trans 'e.g. bank/JazzCash transaction ID' %}">
+      </div>
+      <div class="field">
+        <label>{% trans "Proof of payment (PDF or image)" %}</label>
+        <input type="file" name="proof" accept=".pdf,image/*" required>
+      </div>
+      <div class="field">
+        <label>{% trans "Note (optional)" %}</label>
+        <input type="text" name="note" maxlength="300">
+      </div>
+      <button class="btn btn-lg btn-block" type="submit">
+        {% trans "Pay now" %} — Rs <span x-text="total.toLocaleString()"></span>
+      </button>
+    </div>
+  </form>
+
+  <p class="muted" style="margin-top:16px"><a href="{% url 'dues:my_dues' %}">{% trans "View my dues history →" %}</a></p>
+</div>
+{% endblock %}

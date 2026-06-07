@@ -141,8 +141,12 @@ class Command(BaseCommand):
             month = (today.month - back - 1) % 12 + 1
             year = today.year if today.month - back >= 1 else today.year - 1
             generate_invoices(plan, year, month)
-        # Pay ~70% of invoices.
+        # Pay ~70% of invoices — but leave the demo member's unpaid so the
+        # "Pay my dues" page has something to show.
+        demo_profile = MemberProfile.objects.filter(status="active").order_by("member_number").first()
         for inv in DuesInvoice.objects.all():
+            if inv.member_id == (demo_profile.pk if demo_profile else None):
+                continue
             if random.random() < 0.7:
                 record_dues_payment(inv, amount=inv.amount_due, method="cash", user=finance)
         self.stdout.write(self.style.SUCCESS(f"  {DuesInvoice.objects.count()} invoices generated"))

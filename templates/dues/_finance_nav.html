@@ -1,6 +1,7 @@
 {% load i18n %}
 <div class="pill-nav">
   <a href="{% url 'dues:billing_board' %}" class="{% if active == 'billing' %}active{% endif %}">{% trans "Dues & Billing" %}</a>
+  <a href="{% url 'dues:submission_queue' %}" class="{% if active == 'submissions' %}active{% endif %}">{% trans "Payment Approvals" %}</a>
   <a href="{% url 'dues:donation_list' %}" class="{% if active == 'donations' %}active{% endif %}">{% trans "Donations" %}</a>
   <a href="{% url 'dues:expense_list' %}" class="{% if active == 'expenses' %}active{% endif %}">{% trans "Expenses" %}</a>
   <a href="{% url 'core:transparency' %}" class="{% if active == 'transparency' %}active{% endif %}">{% trans "Transparency" %}</a>

@@ -31,6 +31,7 @@
         <p>{{ inv.period_start|date:"M Y" }} — Rs {{ inv.amount_due|floatformat:0 }}
            <span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></p>
       {% empty %}<p class="muted">{% trans "No invoices yet." %}</p>{% endfor %}
+      <a class="btn btn-block" style="margin-top:12px" href="{% url 'dues:pay_dues' %}">{% trans "Pay dues / donate" %}</a>
       <a href="{% url 'dues:my_dues' %}">{% trans "All my dues →" %}</a>
     </div>
   </div>

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Payment Approvals" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  {% include "dues/_finance_nav.html" with active="submissions" %}
+  <h1>{% trans "Member Payment Approvals" %}</h1>
+  <p class="muted">{% trans "Members submit payments with a proof slip; verify to post them to the ledger." %}</p>
+
+  <div class="pill-nav" style="margin-top:18px">
+    {% for v, l, c in status_tabs %}<a href="?status={{ v }}" class="{% if status == v %}active{% endif %}">{{ l }} ({{ c }})</a>{% endfor %}
+    <a href="?status=" class="{% if not status %}active{% endif %}">{% trans "All" %}</a>
+  </div>
+
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>#</th><th>{% trans "Member" %}</th><th>{% trans "Breakdown" %}</th><th>{% trans "Total" %}</th><th>{% trans "Method" %}</th><th>{% trans "Proof" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
+    <tbody>
+    {% for s in submissions %}
+      <tr>
+        <td>{{ s.pk }}<br><span class="muted">{{ s.created_at|date:"d M, g:i A" }}</span></td>
+        <td>{{ s.member.full_name }}<br><span class="muted">{{ s.member.member_number }}</span></td>
+        <td class="muted">
+          {% if s.dues_amount %}{% trans "Dues" %} Rs {{ s.dues_amount|floatformat:0 }}<br>{% endif %}
+          {% if s.registration_amount %}{% trans "Registration" %} Rs {{ s.registration_amount|floatformat:0 }}<br>{% endif %}
+          {% if s.donation_amount %}{% trans "Donation" %} Rs {{ s.donation_amount|floatformat:0 }}{% endif %}
+        </td>
+        <td><strong>Rs {{ s.total_amount|floatformat:0|intcomma }}</strong>{% if s.reference %}<br><span class="muted">{{ s.reference }}</span>{% endif %}</td>
+        <td>{{ s.get_method_display }}</td>
+        <td><a class="btn btn-ghost btn-sm" href="{% url 'dues:proof_download' s.pk %}" target="_blank">{% trans "View" %}</a></td>
+        <td><span class="badge {% if s.status == 'verified' %}green{% elif s.status == 'rejected' %}red{% else %}amber{% endif %}">{{ s.get_status_display }}</span></td>
+        <td>
+          {% if s.status == 'pending' %}
+          <form class="inline-form" method="post" action="{% url 'dues:submission_decide' s.pk %}">{% csrf_token %}
+            <button class="btn btn-success btn-sm" name="decision" value="verify">{% trans "Verify" %}</button>
+            <button class="btn btn-ghost btn-sm" name="decision" value="reject">{% trans "Reject" %}</button>
+          </form>
+          {% else %}<span class="muted">{{ s.reviewed_by.get_full_name|default:s.reviewed_by.email|default:"—" }}</span>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="8" class="muted">{% trans "No payment submissions." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+  {% include "core/_pagination.html" with page=submissions %}
+</div>
+{% endblock %}

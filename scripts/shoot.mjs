@@ -34,6 +34,8 @@ const PAGES = [
   ["/dues/staff/donations/", "08a-donations.png", { login: "finance" }],
   ["/dues/staff/donations/record/", "08b-donation-form.png", { login: "finance" }],
   ["/dues/staff/expenses/", "08c-expenses.png", { login: "finance" }],
+  ["/dues/staff/submissions/", "08e-payment-approvals.png", { login: "finance" }],
+  ["/dues/pay/", "08f-pay-dues.png", { login: "member" }],
   ["/dues/staff/expenses/new/", "08d-expense-form.png", { login: "finance" }],
   ["/complaints/", "09-complaints.png", { login: "secretary" }],
   ["/content/events/", "11-events.png", { login: "secretary" }],

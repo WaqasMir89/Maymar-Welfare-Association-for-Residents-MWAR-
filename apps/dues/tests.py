@@ -101,3 +101,101 @@ class ExpenseTests(TestCase):
         decide_expense(e, approve=True, user=self.user)           # ignored
         e.refresh_from_db()
         self.assertEqual(e.status, Expense.Status.REJECTED)
+
+
+class PaymentSubmissionTests(TestCase):
+    """Member 'pay in one click' with proof, then Finance verification posts
+    the real receipts to the ledger."""
+
+    def setUp(self):
+        from datetime import date
+
+        from django.contrib.auth.models import Permission
+
+        from apps.members.models import MemberProfile
+
+        sector = Sector.objects.create(name="Sector W", code="W")
+        sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        self.prop = Property.objects.create(sub_sector=sub, house_number="7",
+                                            status=Property.Status.OCCUPIED)
+        self.plan = DuesPlan.objects.create(name="Monthly", amount=Decimal("1500.00"))
+        self.member_user = User.objects.create_user("member@x.pk", "pw1234567890")
+        self.profile = MemberProfile.objects.create(
+            full_name="Ali Khan", father_or_husband_name="X", cnic="42101-9999999-9",
+            phone="0300-9999999", status=MemberProfile.Status.ACTIVE, user=self.member_user,
+        )
+        self.invoice = DuesInvoice.objects.create(
+            property=self.prop, member=self.profile, plan=self.plan,
+            period_start=date(2026, 1, 1), period_end=date(2026, 1, 31),
+            amount_due=Decimal("1500.00"), due_date=date(2026, 1, 10),
+            status=DuesInvoice.Status.UNPAID,
+        )
+        self.finance = User.objects.create_user("fin@x.pk", "pw1234567890")
+        self.finance.user_permissions.add(
+            Permission.objects.get(codename="record_payment", content_type__app_label="dues")
+        )
+
+    def _proof(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        return SimpleUploadedFile("slip.jpg", b"\xff\xd8\xff data", content_type="image/jpeg")
+
+    def test_member_submits_then_finance_verifies_posts_ledger(self):
+        self.client.force_login(self.member_user)
+        r = self.client.post("/dues/pay/", {
+            "method": "bank_transfer", "reference": "TX99", "donation_amount": "500",
+            "proof": self._proof(),
+        })
+        self.assertRedirects(r, "/dues/my-dues/")
+        from apps.dues.models import PaymentSubmission
+
+        sub = PaymentSubmission.objects.get(member=self.profile)
+        self.assertEqual(sub.status, "pending")
+        self.assertEqual(sub.dues_amount, Decimal("1500.00"))
+        self.assertEqual(sub.donation_amount, Decimal("500"))
+        self.assertEqual(sub.total_amount, Decimal("2000.00"))
+
+        # Finance verifies → invoice paid, dues payment + donation created.
+        self.client.force_login(self.finance)
+        r = self.client.post(f"/dues/staff/submissions/{sub.pk}/decide/", {"decision": "verify"})
+        sub.refresh_from_db(); self.invoice.refresh_from_db()
+        self.assertEqual(sub.status, "verified")
+        self.assertEqual(self.invoice.status, "paid")
+        self.assertEqual(DuesPayment.objects.filter(invoice=self.invoice).count(), 1)
+        self.assertEqual(Donation.objects.filter(donor_member=self.profile).count(), 1)
+
+    def test_verify_is_idempotent(self):
+        from apps.dues.services import create_payment_submission, verify_payment_submission
+        from apps.dues.models import PaymentSubmission
+
+        sub = create_payment_submission(
+            member=self.profile, user=self.member_user, invoices=[self.invoice],
+            donation_amount=Decimal("0"), method="bank_transfer", proof=self._proof(),
+        )
+        verify_payment_submission(sub, user=self.finance)
+        verify_payment_submission(sub, user=self.finance)   # no double-post
+        self.assertEqual(DuesPayment.objects.filter(invoice=self.invoice).count(), 1)
+
+    def test_submission_requires_proof(self):
+        self.client.force_login(self.member_user)
+        r = self.client.post("/dues/pay/", {"method": "bank_transfer", "donation_amount": "0"})
+        self.assertRedirects(r, "/dues/pay/")
+        from apps.dues.models import PaymentSubmission
+
+        self.assertEqual(PaymentSubmission.objects.count(), 0)
+
+    def test_proof_visible_to_owner_and_staff_only(self):
+        from apps.dues.services import create_payment_submission
+
+        sub = create_payment_submission(
+            member=self.profile, user=self.member_user, invoices=[self.invoice],
+            method="bank_transfer", proof=self._proof(),
+        )
+        url = f"/dues/proof/{sub.pk}/"
+        self.client.force_login(self.member_user)
+        self.assertEqual(self.client.get(url).status_code, 200)      # owner
+        self.client.force_login(self.finance)
+        self.assertEqual(self.client.get(url).status_code, 200)      # staff
+        stranger = User.objects.create_user("x@x.pk", "pw1234567890")
+        self.client.force_login(stranger)
+        self.assertEqual(self.client.get(url).status_code, 403)
