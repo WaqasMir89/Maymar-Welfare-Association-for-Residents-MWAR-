@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 18:33+0500\n"
+"POT-Creation-Date: 2026-06-07 18:47+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -216,7 +216,7 @@ msgstr "عنوان اور ایک پی ڈی ایف فائل درکار ہے۔"
 msgid "Only PDF files can be uploaded."
 msgstr "صرف پی ڈی ایف فائلیں اپ لوڈ کی جا سکتی ہیں۔"
 
-#: apps/content/views.py:189 apps/members/views.py:79
+#: apps/content/views.py:189 apps/members/views.py:86
 msgid "Document uploaded."
 msgstr "دستاویز اپ لوڈ ہو گئی۔"
 
@@ -286,14 +286,14 @@ msgstr "درست پاکستانی فون نمبر درج کریں، مثلاً 0
 #: apps/dues/models.py:17 apps/members/models.py:312
 #: templates/dues/record_donation.html:14
 #: templates/dues/record_payment.html:14
-#: templates/members/application_detail.html:60
+#: templates/members/application_detail.html:64
 msgid "Cash"
 msgstr "نقد"
 
 #: apps/dues/models.py:18 apps/members/models.py:313
 #: templates/dues/record_donation.html:14
 #: templates/dues/record_payment.html:14
-#: templates/members/application_detail.html:60
+#: templates/members/application_detail.html:64
 msgid "Bank transfer"
 msgstr "بینک ٹرانسفر"
 
@@ -368,7 +368,7 @@ msgid "Pending"
 msgstr "زیر التوا"
 
 #: apps/dues/models.py:194 apps/members/models.py:185
-#: apps/members/views.py:108 templates/members/application_detail.html:45
+#: apps/members/views.py:115 templates/members/application_detail.html:45
 msgid "Approved"
 msgstr "منظور شدہ"
 
@@ -450,7 +450,7 @@ msgstr "مینٹیننس واجبات کی رسید"
 msgid "Property"
 msgstr "جائیداد"
 
-#: apps/dues/views.py:398 apps/members/views.py:361
+#: apps/dues/views.py:398 apps/members/views.py:386
 #: templates/dues/billing_board.html:18
 #: templates/dues/submission_queue.html:16
 msgid "Member"
@@ -460,12 +460,12 @@ msgstr "رکن"
 msgid "Billing period"
 msgstr "بلنگ مدت"
 
-#: apps/dues/views.py:400 apps/dues/views.py:426 apps/members/views.py:365
+#: apps/dues/views.py:400 apps/dues/views.py:426 apps/members/views.py:390
 #: templates/dues/pay_dues.html:58
 msgid "Payment method"
 msgstr "ادائیگی کا طریقہ"
 
-#: apps/dues/views.py:401 apps/dues/views.py:427 apps/members/views.py:366
+#: apps/dues/views.py:401 apps/dues/views.py:427 apps/members/views.py:391
 msgid "Reference"
 msgstr "حوالہ"
 
@@ -473,7 +473,7 @@ msgstr "حوالہ"
 msgid "Invoice balance"
 msgstr "انوائس بقایا"
 
-#: apps/dues/views.py:406 apps/members/views.py:370
+#: apps/dues/views.py:406 apps/members/views.py:395
 #: templates/accounts/password_reset_email.html:12
 msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
 msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
@@ -486,7 +486,7 @@ msgstr "عطیہ کی رسید"
 msgid "Donor"
 msgstr "عطیہ دہندہ"
 
-#: apps/dues/views.py:425 apps/members/views.py:364
+#: apps/dues/views.py:425 apps/members/views.py:389
 #: templates/dues/donations.html:18
 msgid "Purpose"
 msgstr "مقصد"
@@ -539,7 +539,7 @@ msgstr ""
 msgid "Request more documents"
 msgstr "مزید دستاویزات طلب کریں"
 
-#: apps/members/forms.py:65 templates/members/application_detail.html:71
+#: apps/members/forms.py:65 templates/members/application_detail.html:83
 msgid "Notes"
 msgstr "نوٹس"
 
@@ -571,7 +571,7 @@ msgstr "میعاد ختم"
 msgid "Draft"
 msgstr "مسودہ"
 
-#: apps/members/models.py:181 apps/members/views.py:105
+#: apps/members/models.py:181 apps/members/views.py:112
 #: templates/members/dashboard.html:45
 #: templates/members/my_application.html:47
 msgid "Submitted"
@@ -581,11 +581,11 @@ msgstr "جمع شدہ"
 msgid "Documents required"
 msgstr "دستاویزات درکار"
 
-#: apps/members/models.py:183 apps/members/views.py:106
+#: apps/members/models.py:183 apps/members/views.py:113
 msgid "Under review"
 msgstr "زیر جائزہ"
 
-#: apps/members/models.py:184 apps/members/views.py:107
+#: apps/members/models.py:184 apps/members/views.py:114
 msgid "Secretary approved"
 msgstr "سیکریٹری کی منظوری"
 
@@ -609,44 +609,48 @@ msgstr "تصویر"
 msgid "Revoked"
 msgstr "منسوخ"
 
-#: apps/members/views.py:45
+#: apps/members/views.py:52
 msgid "You're already a registered member."
 msgstr "آپ پہلے سے رجسٹرڈ رکن ہیں۔"
 
-#: apps/members/views.py:51
+#: apps/members/views.py:58
 msgid ""
 "You already have an application in progress. You can track its status here."
 msgstr ""
 "آپ کی ایک درخواست پہلے سے زیرِ کارروائی ہے۔ آپ یہاں اس کی صورتحال دیکھ سکتے "
 "ہیں۔"
 
-#: apps/members/views.py:66
+#: apps/members/views.py:73
 msgid "Application started. Now upload your documents."
 msgstr "درخواست شروع ہو گئی۔ اب اپنی دستاویزات اپ لوڈ کریں۔"
 
-#: apps/members/views.py:210
+#: apps/members/views.py:226
 msgid "You do not have final-approval rights."
 msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
 
-#: apps/members/views.py:220
+#: apps/members/views.py:235
+msgid "Application rejected by the Chairman."
+msgstr "چیئرمین نے درخواست مسترد کر دی۔"
+
+#: apps/members/views.py:245
 #, python-format
 msgid "Approved. Member %(num)s issued with fee receipt and ID card."
 msgstr ""
 "منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
 
-#: apps/members/views.py:231
+#: apps/members/views.py:256
 msgid "Review recorded."
 msgstr "جائزہ درج کر دیا گیا۔"
 
-#: apps/members/views.py:304 apps/members/views.py:382
+#: apps/members/views.py:329 apps/members/views.py:407
 msgid "No member card yet — your membership may still be pending."
 msgstr "ابھی تک کوئی رکنیتی کارڈ نہیں — آپ کی رکنیت شاید ابھی زیر التوا ہے۔"
 
-#: apps/members/views.py:357
+#: apps/members/views.py:382
 msgid "Registration Fee Receipt"
 msgstr "رجسٹریشن فیس کی رسید"
 
-#: apps/members/views.py:364
+#: apps/members/views.py:389
 msgid "One-time membership registration fee"
 msgstr "یک بار رکنیت رجسٹریشن فیس"
 
@@ -2036,23 +2040,45 @@ msgstr "جاری شدہ کارڈ دیکھیں (عوامی تصدیق)"
 msgid "Secretary approved — awaiting Chairman"
 msgstr "سیکریٹری کی منظوری — چیئرمین کا انتظار"
 
-#: templates/members/application_detail.html:59
+#: templates/members/application_detail.html:56
+msgid "This property already has a Permanent member"
+msgstr "اس جائیداد پر پہلے سے ایک مستقل ممبر موجود ہے"
+
+#: templates/members/application_detail.html:57
+msgid ""
+"Only one Permanent member is allowed per property — approval will be "
+"blocked."
+msgstr "فی جائیداد صرف ایک مستقل ممبر کی اجازت ہے — منظوری روک دی جائے گی۔"
+
+#: templates/members/application_detail.html:63
 msgid "Registration fee method (Rs 500)"
 msgstr "رجسٹریشن فیس کا طریقہ (روپے 500)"
 
-#: templates/members/application_detail.html:62
+#: templates/members/application_detail.html:66
 msgid "Final approve — issue number, receipt & card"
 msgstr "حتمی منظوری — نمبر، رسید اور کارڈ جاری کریں"
 
-#: templates/members/application_detail.html:64
+#: templates/members/application_detail.html:71
+msgid "Reason for rejection (optional)"
+msgstr "مسترد کرنے کی وجہ (اختیاری)"
+
+#: templates/members/application_detail.html:74
+msgid "Reject this application?"
+msgstr "کیا یہ درخواست مسترد کریں؟"
+
+#: templates/members/application_detail.html:74
+msgid "Reject application"
+msgstr "درخواست مسترد کریں"
+
+#: templates/members/application_detail.html:76
 msgid "Final approval requires the Chairman."
 msgstr "حتمی منظوری کے لیے چیئرمین درکار ہے۔"
 
-#: templates/members/application_detail.html:70
+#: templates/members/application_detail.html:82
 msgid "Secretary decision"
 msgstr "سیکریٹری کا فیصلہ"
 
-#: templates/members/application_detail.html:72
+#: templates/members/application_detail.html:84
 msgid "Record review"
 msgstr "جائزہ درج کریں"
 

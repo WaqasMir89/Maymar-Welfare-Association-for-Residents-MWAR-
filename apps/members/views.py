@@ -19,7 +19,14 @@ from .models import (
     MemberProfile,
     MembershipApplication,
 )
-from .services import ApprovalError, chairman_approve, log_pii_access, secretary_review, submit_application
+from .services import (
+    ApprovalError,
+    chairman_approve,
+    chairman_reject,
+    log_pii_access,
+    secretary_review,
+    submit_application,
+)
 
 
 def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> HttpResponse:
@@ -183,6 +190,14 @@ def application_detail(request: HttpRequest, pk: int) -> HttpResponse:
             metadata={"context": "application_review"},
         )
 
+    # Warn the reviewer if this property's single Permanent slot is already taken.
+    from .services import permanent_member_on
+    from .models import MembershipClass, class_for_residency
+
+    permanent_holder = None
+    if class_for_residency(application.residency_type) == MembershipClass.PERMANENT:
+        permanent_holder = permanent_member_on(application.property)
+
     form = ReviewForm()
     return render(
         request,
@@ -193,6 +208,7 @@ def application_detail(request: HttpRequest, pk: int) -> HttpResponse:
             "shown_cnic": shown_cnic,
             "can_view_pii": can_view_pii,
             "form": form,
+            "permanent_holder": permanent_holder,
             "Status": MembershipApplication.Status,
         },
     )
@@ -208,6 +224,15 @@ def application_review(request: HttpRequest, pk: int) -> HttpResponse:
     if stage == "chairman":
         if not request.user.has_perm("members.approve_membership"):
             messages.error(request, _("You do not have final-approval rights."))
+            return redirect("members:application_detail", pk=pk)
+        if request.POST.get("decision") == "reject":
+            try:
+                chairman_reject(application, request.user,
+                                reason=request.POST.get("reason", ""))
+            except ApprovalError as exc:
+                messages.error(request, str(exc))
+                return redirect("members:application_detail", pk=pk)
+            messages.success(request, _("Application rejected by the Chairman."))
             return redirect("members:application_detail", pk=pk)
         try:
             profile = chairman_approve(application, request.user,

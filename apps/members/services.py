@@ -24,7 +24,9 @@ from .models import (
     MemberProfile,
     Membership,
     MembershipApplication,
+    MembershipClass,
     Residency,
+    ResidencyType,
     class_for_residency,
 )
 
@@ -62,6 +64,23 @@ def _notify_applicant(application, *, title, body, level="info", url="/members/m
         from apps.content.services import notify
 
         notify(user, title=title, body=body, url=url, level=level)
+
+
+def permanent_member_on(property, *, exclude_member=None) -> "MemberProfile | None":
+    """The property's current Permanent (owner) member, if the slot is taken.
+
+    A property may have exactly one Permanent member but any number of
+    Associate (tenant) members.
+    """
+    if not property:
+        return None
+    qs = Residency.objects.filter(
+        property=property, is_current=True, residency_type=ResidencyType.OWNER,
+    ).select_related("member")
+    if exclude_member is not None:
+        qs = qs.exclude(member=exclude_member)
+    residency = qs.first()
+    return residency.member if residency else None
 
 
 def _next_member_number() -> str:
@@ -156,6 +175,21 @@ def chairman_approve(application: MembershipApplication, chairman, *, fee_method
     if application.status != MembershipApplication.Status.SECRETARY_APPROVED:
         raise ApprovalError("Application must be Secretary-approved before final approval.")
 
+    # One membership per account: never issue a second profile to the same user.
+    if application.applicant_user_id and MemberProfile.objects.filter(
+        user_id=application.applicant_user_id
+    ).exists():
+        raise ApprovalError("This account is already a registered member.")
+
+    # One Permanent (owner) member per property; Associates (tenants) may stack.
+    if class_for_residency(application.residency_type) == MembershipClass.PERMANENT:
+        holder = permanent_member_on(application.property)
+        if holder:
+            raise ApprovalError(
+                f"{application.property} already has a Permanent member "
+                f"({holder.member_number}). Only one Permanent member is allowed per property."
+            )
+
     secretary = application.reviewed_by
 
     profile = MemberProfile.objects.create(
@@ -217,6 +251,34 @@ def chairman_approve(application: MembershipApplication, chairman, *, fee_method
               f"{profile.member_number}. Your digital ID card is ready to view."),
     )
     return profile
+
+
+def chairman_reject(application: MembershipApplication, chairman, *, reason: str = ""):
+    """Final-stage rejection by the Chairman. Allowed once the Secretary has
+    approved (the only point the Chairman is in the loop). Idempotent."""
+    if application.status in (
+        MembershipApplication.Status.APPROVED,
+        MembershipApplication.Status.REJECTED,
+    ):
+        return application
+    if application.status != MembershipApplication.Status.SECRETARY_APPROVED:
+        raise ApprovalError("Only a Secretary-approved application can be rejected by the Chairman.")
+
+    application.status = MembershipApplication.Status.REJECTED
+    application.review_notes = (reason or "").strip()
+    application.reviewed_by = chairman
+    application.reviewed_at = timezone.now()
+    application.save(update_fields=["status", "review_notes", "reviewed_by",
+                                    "reviewed_at", "updated_at"])
+    record_audit(AuditLog.Action.REJECT, "MembershipApplication", application.pk,
+                 actor=chairman, metadata={"stage": "chairman", "decision": "reject"})
+    _notify_applicant(
+        application, level="warning",
+        title="Application not approved",
+        body=(application.review_notes or "Your application was reviewed by the Chairman "
+              "and could not be approved. Please contact the office for details."),
+    )
+    return application
 
 
 def log_pii_access(user, profile: MemberProfile, context: str = "view") -> None:

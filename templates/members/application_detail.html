@@ -52,6 +52,10 @@
         <p class="muted">{{ application.review_notes }}</p>
       {% elif application.status == Status.SECRETARY_APPROVED %}
         <p class="badge amber">{% trans "Secretary approved — awaiting Chairman" %}</p>
+        {% if permanent_holder %}
+        <div class="alert warning">{% trans "This property already has a Permanent member" %}
+          ({{ permanent_holder.member_number }}). {% trans "Only one Permanent member is allowed per property — approval will be blocked." %}</div>
+        {% endif %}
         {% if perms.members.approve_membership or user.is_superuser %}
         <form method="post" action="{% url 'members:application_review' application.pk %}" class="stack">
           {% csrf_token %}
@@ -59,7 +63,15 @@
           <div class="field"><label>{% trans "Registration fee method (Rs 500)" %}</label>
             <select name="fee_method"><option value="cash">{% trans "Cash" %}</option><option value="bank_transfer">{% trans "Bank transfer" %}</option><option value="jazzcash">JazzCash</option><option value="easypaisa">EasyPaisa</option></select>
           </div>
-          <button class="btn btn-success" type="submit">{% trans "Final approve — issue number, receipt & card" %}</button>
+          <button class="btn btn-success" name="decision" value="approve" type="submit">{% trans "Final approve — issue number, receipt & card" %}</button>
+        </form>
+        <form method="post" action="{% url 'members:application_review' application.pk %}" class="stack" style="margin-top:14px">
+          {% csrf_token %}
+          <input type="hidden" name="stage" value="chairman">
+          <div class="field"><label>{% trans "Reason for rejection (optional)" %}</label>
+            <textarea name="reason" rows="2"></textarea></div>
+          <button class="btn btn-ghost" name="decision" value="reject" type="submit"
+                  onclick="return confirm('{% trans "Reject this application?" %}')">{% trans "Reject application" %}</button>
         </form>
         {% else %}<p class="muted">{% trans "Final approval requires the Chairman." %}</p>{% endif %}
       {% else %}

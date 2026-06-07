@@ -18,6 +18,7 @@ from apps.members.models import (
 from apps.members.services import (
     ApprovalError,
     chairman_approve,
+    chairman_reject,
     open_application_for,
     secretary_review,
     submit_application,
@@ -268,3 +269,81 @@ class ApplicationLifecycleTests(TestCase):
         r = self.client.get("/members/my-application/")
         self.assertEqual(r.status_code, 200)
         self.assertContains(r, "My Membership Application")
+
+
+class MembershipConstraintTests(TestCase):
+    """One Permanent member per property, unlimited Associates, no double
+    membership per account, and Chairman-stage rejection."""
+
+    def setUp(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        self._doc = SimpleUploadedFile
+        sector = Sector.objects.create(name="Sector W", code="W")
+        self.sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        self.prop = Property.objects.create(sub_sector=self.sub, house_number="11",
+                                            status=Property.Status.OCCUPIED)
+        self.secretary = User.objects.create_user("sec@x.pk", "pw1234567890", full_name="Sec")
+        self.chairman = User.objects.create_user("chair@x.pk", "pw1234567890", full_name="Chair")
+        self.chairman.user_permissions.add(Permission.objects.get(codename="approve_membership"))
+
+    def _approved_app(self, cnic, residency, *, prop=None, user=None):
+        app = MembershipApplication.objects.create(
+            full_name="Person", father_or_husband_name="F", cnic=cnic,
+            phone="0301-2345678", property=prop or self.prop, residency_type=residency,
+            declaration_accepted=True, applicant_user=user,
+        )
+        for dt in ("cnic_front", "cnic_back"):
+            app.documents.create(doc_type=dt, file=self._doc(f"{dt}.txt", b"x"))
+        submit_application(app)
+        secretary_review(app, self.secretary, decision="approve")
+        return app
+
+    def test_only_one_permanent_member_per_property(self):
+        first = self._approved_app("42101-0000001-1", ResidencyType.OWNER)
+        chairman_approve(first, self.chairman)
+        second = self._approved_app("42101-0000002-2", ResidencyType.OWNER)
+        with self.assertRaises(ApprovalError):
+            chairman_approve(second, self.chairman)
+
+    def test_multiple_associates_allowed_on_one_property(self):
+        a = self._approved_app("42101-0000003-3", ResidencyType.TENANT)
+        b = self._approved_app("42101-0000004-4", ResidencyType.TENANT)
+        pa = chairman_approve(a, self.chairman)
+        pb = chairman_approve(b, self.chairman)
+        self.assertNotEqual(pa.pk, pb.pk)
+        self.assertEqual(pa.current_membership.membership_class, "associate")
+        self.assertEqual(pb.current_membership.membership_class, "associate")
+
+    def test_permanent_and_associates_coexist(self):
+        owner = self._approved_app("42101-0000005-5", ResidencyType.OWNER)
+        chairman_approve(owner, self.chairman)
+        tenant = self._approved_app("42101-0000006-6", ResidencyType.TENANT)
+        self.assertIsNotNone(chairman_approve(tenant, self.chairman))
+
+    def test_account_cannot_become_member_twice(self):
+        user = User.objects.create_user("dual@x.pk", "pw1234567890")
+        p2 = Property.objects.create(sub_sector=self.sub, house_number="12",
+                                     status=Property.Status.OCCUPIED)
+        first = self._approved_app("42101-0000007-7", ResidencyType.OWNER, user=user)
+        chairman_approve(first, self.chairman)
+        second = self._approved_app("42101-0000008-8", ResidencyType.OWNER, prop=p2, user=user)
+        with self.assertRaises(ApprovalError):
+            chairman_approve(second, self.chairman)
+
+    def test_chairman_can_reject(self):
+        app = self._approved_app("42101-0000009-9", ResidencyType.OWNER)
+        chairman_reject(app, self.chairman, reason="Disputed ownership")
+        app.refresh_from_db()
+        self.assertEqual(app.status, MembershipApplication.Status.REJECTED)
+        self.assertEqual(app.review_notes, "Disputed ownership")
+        self.assertEqual(MemberProfile.objects.count(), 0)
+
+    def test_chairman_cannot_reject_before_secretary(self):
+        app = MembershipApplication.objects.create(
+            full_name="P", father_or_husband_name="F", cnic="42101-0000010-0",
+            phone="0301-2345678", property=self.prop, residency_type=ResidencyType.OWNER,
+            declaration_accepted=True, status=MembershipApplication.Status.SUBMITTED,
+        )
+        with self.assertRaises(ApprovalError):
+            chairman_reject(app, self.chairman, reason="too early")
