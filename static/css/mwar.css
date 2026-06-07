@@ -244,6 +244,20 @@ footer.site .footer-credit a { font-weight: 600; }
 .roadmap-period { font-weight: 700; color: var(--brand-900); }
 @media (max-width: 640px) { .chairman-card { flex-direction: column; } }
 
+/* Organization assets */
+.asset-item { display: flex; gap: calc(var(--space)*1.5); padding: calc(var(--space)*1.5); border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.asset-photo { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex: 0 0 auto; }
+
+/* Application status stepper */
+.app-steps { list-style: none; margin: var(--space) 0 0; padding: 0; }
+.app-steps li { position: relative; display: flex; align-items: center; gap: calc(var(--space)*1.5); padding: 0 0 calc(var(--space)*2) calc(var(--space)*2); border-inline-start: 2px solid var(--border); color: #94a3b8; }
+.app-steps li:last-child { border-inline-start-color: transparent; padding-bottom: 0; }
+.app-steps li.done { color: var(--brand-900); }
+.app-steps .step-dot { position: absolute; inset-inline-start: -8px; width: 14px; height: 14px; border-radius: 50%; background: #cbd5e1; border: 2px solid #fff; }
+.app-steps li.done .step-dot { background: var(--success, #1E8E5A); }
+.app-steps li.current .step-dot { background: var(--brand-700); box-shadow: 0 0 0 3px rgba(20,67,158,.2); }
+.app-steps li.current { font-weight: 700; }
+
 /* Finance dashboard inline bar chart */
 .barchart { display: flex; flex-direction: column; gap: 3px; }
 .barchart .bar { height: 9px; border-radius: 5px; min-width: 2px; }

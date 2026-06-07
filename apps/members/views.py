@@ -33,12 +33,31 @@ def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> Http
 # Public application flow (works for self-service and assisted staff entry)
 # ---------------------------------------------------------------------------
 def apply_start(request: HttpRequest) -> HttpResponse:
+    from apps.accounts.permissions import is_staff_member
+    from .services import open_application_for
+
+    acting_as_applicant = request.user.is_authenticated and not is_staff_member(request.user)
+
+    # A member may not start a fresh application while one is still undecided,
+    # or once they're already an active member. Staff (assisted walk-ins) are exempt.
+    if acting_as_applicant:
+        if getattr(request.user, "member_profile", None):
+            messages.info(request, _("You're already a registered member."))
+            return redirect("members:dashboard")
+        existing = open_application_for(request.user)
+        if existing:
+            messages.info(
+                request,
+                _("You already have an application in progress. You can track its status here."),
+            )
+            if existing.status == MembershipApplication.Status.DRAFT:
+                return redirect("members:apply_documents", pk=existing.pk)
+            return redirect("members:my_application")
+
     form = ApplicationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         application = form.save(commit=False)
         if request.user.is_authenticated:
-            from apps.accounts.permissions import is_staff_member
-
             if is_staff_member(request.user):
                 application.submitted_by = request.user
             else:
@@ -79,6 +98,43 @@ def apply_submit(request: HttpRequest, pk: int) -> HttpResponse:
 def apply_success(request: HttpRequest, pk: int) -> HttpResponse:
     application = get_object_or_404(MembershipApplication, pk=pk)
     return render(request, "members/apply_success.html", {"application": application})
+
+
+# Ordered lifecycle for the applicant-facing status tracker.
+APPLICATION_STEPS = [
+    (MembershipApplication.Status.SUBMITTED, _("Submitted")),
+    (MembershipApplication.Status.UNDER_REVIEW, _("Under review")),
+    (MembershipApplication.Status.SECRETARY_APPROVED, _("Secretary approved")),
+    (MembershipApplication.Status.APPROVED, _("Approved")),
+]
+
+
+@login_required
+def my_application(request: HttpRequest) -> HttpResponse:
+    """Let an applicant track the status of their membership application(s)."""
+    applications = (
+        MembershipApplication.objects
+        .filter(applicant_user=request.user)
+        .select_related("property", "member_profile")
+        .order_by("-created_at")
+    )
+    latest = applications.first()
+
+    # Build a simple stepper for the latest application.
+    steps = []
+    if latest and latest.status != MembershipApplication.Status.REJECTED:
+        order = [s for s, _ in APPLICATION_STEPS]
+        current_index = order.index(latest.status) if latest.status in order else -1
+        if latest.status == MembershipApplication.Status.DOCS_REQUIRED:
+            current_index = 0
+        for i, (value, label) in enumerate(APPLICATION_STEPS):
+            steps.append({"label": label, "done": i <= current_index,
+                          "current": i == current_index})
+
+    return render(request, "members/my_application.html", {
+        "applications": applications, "latest": latest, "steps": steps,
+        "Status": MembershipApplication.Status,
+    })
 
 
 # ---------------------------------------------------------------------------
@@ -232,6 +288,11 @@ def dashboard(request: HttpRequest) -> HttpResponse:
             member=profile, status__in=["unpaid", "partial", "overdue"]
         ).count()
         context["card"] = getattr(profile, "card", None)
+    else:
+        context["application"] = (
+            MembershipApplication.objects.filter(applicant_user=request.user)
+            .order_by("-created_at").first()
+        )
     context["tickets"] = Ticket.objects.filter(created_by=request.user).order_by("-created_at")[:5]
     return render(request, "members/dashboard.html", context)
 

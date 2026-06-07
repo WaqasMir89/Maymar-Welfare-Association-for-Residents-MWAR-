@@ -203,6 +203,40 @@ class RoadmapMilestone(TimeStampedModel):
         return f"{self.period}: {self.title}"
 
 
+class OrganizationAsset(TimeStampedModel):
+    """A physical or financial asset owned by the association. Uploaded by
+    senior staff (``content.manage_assets``) and listed publicly for openness."""
+
+    class Category(models.TextChoices):
+        LAND = "land", _("Land & plots")
+        BUILDING = "building", _("Buildings")
+        VEHICLE = "vehicle", _("Vehicles")
+        EQUIPMENT = "equipment", _("Equipment")
+        FURNITURE = "furniture", _("Furniture & fixtures")
+        FUND = "fund", _("Funds & reserves")
+        OTHER = "other", _("Other")
+
+    name = models.CharField(max_length=180)
+    category = models.CharField(max_length=12, choices=Category.choices, default=Category.OTHER)
+    description = models.CharField(max_length=400, blank=True)
+    location = models.CharField(max_length=200, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+    estimated_value = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    acquired_on = models.DateField(null=True, blank=True)
+    photo = models.ImageField(upload_to="assets/", null=True, blank=True)
+    is_public = models.BooleanField(default=True)
+    added_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+",
+    )
+
+    class Meta:
+        ordering = ["category", "name"]
+        permissions = [("manage_assets", "Can add and manage organization assets")]
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Notification(TimeStampedModel):
     """A per-user in-app notification (the inbox behind the nav bell)."""
 

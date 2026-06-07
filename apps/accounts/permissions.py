@@ -31,6 +31,7 @@ PERM_APPROVE_MEMBERSHIP = "members.approve_membership"
 PERM_RECORD_PAYMENT = "dues.record_payment"
 PERM_BROADCAST_NOTICE = "content.broadcast_notice"
 PERM_MANAGE_DOCUMENTS = "content.manage_documents"
+PERM_MANAGE_ASSETS = "content.manage_assets"
 PERM_APPROVE_EXPENSE = "dues.approve_expense"
 
 # Which permissions each role receives when `setup_rbac` runs.
@@ -46,6 +47,7 @@ ROLE_PERMISSIONS: dict[str, list[str]] = {
         PERM_VIEW_PII,
         PERM_BROADCAST_NOTICE,
         PERM_MANAGE_DOCUMENTS,
+        PERM_MANAGE_ASSETS,
         PERM_APPROVE_EXPENSE,
     ],
     ADMIN: [
@@ -54,6 +56,7 @@ ROLE_PERMISSIONS: dict[str, list[str]] = {
         PERM_VIEW_PII,
         PERM_BROADCAST_NOTICE,
         PERM_MANAGE_DOCUMENTS,
+        PERM_MANAGE_ASSETS,
         PERM_RECORD_PAYMENT,
         PERM_APPROVE_EXPENSE,
     ],

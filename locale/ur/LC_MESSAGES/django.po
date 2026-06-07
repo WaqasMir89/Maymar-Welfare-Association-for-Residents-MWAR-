@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 18:07+0500\n"
+"POT-Creation-Date: 2026-06-07 18:33+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -80,7 +80,8 @@ msgid "Administrator"
 msgstr "ایڈمنسٹریٹر"
 
 #: apps/accounts/models.py:87 apps/content/models.py:110
-#: apps/members/models.py:272 apps/tickets/models.py:24
+#: apps/content/models.py:217 apps/members/models.py:272
+#: apps/tickets/models.py:24
 msgid "Other"
 msgstr "دیگر"
 
@@ -149,15 +150,39 @@ msgstr "زیر عمل"
 msgid "Done"
 msgstr "مکمل"
 
-#: apps/content/models.py:210
+#: apps/content/models.py:211
+msgid "Land & plots"
+msgstr "زمین و پلاٹ"
+
+#: apps/content/models.py:212
+msgid "Buildings"
+msgstr "عمارتیں"
+
+#: apps/content/models.py:213
+msgid "Vehicles"
+msgstr "گاڑیاں"
+
+#: apps/content/models.py:214
+msgid "Equipment"
+msgstr "سازوسامان"
+
+#: apps/content/models.py:215
+msgid "Furniture & fixtures"
+msgstr "فرنیچر و فکسچر"
+
+#: apps/content/models.py:216
+msgid "Funds & reserves"
+msgstr "فنڈز و ذخائر"
+
+#: apps/content/models.py:244
 msgid "Info"
 msgstr "معلومات"
 
-#: apps/content/models.py:211
+#: apps/content/models.py:245
 msgid "Success"
 msgstr "کامیاب"
 
-#: apps/content/models.py:212
+#: apps/content/models.py:246
 msgid "Warning"
 msgstr "انتباہ"
 
@@ -191,15 +216,28 @@ msgstr "عنوان اور ایک پی ڈی ایف فائل درکار ہے۔"
 msgid "Only PDF files can be uploaded."
 msgstr "صرف پی ڈی ایف فائلیں اپ لوڈ کی جا سکتی ہیں۔"
 
-#: apps/content/views.py:189 apps/members/views.py:60
+#: apps/content/views.py:189 apps/members/views.py:79
 msgid "Document uploaded."
 msgstr "دستاویز اپ لوڈ ہو گئی۔"
 
-#: apps/content/views.py:203
+#: apps/content/views.py:221
+msgid "An asset name is required."
+msgstr "اثاثے کا نام درکار ہے۔"
+
+#: apps/content/views.py:239
+#, python-format
+msgid "Please check the asset details: %(e)s"
+msgstr "براہِ کرم اثاثے کی تفصیلات چیک کریں: %(e)s"
+
+#: apps/content/views.py:242
+msgid "Asset added to the register."
+msgstr "اثاثہ رجسٹر میں شامل کر دیا گیا۔"
+
+#: apps/content/views.py:254
 msgid "A title and start time are required."
 msgstr "عنوان اور آغاز کا وقت درکار ہے۔"
 
-#: apps/content/views.py:213
+#: apps/content/views.py:264
 msgid "Event created."
 msgstr "تقریب بنا دی گئی۔"
 
@@ -330,7 +368,7 @@ msgid "Pending"
 msgstr "زیر التوا"
 
 #: apps/dues/models.py:194 apps/members/models.py:185
-#: templates/members/application_detail.html:45
+#: apps/members/views.py:108 templates/members/application_detail.html:45
 msgid "Approved"
 msgstr "منظور شدہ"
 
@@ -343,7 +381,7 @@ msgstr "درست رقم درج کریں۔"
 msgid "Payment recorded. Receipt %(r)s."
 msgstr "ادائیگی درج کر دی گئی۔ رسید %(r)s۔"
 
-#: apps/dues/views.py:165 templates/members/dashboard.html:40
+#: apps/dues/views.py:165 templates/members/dashboard.html:48
 msgid "You don't have an approved membership yet."
 msgstr "آپ کے پاس ابھی تک منظور شدہ رکنیت نہیں ہے۔"
 
@@ -412,7 +450,7 @@ msgstr "مینٹیننس واجبات کی رسید"
 msgid "Property"
 msgstr "جائیداد"
 
-#: apps/dues/views.py:398 apps/members/views.py:300
+#: apps/dues/views.py:398 apps/members/views.py:361
 #: templates/dues/billing_board.html:18
 #: templates/dues/submission_queue.html:16
 msgid "Member"
@@ -422,12 +460,12 @@ msgstr "رکن"
 msgid "Billing period"
 msgstr "بلنگ مدت"
 
-#: apps/dues/views.py:400 apps/dues/views.py:426 apps/members/views.py:304
+#: apps/dues/views.py:400 apps/dues/views.py:426 apps/members/views.py:365
 #: templates/dues/pay_dues.html:58
 msgid "Payment method"
 msgstr "ادائیگی کا طریقہ"
 
-#: apps/dues/views.py:401 apps/dues/views.py:427 apps/members/views.py:305
+#: apps/dues/views.py:401 apps/dues/views.py:427 apps/members/views.py:366
 msgid "Reference"
 msgstr "حوالہ"
 
@@ -435,7 +473,7 @@ msgstr "حوالہ"
 msgid "Invoice balance"
 msgstr "انوائس بقایا"
 
-#: apps/dues/views.py:406 apps/members/views.py:309
+#: apps/dues/views.py:406 apps/members/views.py:370
 #: templates/accounts/password_reset_email.html:12
 msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
 msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
@@ -448,7 +486,7 @@ msgstr "عطیہ کی رسید"
 msgid "Donor"
 msgstr "عطیہ دہندہ"
 
-#: apps/dues/views.py:425 apps/members/views.py:303
+#: apps/dues/views.py:425 apps/members/views.py:364
 #: templates/dues/donations.html:18
 msgid "Purpose"
 msgstr "مقصد"
@@ -533,7 +571,9 @@ msgstr "میعاد ختم"
 msgid "Draft"
 msgstr "مسودہ"
 
-#: apps/members/models.py:181
+#: apps/members/models.py:181 apps/members/views.py:105
+#: templates/members/dashboard.html:45
+#: templates/members/my_application.html:47
 msgid "Submitted"
 msgstr "جمع شدہ"
 
@@ -541,11 +581,11 @@ msgstr "جمع شدہ"
 msgid "Documents required"
 msgstr "دستاویزات درکار"
 
-#: apps/members/models.py:183
+#: apps/members/models.py:183 apps/members/views.py:106
 msgid "Under review"
 msgstr "زیر جائزہ"
 
-#: apps/members/models.py:184
+#: apps/members/models.py:184 apps/members/views.py:107
 msgid "Secretary approved"
 msgstr "سیکریٹری کی منظوری"
 
@@ -569,33 +609,44 @@ msgstr "تصویر"
 msgid "Revoked"
 msgstr "منسوخ"
 
-#: apps/members/views.py:47
+#: apps/members/views.py:45
+msgid "You're already a registered member."
+msgstr "آپ پہلے سے رجسٹرڈ رکن ہیں۔"
+
+#: apps/members/views.py:51
+msgid ""
+"You already have an application in progress. You can track its status here."
+msgstr ""
+"آپ کی ایک درخواست پہلے سے زیرِ کارروائی ہے۔ آپ یہاں اس کی صورتحال دیکھ سکتے "
+"ہیں۔"
+
+#: apps/members/views.py:66
 msgid "Application started. Now upload your documents."
 msgstr "درخواست شروع ہو گئی۔ اب اپنی دستاویزات اپ لوڈ کریں۔"
 
-#: apps/members/views.py:154
+#: apps/members/views.py:210
 msgid "You do not have final-approval rights."
 msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
 
-#: apps/members/views.py:164
+#: apps/members/views.py:220
 #, python-format
 msgid "Approved. Member %(num)s issued with fee receipt and ID card."
 msgstr ""
 "منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
 
-#: apps/members/views.py:175
+#: apps/members/views.py:231
 msgid "Review recorded."
 msgstr "جائزہ درج کر دیا گیا۔"
 
-#: apps/members/views.py:243 apps/members/views.py:321
+#: apps/members/views.py:304 apps/members/views.py:382
 msgid "No member card yet — your membership may still be pending."
 msgstr "ابھی تک کوئی رکنیتی کارڈ نہیں — آپ کی رکنیت شاید ابھی زیر التوا ہے۔"
 
-#: apps/members/views.py:296
+#: apps/members/views.py:357
 msgid "Registration Fee Receipt"
 msgstr "رجسٹریشن فیس کی رسید"
 
-#: apps/members/views.py:303
+#: apps/members/views.py:364
 msgid "One-time membership registration fee"
 msgstr "یک بار رکنیت رجسٹریشن فیس"
 
@@ -683,7 +734,7 @@ msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
 #: templates/accounts/login.html:19
 #: templates/accounts/password_reset_complete.html:9
-#: templates/accounts/register.html:20 templates/base.html:42
+#: templates/accounts/register.html:20 templates/base.html:43
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -828,7 +879,7 @@ msgstr "اپنا اکاؤنٹ بنائیں"
 msgid "Already registered?"
 msgstr "پہلے سے رجسٹرڈ ہیں؟"
 
-#: templates/base.html:21 templates/base.html:71 templates/core/about.html:8
+#: templates/base.html:21 templates/base.html:72 templates/core/about.html:8
 #: templates/core/contact.html:8 templates/core/home.html:12
 #: templates/members/card.html:10
 msgid "Reg. No."
@@ -858,34 +909,128 @@ msgstr "تقریبات"
 msgid "Documents"
 msgstr "دستاویزات"
 
-#: templates/base.html:30 templates/dues/_finance_nav.html:8
+#: templates/base.html:30 templates/content/asset_list.html:3
+msgid "Assets"
+msgstr "اثاثے"
+
+#: templates/base.html:31 templates/dues/_finance_nav.html:8
 msgid "Transparency"
 msgstr "شفافیت"
 
-#: templates/base.html:31 templates/core/home.html:9
+#: templates/base.html:32 templates/core/home.html:9
 msgid "Become a Member"
 msgstr "رکن بنیں"
 
-#: templates/base.html:34
+#: templates/base.html:35
 msgid "Staff"
 msgstr "عملہ"
 
-#: templates/base.html:36 templates/members/dashboard.html:3
+#: templates/base.html:37 templates/members/dashboard.html:3
 msgid "My Dashboard"
 msgstr "میرا ڈیش بورڈ"
 
-#: templates/base.html:37 templates/content/notifications.html:3
+#: templates/base.html:38 templates/content/notifications.html:3
 #: templates/content/notifications.html:7
 msgid "Notifications"
 msgstr "اطلاعات"
 
-#: templates/base.html:40
+#: templates/base.html:41
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:73
+#: templates/base.html:74
 msgid "Built by"
 msgstr "تیار کردہ"
+
+#: templates/content/asset_form.html:3 templates/content/asset_form.html:27
+msgid "Add asset"
+msgstr "اثاثہ شامل کریں"
+
+#: templates/content/asset_form.html:7
+msgid "Add an organization asset"
+msgstr "تنظیم کا اثاثہ شامل کریں"
+
+#: templates/content/asset_form.html:8
+msgid "Published assets appear on the public Assets register."
+msgstr "شائع شدہ اثاثے عوامی اثاثہ رجسٹر پر ظاہر ہوتے ہیں۔"
+
+#: templates/content/asset_form.html:11
+msgid "Asset name"
+msgstr "اثاثے کا نام"
+
+#: templates/content/asset_form.html:13
+#: templates/content/document_form.html:14 templates/core/transparency.html:38
+#: templates/dues/expense_form.html:11 templates/dues/expenses.html:23
+#: templates/tickets/list.html:15
+msgid "Category"
+msgstr "زمرہ"
+
+#: templates/content/asset_form.html:18 templates/content/event_form.html:14
+#: templates/tickets/detail.html:15
+msgid "Description"
+msgstr "تفصیل"
+
+#: templates/content/asset_form.html:19 templates/content/event_form.html:13
+msgid "Location"
+msgstr "مقام"
+
+#: templates/content/asset_form.html:19 templates/content/event_form.html:13
+msgid "e.g. Community hall, Sector W"
+msgstr "مثلاً کمیونٹی ہال، سیکٹر W"
+
+#: templates/content/asset_form.html:21
+msgid "Quantity"
+msgstr "تعداد"
+
+#: templates/content/asset_form.html:22
+msgid "Estimated value (Rs)"
+msgstr "تخمینی مالیت (روپے)"
+
+#: templates/content/asset_form.html:24
+msgid "Acquired on"
+msgstr "حصول کی تاریخ"
+
+#: templates/content/asset_form.html:25
+msgid "Photo (optional)"
+msgstr "تصویر (اختیاری)"
+
+#: templates/content/asset_form.html:26
+msgid "Show on the public register"
+msgstr "عوامی رجسٹر پر دکھائیں"
+
+#: templates/content/asset_list.html:7
+msgid "Organization Assets"
+msgstr "تنظیم کے اثاثے"
+
+#: templates/content/asset_list.html:8
+msgid "+ Add asset"
+msgstr "+ اثاثہ شامل کریں"
+
+#: templates/content/asset_list.html:10
+msgid ""
+"A public register of what the association owns — held in trust for all "
+"residents."
+msgstr "ایسوسی ایشن کی ملکیت کا عوامی رجسٹر — تمام رہائشیوں کی امانت۔"
+
+#: templates/content/asset_list.html:15
+msgid "Estimated total value"
+msgstr "تخمینی کل مالیت"
+
+#: templates/content/asset_list.html:28
+msgid "Hidden"
+msgstr "پوشیدہ"
+
+#: templates/content/asset_list.html:31
+msgid "Qty"
+msgstr "تعداد"
+
+#: templates/content/asset_list.html:34
+msgid "Acquired"
+msgstr "حاصل کیا"
+
+#: templates/content/asset_list.html:42
+msgid "No assets have been published yet."
+msgstr "ابھی تک کوئی اثاثہ شائع نہیں ہوا۔"
 
 #: templates/content/document_form.html:3
 msgid "Upload document"
@@ -909,12 +1054,6 @@ msgstr "عنوان"
 #: templates/content/document_form.html:12 templates/dues/expense_form.html:14
 msgid "Description (optional)"
 msgstr "تفصیل (اختیاری)"
-
-#: templates/content/document_form.html:14 templates/core/transparency.html:38
-#: templates/dues/expense_form.html:11 templates/dues/expenses.html:23
-#: templates/tickets/list.html:15
-msgid "Category"
-msgstr "زمرہ"
 
 #: templates/content/document_form.html:19
 msgid "PDF file"
@@ -971,18 +1110,6 @@ msgstr "آغاز"
 #: templates/content/event_form.html:12
 msgid "Ends at (optional)"
 msgstr "اختتام (اختیاری)"
-
-#: templates/content/event_form.html:13
-msgid "Location"
-msgstr "مقام"
-
-#: templates/content/event_form.html:13
-msgid "e.g. Community hall, Sector W"
-msgstr "مثلاً کمیونٹی ہال، سیکٹر W"
-
-#: templates/content/event_form.html:14 templates/tickets/detail.html:15
-msgid "Description"
-msgstr "تفصیل"
 
 #: templates/content/event_form.html:15
 msgid "Visible to the public (not just members)"
@@ -1212,6 +1339,7 @@ msgstr ""
 "کرایہ دار۔"
 
 #: templates/core/home.html:46 templates/members/apply_documents.html:12
+#: templates/members/my_application.html:37
 msgid "Upload documents"
 msgstr "دستاویزات اپ لوڈ کریں"
 
@@ -1440,7 +1568,8 @@ msgstr "واجب"
 #: templates/dues/billing_board.html:18 templates/dues/expenses.html:23
 #: templates/dues/my_dues.html:11 templates/dues/submission_queue.html:16
 #: templates/locality/property_list.html:15
-#: templates/members/dashboard.html:11 templates/members/queue.html:17
+#: templates/members/dashboard.html:11
+#: templates/members/my_application.html:16 templates/members/queue.html:17
 #: templates/tickets/detail.html:41 templates/tickets/list.html:15
 msgid "Status"
 msgstr "اسٹیٹس"
@@ -1895,6 +2024,7 @@ msgid "No documents."
 msgstr "کوئی دستاویز نہیں۔"
 
 #: templates/members/application_detail.html:47
+#: templates/members/my_application.html:25
 msgid "Member number:"
 msgstr "رکن نمبر:"
 
@@ -2107,21 +2237,74 @@ msgstr "ابھی تک کوئی انوائس نہیں۔"
 msgid "All my dues →"
 msgstr "میرے تمام واجبات ←"
 
-#: templates/members/dashboard.html:41
+#: templates/members/dashboard.html:42
+msgid "Your membership application"
+msgstr "آپ کی رکنیت کی درخواست"
+
+#: templates/members/dashboard.html:46
+msgid "Track application status"
+msgstr "درخواست کی صورتحال دیکھیں"
+
+#: templates/members/dashboard.html:49
+#: templates/members/my_application.html:11
 msgid "Apply for membership"
 msgstr "رکنیت کے لیے درخواست دیں"
 
-#: templates/members/dashboard.html:46
+#: templates/members/dashboard.html:55
 msgid "My complaints"
 msgstr "میری شکایات"
 
-#: templates/members/dashboard.html:46 templates/tickets/list.html:8
+#: templates/members/dashboard.html:55 templates/tickets/list.html:8
 msgid "+ Raise a complaint"
 msgstr "+ شکایت درج کریں"
 
-#: templates/members/dashboard.html:50
+#: templates/members/dashboard.html:59
 msgid "No complaints raised."
 msgstr "کوئی شکایت درج نہیں کی گئی۔"
+
+#: templates/members/my_application.html:3
+msgid "My Application"
+msgstr "میری درخواست"
+
+#: templates/members/my_application.html:6
+msgid "My Membership Application"
+msgstr "میری رکنیت کی درخواست"
+
+#: templates/members/my_application.html:10
+msgid "You haven't submitted a membership application yet."
+msgstr "آپ نے ابھی تک رکنیت کی درخواست جمع نہیں کرائی۔"
+
+#: templates/members/my_application.html:21
+msgid "Your application was not approved."
+msgstr "آپ کی درخواست منظور نہیں ہوئی۔"
+
+#: templates/members/my_application.html:22
+msgid "Note:"
+msgstr "نوٹ:"
+
+#: templates/members/my_application.html:24
+msgid "Congratulations! Your membership has been approved."
+msgstr "مبارک ہو! آپ کی رکنیت منظور ہو گئی ہے۔"
+
+#: templates/members/my_application.html:26
+msgid "Go to my dashboard"
+msgstr "میرے ڈیش بورڈ پر جائیں"
+
+#: templates/members/my_application.html:36
+msgid "We need more documents before we can proceed."
+msgstr "آگے بڑھنے کے لیے ہمیں مزید دستاویزات درکار ہیں۔"
+
+#: templates/members/my_application.html:39
+msgid "Reviewer note:"
+msgstr "جائزہ کار کا نوٹ:"
+
+#: templates/members/my_application.html:44
+msgid "Application details"
+msgstr "درخواست کی تفصیلات"
+
+#: templates/members/my_application.html:52
+msgid "Previous applications"
+msgstr "سابقہ درخواستیں"
 
 #: templates/members/queue.html:8
 msgid "+ Assisted registration"

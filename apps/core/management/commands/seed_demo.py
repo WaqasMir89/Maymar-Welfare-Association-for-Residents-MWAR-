@@ -26,6 +26,7 @@ from apps.accounts.permissions import CHAIRMAN, FINANCE, MEMBER, SECRETARY
 from apps.content.models import (
     Event,
     Notice,
+    OrganizationAsset,
     OrganizationProfile,
     Project,
     ProjectUpdate,
@@ -309,6 +310,23 @@ class Command(BaseCommand):
             ]):
                 org.milestones.create(order=i, period=period, title=t, description=d, status=status)
             self.stdout.write(self.style.SUCCESS("  About page seeded (chairman's message, goals, roadmap)"))
+
+        # ---- Organization assets (public register) ----
+        if not OrganizationAsset.objects.exists():
+            for name, cat, qty, val, loc in [
+                ("Community Hall", "building", 1, 8000000, "Sector W"),
+                ("Association Office", "building", 1, 3500000, "Sector V"),
+                ("Water Tanker (3000 gal)", "vehicle", 2, 2400000, "Maintenance yard"),
+                ("Generator (50 kVA)", "equipment", 1, 900000, "Community Hall"),
+                ("Plastic Chairs", "furniture", 200, 200000, "Store room"),
+                ("Reserve / Sinking Fund", "fund", 1, 1500000, ""),
+            ]:
+                OrganizationAsset.objects.create(
+                    name=name, category=cat, quantity=qty,
+                    estimated_value=Decimal(val), location=loc,
+                    is_public=True, added_by=chairman,
+                )
+            self.stdout.write(self.style.SUCCESS("  6 organization assets registered"))
 
         members_qs = list(User.objects.filter(member_profile__isnull=False)[:5])
         ticket_data = [

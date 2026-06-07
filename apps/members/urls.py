@@ -10,6 +10,7 @@ urlpatterns = [
     path("apply/<int:pk>/documents/", views.apply_documents, name="apply_documents"),
     path("apply/<int:pk>/submit/", views.apply_submit, name="apply_submit"),
     path("apply/<int:pk>/success/", views.apply_success, name="apply_success"),
+    path("my-application/", views.my_application, name="my_application"),
     # Member self-service
     path("dashboard/", views.dashboard, name="dashboard"),
     path("card/", views.my_card, name="my_card"),

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Assets" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="row-between">
+    <h1>{% trans "Organization Assets" %}</h1>
+    {% if can_manage %}<a class="btn" href="{% url 'content:asset_create' %}">{% trans "+ Add asset" %}</a>{% endif %}
+  </div>
+  <p class="muted">{% trans "A public register of what the association owns — held in trust for all residents." %}</p>
+
+  {% if total_value %}
+  <div class="kpi" style="max-width:320px;margin-top:8px">
+    <div class="value">Rs {{ total_value|floatformat:0|intcomma }}</div>
+    <div class="label">{% trans "Estimated total value" %}</div>
+  </div>
+  {% endif %}
+
+  {% for group in groups %}
+  <div class="card" style="margin-top:18px">
+    <h3>{{ group.label }}</h3>
+    <div class="grid grid-2">
+      {% for a in group.items %}
+      <div class="asset-item">
+        {% if a.photo %}<img class="asset-photo" src="{{ a.photo.url }}" alt="{{ a.name }}">{% endif %}
+        <div>
+          <strong>{{ a.name }}</strong>
+          {% if not a.is_public %}<span class="badge gray">{% trans "Hidden" %}</span>{% endif %}
+          {% if a.description %}<p class="muted" style="margin:4px 0 0">{{ a.description }}</p>{% endif %}
+          <p class="muted" style="margin:4px 0 0">
+            {% if a.quantity > 1 %}{% trans "Qty" %}: {{ a.quantity }} · {% endif %}
+            {% if a.location %}📍 {{ a.location }} · {% endif %}
+            {% if a.estimated_value %}Rs {{ a.estimated_value|floatformat:0|intcomma }}{% endif %}
+            {% if a.acquired_on %}<br>{% trans "Acquired" %} {{ a.acquired_on|date:"M Y" }}{% endif %}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="muted" style="margin-top:24px">{% trans "No assets have been published yet." %}</p>
+  {% endfor %}
+</div>
+{% endblock %}

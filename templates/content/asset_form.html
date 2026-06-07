@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Add asset" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Add an organization asset" %}</h1>
+    <p class="muted">{% trans "Published assets appear on the public Assets register." %}</p>
+    <form method="post" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Asset name" %}</label><input type="text" name="name" required></div>
+      <div class="field">
+        <label>{% trans "Category" %}</label>
+        <select name="category">
+          {% for value, label in categories %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>{% trans "Description" %}</label><input type="text" name="description" maxlength="400"></div>
+      <div class="field"><label>{% trans "Location" %}</label><input type="text" name="location" placeholder="{% trans 'e.g. Community hall, Sector W' %}"></div>
+      <div class="grid grid-2">
+        <div class="field"><label>{% trans "Quantity" %}</label><input type="number" name="quantity" min="1" value="1"></div>
+        <div class="field"><label>{% trans "Estimated value (Rs)" %}</label><input type="number" name="estimated_value" min="0" step="1"></div>
+      </div>
+      <div class="field"><label>{% trans "Acquired on" %}</label><input type="date" name="acquired_on"></div>
+      <div class="field"><label>{% trans "Photo (optional)" %}</label><input type="file" name="photo" accept="image/*"></div>
+      <label><input type="checkbox" name="is_public" checked> {% trans "Show on the public register" %}</label>
+      <button class="btn" type="submit">{% trans "Add asset" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

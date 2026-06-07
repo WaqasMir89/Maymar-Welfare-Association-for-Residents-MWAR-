@@ -189,3 +189,41 @@ class OrganizationProfileTests(TestCase):
     def test_about_page_renders_without_content(self):
         # A fresh install with an empty profile must still render.
         self.assertEqual(self.client.get("/about/").status_code, 200)
+
+
+class OrganizationAssetTests(TestCase):
+    def setUp(self):
+        from apps.content.models import OrganizationAsset
+
+        self.senior = User.objects.create_user("senior@x.pk", "password123")
+        self.senior.user_permissions.add(
+            Permission.objects.get(codename="manage_assets", content_type__app_label="content")
+        )
+        OrganizationAsset.objects.create(name="Community Hall", category="building",
+                                         estimated_value=1000000, is_public=True)
+        OrganizationAsset.objects.create(name="Secret Plot", category="land", is_public=False)
+
+    def test_public_sees_only_public_assets(self):
+        r = self.client.get("/content/assets/")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Community Hall")
+        self.assertNotContains(r, "Secret Plot")
+
+    def test_manager_sees_all_and_can_add(self):
+        self.client.force_login(self.senior)
+        r = self.client.get("/content/assets/")
+        self.assertContains(r, "Secret Plot")
+        self.assertEqual(self.client.get("/content/assets/add/").status_code, 200)
+        r = self.client.post("/content/assets/add/", {
+            "name": "Generator", "category": "equipment", "quantity": "1",
+            "estimated_value": "50000", "is_public": "on",
+        })
+        self.assertRedirects(r, "/content/assets/")
+        from apps.content.models import OrganizationAsset
+
+        self.assertTrue(OrganizationAsset.objects.filter(name="Generator").exists())
+
+    def test_non_manager_cannot_add(self):
+        plain = User.objects.create_user("plain2@x.pk", "password123")
+        self.client.force_login(plain)
+        self.assertEqual(self.client.get("/content/assets/add/").status_code, 403)

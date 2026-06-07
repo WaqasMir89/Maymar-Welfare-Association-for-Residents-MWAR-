@@ -37,8 +37,17 @@
   </div>
   {% else %}
   <div class="card">
-    <p>{% trans "You don't have an approved membership yet." %}</p>
-    <a class="btn" href="{% url 'members:apply_start' %}">{% trans "Apply for membership" %}</a>
+    {% if application %}
+      <div class="row-between">
+        <h3>{% trans "Your membership application" %}</h3>
+        <span class="badge {% if application.status == 'approved' %}green{% elif application.status == 'rejected' %}red{% else %}amber{% endif %}">{{ application.get_status_display }}</span>
+      </div>
+      <p class="muted">{% trans "Submitted" %} {{ application.created_at|date:"d M Y" }}</p>
+      <a class="btn" href="{% url 'members:my_application' %}">{% trans "Track application status" %}</a>
+    {% else %}
+      <p>{% trans "You don't have an approved membership yet." %}</p>
+      <a class="btn" href="{% url 'members:apply_start' %}">{% trans "Apply for membership" %}</a>
+    {% endif %}
   </div>
   {% endif %}
 

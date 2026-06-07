@@ -14,7 +14,7 @@ from apps.accounts.permissions import is_staff_member, staff_member_test
 from apps.core.sms import send_sms
 from apps.members.models import MemberProfile
 
-from .models import Event, Notice, Notification, Project, PublicDocument
+from .models import Event, Notice, Notification, OrganizationAsset, Project, PublicDocument
 from .services import fan_out_notice
 
 
@@ -193,6 +193,57 @@ def document_upload(request: HttpRequest) -> HttpResponse:
         "content/document_form.html",
         {"categories": PublicDocument.Category.choices},
     )
+
+
+# ---------------------------------------------------------------------------
+# Organization assets — senior staff add, public views
+# ---------------------------------------------------------------------------
+def asset_list(request: HttpRequest) -> HttpResponse:
+    can_manage = request.user.has_perm("content.manage_assets")
+    assets = OrganizationAsset.objects.all() if can_manage else OrganizationAsset.objects.filter(is_public=True)
+    groups: dict[str, dict] = {}
+    for asset in assets:
+        groups.setdefault(asset.category, {"label": asset.get_category_display(), "items": []})
+        groups[asset.category]["items"].append(asset)
+    total_value = sum(
+        (a.estimated_value or 0) for a in assets if a.estimated_value is not None
+    )
+    return render(request, "content/asset_list.html", {
+        "groups": groups.values(), "can_manage": can_manage, "total_value": total_value,
+    })
+
+
+@permission_required("content.manage_assets", raise_exception=True)
+def asset_create(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        if not name:
+            messages.error(request, _("An asset name is required."))
+            return redirect("content:asset_create")
+        value = request.POST.get("estimated_value") or None
+        asset = OrganizationAsset(
+            name=name,
+            category=request.POST.get("category", OrganizationAsset.Category.OTHER),
+            description=request.POST.get("description", "").strip(),
+            location=request.POST.get("location", "").strip(),
+            quantity=request.POST.get("quantity") or 1,
+            estimated_value=value,
+            acquired_on=request.POST.get("acquired_on") or None,
+            photo=request.FILES.get("photo"),
+            is_public=bool(request.POST.get("is_public")),
+            added_by=request.user,
+        )
+        try:
+            asset.full_clean()
+        except Exception as exc:
+            messages.error(request, _("Please check the asset details: %(e)s") % {"e": exc})
+            return redirect("content:asset_create")
+        asset.save()
+        messages.success(request, _("Asset added to the register."))
+        return redirect("content:asset_list")
+    return render(request, "content/asset_form.html", {
+        "categories": OrganizationAsset.Category.choices,
+    })
 
 
 @staff_member_test

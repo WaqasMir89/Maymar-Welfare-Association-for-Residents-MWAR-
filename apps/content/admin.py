@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Event,
     Notice,
+    OrganizationAsset,
     OrganizationGoal,
     OrganizationProfile,
     Project,
@@ -55,6 +56,12 @@ class OrganizationProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         # Singleton — edit the one row rather than adding new ones.
         return not OrganizationProfile.objects.exists()
+
+
+@admin.register(OrganizationAsset)
+class OrganizationAssetAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "quantity", "estimated_value", "is_public", "added_by")
+    list_filter = ("category", "is_public")
 
 
 admin.site.register(Event)

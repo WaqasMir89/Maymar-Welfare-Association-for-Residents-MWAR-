@@ -24,6 +24,7 @@ const PAGES = [
   ["/", "01-home.png", {}],
   ["/content/projects/", "02-projects.png", {}],
   ["/about/", "02a-about.png", {}],
+  ["/content/assets/", "02b-assets.png", {}],
   ["/core/.. ", null, null], // placeholder removed below
   ["/transparency/", "03-transparency.png", {}],
   ["/members/apply/", "04-apply.png", {}],

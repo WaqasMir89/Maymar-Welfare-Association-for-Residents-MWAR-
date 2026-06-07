@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "My Application" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <h1>{% trans "My Membership Application" %}</h1>
+
+  {% if not latest %}
+    <div class="card">
+      <p class="muted">{% trans "You haven't submitted a membership application yet." %}</p>
+      <a class="btn" href="{% url 'members:apply_start' %}">{% trans "Apply for membership" %}</a>
+    </div>
+  {% else %}
+    <div class="card">
+      <div class="row-between">
+        <h3>{% trans "Status" %}</h3>
+        <span class="badge {% if latest.status == 'approved' %}green{% elif latest.status == 'rejected' %}red{% else %}amber{% endif %}">{{ latest.get_status_display }}</span>
+      </div>
+
+      {% if latest.status == 'rejected' %}
+        <p>{% trans "Your application was not approved." %}</p>
+        {% if latest.review_notes %}<p class="muted">{% trans "Note:" %} {{ latest.review_notes }}</p>{% endif %}
+      {% elif latest.status == 'approved' %}
+        <p>🎉 {% trans "Congratulations! Your membership has been approved." %}
+           {% if latest.member_profile %}<br>{% trans "Member number:" %} <strong>{{ latest.member_profile.member_number }}</strong>{% endif %}</p>
+        <a class="btn" href="{% url 'members:dashboard' %}">{% trans "Go to my dashboard" %}</a>
+      {% else %}
+        <ol class="app-steps">
+          {% for s in steps %}
+            <li class="{% if s.done %}done{% endif %} {% if s.current %}current{% endif %}">
+              <span class="step-dot"></span><span>{{ s.label }}</span>
+            </li>
+          {% endfor %}
+        </ol>
+        {% if latest.status == 'docs_required' %}
+          <div class="alert warning">{% trans "We need more documents before we can proceed." %}
+            <a href="{% url 'members:apply_documents' latest.pk %}">{% trans "Upload documents" %}</a></div>
+        {% endif %}
+        {% if latest.review_notes %}<p class="muted">{% trans "Reviewer note:" %} {{ latest.review_notes }}</p>{% endif %}
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>{% trans "Application details" %}</h3>
+      <p><strong>{{ latest.full_name }}</strong> · {{ latest.get_residency_type_display }}</p>
+      {% if latest.property %}<p class="muted">{{ latest.property }}</p>{% endif %}
+      <p class="muted">{% trans "Submitted" %}: {{ latest.created_at|date:"d M Y" }}</p>
+    </div>
+
+    {% if applications|length > 1 %}
+    <div class="card">
+      <h3>{% trans "Previous applications" %}</h3>
+      {% for a in applications %}{% if not forloop.first %}
+        <p>{{ a.created_at|date:"d M Y" }} —
+           <span class="badge {% if a.status == 'approved' %}green{% elif a.status == 'rejected' %}red{% else %}amber{% endif %}">{{ a.get_status_display }}</span></p>
+      {% endif %}{% endfor %}
+    </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

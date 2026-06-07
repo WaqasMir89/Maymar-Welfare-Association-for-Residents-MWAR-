@@ -15,7 +15,13 @@ from apps.members.models import (
     ResidencyType,
     class_for_residency,
 )
-from apps.members.services import ApprovalError, chairman_approve, secretary_review, submit_application
+from apps.members.services import (
+    ApprovalError,
+    chairman_approve,
+    open_application_for,
+    secretary_review,
+    submit_application,
+)
 
 CNIC = "42101-1234567-1"
 
@@ -186,3 +192,79 @@ class ApplicationDocumentAccessTests(TestCase):
 
     def test_anonymous_is_redirected_to_login(self):
         self.assertEqual(self.client.get(self.url).status_code, 302)
+
+
+class ApplicationLifecycleTests(TestCase):
+    """Re-apply blocking, applicant notifications, and the status tracker."""
+
+    def setUp(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        sector = Sector.objects.create(name="Sector W", code="W")
+        sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        self.prop = Property.objects.create(sub_sector=sub, house_number="8",
+                                            status=Property.Status.OCCUPIED)
+        self.applicant = User.objects.create_user("hopeful@x.pk", "pw1234567890",
+                                                   full_name="Hopeful One")
+        self.secretary = User.objects.create_user("sec@x.pk", "pw1234567890", full_name="Sec")
+        self.chairman = User.objects.create_user("chair@x.pk", "pw1234567890", full_name="Chair")
+        self.chairman.user_permissions.add(Permission.objects.get(codename="approve_membership"))
+        self._doc = SimpleUploadedFile
+
+    def _app(self):
+        app = MembershipApplication.objects.create(
+            full_name="Hopeful One", father_or_husband_name="F", cnic=CNIC,
+            phone="0301-2345678", property=self.prop, residency_type=ResidencyType.OWNER,
+            declaration_accepted=True, applicant_user=self.applicant,
+        )
+        for dt in ("cnic_front", "cnic_back"):
+            app.documents.create(doc_type=dt, file=self._doc(f"{dt}.txt", b"x"))
+        return app
+
+    def test_cannot_apply_with_open_application(self):
+        app = self._app()
+        submit_application(app)
+        self.assertIsNotNone(open_application_for(self.applicant))
+        self.client.force_login(self.applicant)
+        r = self.client.get("/members/apply/")
+        self.assertRedirects(r, "/members/my-application/")
+
+    def test_active_member_cannot_apply_again(self):
+        app = self._app()
+        submit_application(app)
+        secretary_review(app, self.secretary, decision="approve")
+        chairman_approve(app, self.chairman)
+        self.applicant.refresh_from_db()
+        self.client.force_login(self.applicant)
+        r = self.client.get("/members/apply/")
+        self.assertRedirects(r, "/members/dashboard/")
+
+    def test_applicant_is_notified_at_each_stage(self):
+        from apps.content.models import Notification
+
+        app = self._app()
+        submit_application(app)
+        secretary_review(app, self.secretary, decision="approve")
+        chairman_approve(app, self.chairman)
+        titles = set(Notification.objects.filter(recipient=self.applicant)
+                     .values_list("title", flat=True))
+        self.assertIn("Application submitted", titles)
+        self.assertIn("Application passed first review", titles)
+        self.assertTrue(any(t.startswith("Membership approved") for t in titles))
+
+    def test_rejection_notifies_with_reason(self):
+        from apps.content.models import Notification
+
+        app = self._app()
+        submit_application(app)
+        secretary_review(app, self.secretary, decision="reject", notes="Incomplete CNIC scan")
+        n = Notification.objects.get(recipient=self.applicant, title="Application not approved")
+        self.assertIn("Incomplete CNIC scan", n.body)
+
+    def test_status_page_shows_tracker(self):
+        app = self._app()
+        submit_application(app)
+        self.client.force_login(self.applicant)
+        r = self.client.get("/members/my-application/")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "My Membership Application")

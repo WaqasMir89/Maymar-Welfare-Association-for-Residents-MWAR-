@@ -33,6 +33,37 @@ class ApprovalError(Exception):
     """Raised when an approval precondition is not met."""
 
 
+# Statuses that mean "this application is still in progress / not yet decided".
+OPEN_APPLICATION_STATUSES = [
+    MembershipApplication.Status.DRAFT,
+    MembershipApplication.Status.SUBMITTED,
+    MembershipApplication.Status.DOCS_REQUIRED,
+    MembershipApplication.Status.UNDER_REVIEW,
+    MembershipApplication.Status.SECRETARY_APPROVED,
+]
+
+
+def open_application_for(user) -> MembershipApplication | None:
+    """The user's not-yet-decided application, if any (blocks re-applying)."""
+    if not getattr(user, "is_authenticated", False):
+        return None
+    return (
+        MembershipApplication.objects
+        .filter(applicant_user=user, status__in=OPEN_APPLICATION_STATUSES)
+        .order_by("-created_at")
+        .first()
+    )
+
+
+def _notify_applicant(application, *, title, body, level="info", url="/members/my-application/"):
+    """In-app notification to the applicant (no-op for staff walk-ins)."""
+    user = application.applicant_user
+    if user:
+        from apps.content.services import notify
+
+        notify(user, title=title, body=body, url=url, level=level)
+
+
 def _next_member_number() -> str:
     """Allocate the next ``MWAR-000123`` sequence atomically."""
     prefix = settings.MEMBER_NUMBER_PREFIX
@@ -67,6 +98,18 @@ def submit_application(application: MembershipApplication) -> MembershipApplicat
     application.save()
     record_audit(AuditLog.Action.UPDATE, "MembershipApplication", application.pk,
                  metadata={"to": application.status})
+    if application.status == MembershipApplication.Status.SUBMITTED:
+        _notify_applicant(
+            application, level="info",
+            title="Application submitted",
+            body="We've received your membership application. The Secretary will review it shortly.",
+        )
+    else:
+        _notify_applicant(
+            application, level="warning",
+            title="More documents needed",
+            body="Please upload the required documents so we can process your application.",
+        )
     return application
 
 
@@ -79,16 +122,26 @@ def secretary_review(application: MembershipApplication, user, *, decision: str,
     if decision == "approve":
         application.status = MembershipApplication.Status.SECRETARY_APPROVED
         action = AuditLog.Action.APPROVE
+        notice = ("Application passed first review",
+                  "Good news — the Secretary has approved your application. "
+                  "It now awaits the Chairman's final approval.", "success")
     elif decision == "reject":
         application.status = MembershipApplication.Status.REJECTED
         action = AuditLog.Action.REJECT
+        notice = ("Application not approved",
+                  notes or "Unfortunately your application was not approved. "
+                  "Please contact the office for details.", "warning")
     else:  # docs_required
         application.status = MembershipApplication.Status.DOCS_REQUIRED
         action = AuditLog.Action.UPDATE
+        notice = ("More documents required",
+                  notes or "Please upload the additional documents requested so the "
+                  "review can continue.", "warning")
 
     application.save()
     record_audit(action, "MembershipApplication", application.pk,
                  actor=user, metadata={"stage": "secretary", "decision": decision})
+    _notify_applicant(application, title=notice[0], body=notice[1], level=notice[2])
     return application
 
 
@@ -157,6 +210,12 @@ def chairman_approve(application: MembershipApplication, chairman, *, fee_method
                  })
     record_audit(AuditLog.Action.PAYMENT, "FeePayment", fee.pk, actor=chairman,
                  metadata={"amount": str(fee.amount), "receipt": fee.receipt_number})
+    _notify_applicant(
+        application, level="success", url="/members/dashboard/",
+        title="Membership approved 🎉",
+        body=(f"Congratulations! Your membership is approved. Your member number is "
+              f"{profile.member_number}. Your digital ID card is ready to view."),
+    )
     return profile
 
 
