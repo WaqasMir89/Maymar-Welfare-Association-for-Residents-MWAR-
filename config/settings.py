@@ -30,8 +30,8 @@ env = environ.Env(
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", "").split(",")
+DEBUG = env("DEBUG")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 # ---------------------------------------------------------------------------
 # Applications
