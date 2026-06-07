@@ -272,3 +272,67 @@ class ReportsAndExportsTests(TestCase):
         r = self.client.get("/dues/staff/dashboard/")
         self.assertEqual(r.status_code, 200)
         self.assertContains(r, "Month-wise collection vs spending")
+
+
+class TransactionLedgerTests(TestCase):
+    """The line-by-line ledger merges every money movement and filters it."""
+
+    def setUp(self):
+        from datetime import date
+
+        from django.contrib.auth.models import Group, Permission
+
+        sector = Sector.objects.create(name="Sector W", code="W")
+        sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        self.prop = Property.objects.create(sub_sector=sub, house_number="4",
+                                            status=Property.Status.OCCUPIED)
+        self.plan = DuesPlan.objects.create(name="Monthly", amount=Decimal("1500.00"))
+        self.finance = User.objects.create_user("fin@x.pk", "pw1234567890", full_name="Fin")
+        self.finance.groups.add(Group.objects.create(name="Finance Officer"))
+        self.finance.user_permissions.add(
+            Permission.objects.get(codename="record_payment", content_type__app_label="dues")
+        )
+        inv = DuesInvoice.objects.create(
+            property=self.prop, plan=self.plan, period_start=date(2026, 1, 1),
+            period_end=date(2026, 1, 31), amount_due=Decimal("1500.00"),
+            due_date=date(2026, 1, 10), status=DuesInvoice.Status.UNPAID,
+        )
+        record_dues_payment(inv, amount=Decimal("1500"), method="cash", user=self.finance)
+        record_donation(donor_name="Abdul Karim", amount=Decimal("5000"),
+                        user=self.finance, purpose="Ramzan drive")
+        e = create_expense(category="Security", amount=Decimal("2000"), user=self.finance)
+        e.status = Expense.Status.PAID
+        e.save()
+
+    def test_ledger_merges_all_kinds_with_directions(self):
+        from apps.dues.reports import ledger_totals, transaction_ledger
+
+        rows = transaction_ledger()
+        kinds = {r["kind"] for r in rows}
+        self.assertEqual(kinds, {"dues", "donation", "expense"})
+        totals = ledger_totals(rows)
+        self.assertEqual(totals["total_in"], Decimal("6500"))   # 1500 dues + 5000 donation
+        self.assertEqual(totals["total_out"], Decimal("2000"))  # expense
+        self.assertEqual(totals["net"], Decimal("4500"))
+
+    def test_filters_by_kind_direction_and_search(self):
+        from apps.dues.reports import transaction_ledger
+
+        self.assertEqual(len(transaction_ledger(kind="expense")), 1)
+        self.assertEqual(len(transaction_ledger(direction="in")), 2)
+        self.assertEqual(len(transaction_ledger(direction="out")), 1)
+        self.assertEqual(len(transaction_ledger(search="Karim")), 1)
+        self.assertEqual(len(transaction_ledger(search="nomatch")), 0)
+
+    def test_ledger_page_and_csv_require_staff(self):
+        self.assertEqual(self.client.get("/dues/staff/transactions/").status_code, 302)
+        self.client.force_login(self.finance)
+        r = self.client.get("/dues/staff/transactions/")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Transaction Ledger")
+        self.assertContains(r, "Abdul Karim")
+        csv = self.client.get("/dues/staff/transactions.csv")
+        self.assertEqual(csv["Content-Type"].split(";")[0], "text/csv")
+        body = csv.content.decode("utf-8")
+        self.assertIn("Money in", body)
+        self.assertIn("Abdul Karim", body)

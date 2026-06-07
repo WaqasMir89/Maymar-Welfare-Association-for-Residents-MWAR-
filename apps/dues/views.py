@@ -90,6 +90,72 @@ def export_public_finance(request: HttpRequest) -> HttpResponse:
     )
 
 
+def _ledger_filters(request):
+    """Parse the shared transaction-ledger filters from the query string."""
+    from datetime import date
+
+    def _date(name):
+        raw = request.GET.get(name)
+        try:
+            return date.fromisoformat(raw) if raw else None
+        except ValueError:
+            return None
+
+    return {
+        "kind": request.GET.get("kind") or None,
+        "direction": request.GET.get("direction") or None,
+        "start": _date("start"),
+        "end": _date("end"),
+        "search": request.GET.get("q", ""),
+    }
+
+
+@staff_member_test
+def transaction_ledger(request: HttpRequest) -> HttpResponse:
+    """Line-by-line ledger of every money movement — not just summaries."""
+    from apps.dues.reports import ledger_totals, transaction_ledger as _ledger
+
+    filters = _ledger_filters(request)
+    rows = _ledger(**filters)
+    totals = ledger_totals(rows)
+    page = Paginator(rows, 50).get_page(request.GET.get("page"))
+
+    querystring = request.GET.copy()
+    querystring.pop("page", None)
+    return render(request, "dues/transactions.html", {
+        "transactions": page, "totals": totals, "filters": filters,
+        "querystring": querystring.urlencode(),
+        "kinds": [("dues", _("Dues payment")), ("fee", _("Registration fee")),
+                  ("donation", _("Donation")), ("expense", _("Expense"))],
+    })
+
+
+@staff_member_test
+def export_transactions(request: HttpRequest) -> HttpResponse:
+    from apps.core.exports import csv_response
+    from apps.dues.reports import transaction_ledger as _ledger
+
+    rows = _ledger(**_ledger_filters(request))
+
+    def _out():
+        for r in rows:
+            d = r["date"]
+            yield [d.strftime("%Y-%m-%d"), r["kind_label"],
+                   "IN" if r["direction"] == "in" else "OUT",
+                   r["party"], r["detail"],
+                   r["amount"] if r["direction"] == "in" else "",
+                   r["amount"] if r["direction"] == "out" else "",
+                   r["method"], r["reference"], r["receipt"],
+                   r["recorded_by"].get_full_name() if r["recorded_by"] else ""]
+
+    return csv_response(
+        "transactions.csv",
+        ["Date", "Type", "Direction", "Party", "Detail", "Money in", "Money out",
+         "Method/Status", "Reference", "Receipt", "Recorded by"],
+        _out(),
+    )
+
+
 @staff_member_test
 def billing_board(request: HttpRequest) -> HttpResponse:
     qs = DuesInvoice.objects.select_related(

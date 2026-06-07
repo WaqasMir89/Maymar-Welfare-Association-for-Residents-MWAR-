@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Transactions" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  {% include "dues/_finance_nav.html" with active="transactions" %}
+  <div class="row-between">
+    <h1>{% trans "Transaction Ledger" %}</h1>
+    <a class="btn btn-ghost btn-sm" href="{% url 'dues:export_transactions' %}{% if querystring %}?{{ querystring }}{% endif %}">⬇ {% trans "Export CSV" %}</a>
+  </div>
+  <p class="muted">{% trans "Every individual money movement — dues, registration fees, donations and expenses." %}</p>
+
+  <div class="grid grid-3" style="margin-top:8px">
+    <div class="kpi success"><div class="value">Rs {{ totals.total_in|floatformat:0|intcomma }}</div><div class="label">{% trans "Money in" %}</div></div>
+    <div class="kpi warning"><div class="value">Rs {{ totals.total_out|floatformat:0|intcomma }}</div><div class="label">{% trans "Money out" %}</div></div>
+    <div class="kpi"><div class="value">Rs {{ totals.net|floatformat:0|intcomma }}</div><div class="label">{% trans "Net" %} · {{ totals.count }} {% trans "txns" %}</div></div>
+  </div>
+
+  <form method="get" class="card" style="margin-top:18px">
+    <div class="grid grid-4">
+      <div class="field"><label>{% trans "Type" %}</label>
+        <select name="kind">
+          <option value="">{% trans "All types" %}</option>
+          {% for v, l in kinds %}<option value="{{ v }}" {% if filters.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>{% trans "Direction" %}</label>
+        <select name="direction">
+          <option value="">{% trans "In & out" %}</option>
+          <option value="in" {% if filters.direction == 'in' %}selected{% endif %}>{% trans "Money in" %}</option>
+          <option value="out" {% if filters.direction == 'out' %}selected{% endif %}>{% trans "Money out" %}</option>
+        </select>
+      </div>
+      <div class="field"><label>{% trans "From" %}</label><input type="date" name="start" value="{{ filters.start|date:'Y-m-d' }}"></div>
+      <div class="field"><label>{% trans "To" %}</label><input type="date" name="end" value="{{ filters.end|date:'Y-m-d' }}"></div>
+    </div>
+    <div class="row-between" style="margin-bottom:0">
+      <input type="text" name="q" value="{{ filters.search }}" placeholder="{% trans 'Search party, reference or receipt…' %}" style="max-width:360px">
+      <div>
+        <a class="btn btn-ghost btn-sm" href="{% url 'dues:transaction_ledger' %}">{% trans "Clear" %}</a>
+        <button class="btn btn-sm" type="submit">{% trans "Filter" %}</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="table-wrap"><table class="table">
+    <thead><tr>
+      <th>{% trans "Date" %}</th><th>{% trans "Type" %}</th><th>{% trans "Party / detail" %}</th>
+      <th>{% trans "Method" %}</th><th>{% trans "Reference" %}</th>
+      <th style="text-align:end">{% trans "In" %}</th><th style="text-align:end">{% trans "Out" %}</th>
+      <th>{% trans "By" %}</th><th></th>
+    </tr></thead>
+    <tbody>
+    {% for t in transactions %}
+      <tr>
+        <td style="white-space:nowrap">{{ t.date|date:"d M Y" }}</td>
+        <td><span class="badge {% if t.direction == 'in' %}green{% else %}amber{% endif %}">{{ t.kind_label }}</span></td>
+        <td><strong>{{ t.party }}</strong>{% if t.detail %}<br><span class="muted">{{ t.detail }}</span>{% endif %}</td>
+        <td class="muted">{{ t.method }}</td>
+        <td class="muted">{{ t.reference|default:"—" }}{% if t.receipt %}<br><span class="muted">{{ t.receipt }}</span>{% endif %}</td>
+        <td style="text-align:end;color:var(--accent-success)">{% if t.direction == 'in' %}Rs {{ t.amount|floatformat:0|intcomma }}{% endif %}</td>
+        <td style="text-align:end;color:#b4471f">{% if t.direction == 'out' %}Rs {{ t.amount|floatformat:0|intcomma }}{% endif %}</td>
+        <td class="muted">{{ t.recorded_by.get_full_name|default:t.recorded_by.email|default:"—" }}</td>
+        <td>{% if t.pdf %}<a class="btn btn-ghost btn-sm" href="{% url t.pdf.0 t.pdf.1 %}?download=1" title="{% trans 'Receipt' %}">PDF</a>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="9" class="muted">{% trans "No transactions match these filters." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+
+  {% if transactions.paginator.num_pages > 1 %}
+  <nav class="pagination">
+    {% if transactions.has_previous %}<a class="btn btn-ghost" href="?{{ querystring }}&page={{ transactions.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}
+    <span>{% blocktrans with n=transactions.number total=transactions.paginator.num_pages %}Page {{ n }} of {{ total }}{% endblocktrans %}</span>
+    {% if transactions.has_next %}<a class="btn btn-ghost" href="?{{ querystring }}&page={{ transactions.next_page_number }}">{% trans "Next" %}</a>{% endif %}
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

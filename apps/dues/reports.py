@@ -85,6 +85,113 @@ def transparency_summary() -> dict:
     }
 
 
+def transaction_ledger(*, kind=None, direction=None, start=None, end=None, search=""):
+    """A flat, chronological ledger of every individual money movement —
+    dues payments, registration fees, donations (in) and expenses (out).
+
+    Returns a list of dicts sorted newest-first. Filters narrow by kind,
+    direction (in/out), date range and a free-text search.
+    """
+    from apps.members.models import FeePayment
+
+    s = (search or "").strip().lower()
+    rows: list[dict] = []
+
+    def _match(*fields) -> bool:
+        return not s or any(s in (f or "").lower() for f in fields)
+
+    want_in = direction in (None, "", "in")
+    want_out = direction in (None, "", "out")
+
+    if want_in and kind in (None, "", "dues"):
+        qs = DuesPayment.objects.select_related(
+            "invoice__member", "invoice__property", "received_by")
+        if start:
+            qs = qs.filter(paid_at__date__gte=start)
+        if end:
+            qs = qs.filter(paid_at__date__lte=end)
+        for p in qs:
+            member = p.invoice.member.full_name if p.invoice and p.invoice.member else ""
+            prop = str(p.invoice.property) if p.invoice and p.invoice.property_id else ""
+            if not _match(member, prop, p.reference, p.receipt_number):
+                continue
+            rows.append({
+                "date": p.paid_at, "kind": "dues", "kind_label": "Dues payment",
+                "direction": "in", "party": member or prop or "—", "detail": prop,
+                "amount": p.amount, "method": p.get_method_display(),
+                "reference": p.reference, "receipt": p.receipt_number,
+                "recorded_by": p.received_by, "pdf": ("dues:dues_receipt_pdf", p.pk),
+            })
+
+    if want_in and kind in (None, "", "fee"):
+        qs = FeePayment.objects.select_related("member", "received_by")
+        if start:
+            qs = qs.filter(paid_at__date__gte=start)
+        if end:
+            qs = qs.filter(paid_at__date__lte=end)
+        for f in qs:
+            member = f.member.full_name if f.member else ""
+            if not _match(member, f.reference, f.receipt_number):
+                continue
+            rows.append({
+                "date": f.paid_at, "kind": "fee", "kind_label": "Registration fee",
+                "direction": "in", "party": member or "—", "detail": "Membership registration",
+                "amount": f.amount, "method": f.get_method_display(),
+                "reference": f.reference, "receipt": f.receipt_number,
+                "recorded_by": f.received_by, "pdf": ("members:fee_receipt_pdf", f.pk),
+            })
+
+    if want_in and kind in (None, "", "donation"):
+        qs = Donation.objects.select_related("received_by")
+        if start:
+            qs = qs.filter(donated_at__date__gte=start)
+        if end:
+            qs = qs.filter(donated_at__date__lte=end)
+        for d in qs:
+            if not _match(d.donor_name, d.purpose, d.reference, d.receipt_number):
+                continue
+            rows.append({
+                "date": d.donated_at, "kind": "donation", "kind_label": "Donation",
+                "direction": "in", "party": d.donor_name, "detail": d.purpose,
+                "amount": d.amount, "method": d.get_method_display(),
+                "reference": d.reference, "receipt": d.receipt_number,
+                "recorded_by": d.received_by, "pdf": ("dues:donation_receipt_pdf", d.pk),
+            })
+
+    if want_out and kind in (None, "", "expense"):
+        qs = Expense.objects.filter(status__in=["approved", "paid"]).select_related(
+            "approved_by", "requested_by")
+        if start:
+            qs = qs.filter(incurred_on__gte=start)
+        if end:
+            qs = qs.filter(incurred_on__lte=end)
+        for e in qs:
+            if not _match(e.category, e.description):
+                continue
+            rows.append({
+                "date": e.incurred_on, "kind": "expense", "kind_label": "Expense",
+                "direction": "out", "party": e.category, "detail": e.description,
+                "amount": e.amount, "method": e.get_status_display(),
+                "reference": "", "receipt": "",
+                "recorded_by": e.approved_by or e.requested_by, "pdf": None,
+            })
+
+    def _sort_key(r):
+        d = r["date"]
+        return d if hasattr(d, "timestamp") else timezone.make_aware(
+            timezone.datetime.combine(d, timezone.datetime.min.time()))
+
+    rows.sort(key=_sort_key, reverse=True)
+    return rows
+
+
+def ledger_totals(rows) -> dict:
+    total_in = sum((r["amount"] for r in rows if r["direction"] == "in"), Decimal("0"))
+    total_out = sum((r["amount"] for r in rows if r["direction"] == "out"), Decimal("0"))
+    return {"total_in": total_in, "total_out": total_out, "net": total_in - total_out,
+            "count": len(rows)}
+
+
 def finance_dashboard(months: int = 12) -> dict:
     """Everything the staff finance dashboard needs in one call."""
     summary = transparency_summary()
