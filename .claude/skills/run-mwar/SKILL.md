@@ -139,9 +139,13 @@ use the driver above to verify without a display.
   returns a `gAAAAA…` Fernet token, not digits. Read through the ORM (it
   decrypts) and expect `masked_cnic` (`*****-*****67-*`) in the UI unless the
   user holds `members.view_pii`.
-- **Urdu UI direction flips but body text stays English** — only the chrome is
-  translated; no compiled `.po` catalog ships yet. RTL layout mirroring is the
-  thing to verify in `10-home-urdu.png`, not translated copy.
+- **Urdu UI is fully translated + RTL.** A compiled catalog ships at
+  `locale/ur/LC_MESSAGES/django.{po,mo}` (~395 strings). Edit the `.po` then
+  `python manage.py compilemessages -l ur` (needs the `gettext` binary; the
+  Dockerfile installs it). After adding new `{% trans %}`/`gettext` strings, run
+  `makemessages -l ur --ignore=node_modules --ignore=staticfiles` to extract.
+  Data (member names, notice/project titles) stays in its source language — only
+  UI chrome is translated. Verify in `10-home-urdu.png`.
 
 ## Troubleshooting
 

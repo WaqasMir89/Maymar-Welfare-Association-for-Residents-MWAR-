@@ -1,0 +1,1725 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-07 10:00+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
+"Language-Team: Urdu\n"
+"Language: ur\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/accounts/forms.py:16 templates/accounts/login.html:11
+msgid "Email"
+msgstr "ای میل"
+
+#: apps/accounts/forms.py:17 templates/accounts/login.html:12
+msgid "Password"
+msgstr "پاس ورڈ"
+
+#: apps/accounts/forms.py:31
+msgid "Invalid email or password."
+msgstr "ای میل یا پاس ورڈ غلط ہے۔"
+
+#: apps/accounts/forms.py:39 templates/members/apply_form.html:18
+msgid "Full name"
+msgstr "پورا نام"
+
+#: apps/accounts/forms.py:40 templates/members/application_detail.html:20
+#: templates/members/apply_form.html:23 templates/members/apply_review.html:16
+msgid "Phone"
+msgstr "فون"
+
+#: apps/accounts/models.py:47
+msgid "اردو"
+msgstr "اردو"
+
+#: apps/accounts/models.py:48
+msgid "English"
+msgstr "انگریزی"
+
+#: apps/accounts/models.py:51
+msgid "email address"
+msgstr "ای میل ایڈریس"
+
+#: apps/accounts/models.py:52
+msgid "full name"
+msgstr "پورا نام"
+
+#: apps/accounts/models.py:54
+msgid "phone"
+msgstr "فون"
+
+#: apps/accounts/models.py:82
+msgid "Chairman"
+msgstr "چیئرمین"
+
+#: apps/accounts/models.py:83
+msgid "Secretary"
+msgstr "سیکریٹری"
+
+#: apps/accounts/models.py:84
+msgid "Treasurer / Finance Officer"
+msgstr "خازن / فنانس آفیسر"
+
+#: apps/accounts/models.py:85
+msgid "Project Manager"
+msgstr "پروجیکٹ مینیجر"
+
+#: apps/accounts/models.py:86
+msgid "Administrator"
+msgstr "ایڈمنسٹریٹر"
+
+#: apps/accounts/models.py:87 apps/members/models.py:272
+#: apps/tickets/models.py:24
+msgid "Other"
+msgstr "دیگر"
+
+#: apps/accounts/views.py:27
+msgid "Welcome back."
+msgstr "خوش آمدید۔"
+
+#: apps/accounts/views.py:40
+msgid "Account created. Welcome to M.W.A.R."
+msgstr "اکاؤنٹ بن گیا۔ M.W.A.R میں خوش آمدید۔"
+
+#: apps/accounts/views.py:47
+msgid "You have been signed out."
+msgstr "آپ سائن آؤٹ ہو گئے ہیں۔"
+
+#: apps/content/models.py:17
+msgid "Planned"
+msgstr "منصوبہ بند"
+
+#: apps/content/models.py:18 apps/members/models.py:54
+#: apps/members/models.py:152 apps/members/models.py:294
+msgid "Active"
+msgstr "فعال"
+
+#: apps/content/models.py:19
+msgid "Completed"
+msgstr "مکمل"
+
+#: apps/content/models.py:20
+msgid "On hold"
+msgstr "ملتوی"
+
+#: apps/content/models.py:60 templates/dues/donations.html:18
+msgid "Public"
+msgstr "عوامی"
+
+#: apps/content/models.py:61
+msgid "All members"
+msgstr "تمام اراکین"
+
+#: apps/content/models.py:62
+msgid "Specific sector"
+msgstr "مخصوص سیکٹر"
+
+#: apps/content/models.py:103
+msgid "Info"
+msgstr "معلومات"
+
+#: apps/content/models.py:104
+msgid "Success"
+msgstr "کامیاب"
+
+#: apps/content/models.py:105
+msgid "Warning"
+msgstr "انتباہ"
+
+#: apps/content/views.py:62
+#, python-format
+msgid " Delivered in-app to %(n)d."
+msgstr " ایپ میں %(n)d تک پہنچا دیا گیا۔"
+
+#: apps/content/views.py:64
+#, python-format
+msgid " SMS sent to %(n)d."
+msgstr " %(n)d کو ایس ایم ایس بھیجا گیا۔"
+
+#: apps/content/views.py:65
+msgid "Notice published."
+msgstr "نوٹس شائع کر دیا گیا۔"
+
+#: apps/content/views.py:93
+msgid "All notifications marked as read."
+msgstr "تمام اطلاعات کو پڑھا ہوا نشان زد کر دیا گیا۔"
+
+#: apps/content/views.py:125
+msgid "A title and start time are required."
+msgstr "عنوان اور آغاز کا وقت درکار ہے۔"
+
+#: apps/content/views.py:135
+msgid "Event created."
+msgstr "تقریب بنا دی گئی۔"
+
+#: apps/core/models.py:55
+msgid "Create"
+msgstr "بنائیں"
+
+#: apps/core/models.py:56
+msgid "Update"
+msgstr "اپ ڈیٹ"
+
+#: apps/core/models.py:57
+msgid "Delete"
+msgstr "حذف کریں"
+
+#: apps/core/models.py:58 apps/members/forms.py:60
+#: templates/dues/expenses.html:37
+msgid "Approve"
+msgstr "منظور کریں"
+
+#: apps/core/models.py:59 apps/members/forms.py:62
+#: templates/dues/expenses.html:38
+msgid "Reject"
+msgstr "مسترد کریں"
+
+#: apps/core/models.py:60
+msgid "Payment"
+msgstr "ادائیگی"
+
+#: apps/core/models.py:61
+msgid "Login"
+msgstr "لاگ اِن"
+
+#: apps/core/models.py:62
+msgid "PII access"
+msgstr "ذاتی معلومات تک رسائی"
+
+#: apps/core/validators.py:11
+msgid "Enter a valid CNIC in the format 42101-1234567-1."
+msgstr "درست شناختی کارڈ نمبر اس فارمیٹ میں درج کریں: 42101-1234567-1۔"
+
+#: apps/core/validators.py:17
+msgid "Enter a valid Pakistani phone number, e.g. 0301-2345678."
+msgstr "درست پاکستانی فون نمبر درج کریں، مثلاً 0301-2345678۔"
+
+#: apps/dues/models.py:17 apps/members/models.py:312
+#: templates/dues/record_donation.html:14
+#: templates/dues/record_payment.html:14
+#: templates/members/application_detail.html:54
+msgid "Cash"
+msgstr "نقد"
+
+#: apps/dues/models.py:18 apps/members/models.py:313
+#: templates/dues/record_donation.html:14
+#: templates/dues/record_payment.html:14
+#: templates/members/application_detail.html:54
+msgid "Bank transfer"
+msgstr "بینک ٹرانسفر"
+
+#: apps/dues/models.py:19 apps/members/models.py:314
+msgid "JazzCash"
+msgstr "JazzCash"
+
+#: apps/dues/models.py:20 apps/members/models.py:315
+msgid "EasyPaisa"
+msgstr "EasyPaisa"
+
+#: apps/dues/models.py:26
+msgid "Monthly"
+msgstr "ماہانہ"
+
+#: apps/dues/models.py:27
+msgid "Quarterly"
+msgstr "سہ ماہی"
+
+#: apps/dues/models.py:28
+msgid "Annual"
+msgstr "سالانہ"
+
+#: apps/dues/models.py:31
+msgid "All properties"
+msgstr "تمام جائیدادیں"
+
+#: apps/dues/models.py:32
+msgid "Owner-occupied"
+msgstr "مالک کے زیر استعمال"
+
+#: apps/dues/models.py:33
+msgid "Tenant-occupied"
+msgstr "کرایہ دار کے زیر استعمال"
+
+#: apps/dues/models.py:53
+msgid "Unpaid"
+msgstr "غیر ادا شدہ"
+
+#: apps/dues/models.py:54
+msgid "Partial"
+msgstr "جزوی"
+
+#: apps/dues/models.py:55 apps/dues/models.py:150
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+msgid "Paid"
+msgstr "ادا شدہ"
+
+#: apps/dues/models.py:56
+msgid "Waived"
+msgstr "معاف"
+
+#: apps/dues/models.py:57
+msgid "Overdue"
+msgstr "واجب الادا"
+
+#: apps/dues/models.py:147 apps/members/models.py:53
+msgid "Pending"
+msgstr "زیر التوا"
+
+#: apps/dues/models.py:148 apps/members/models.py:185
+#: templates/members/application_detail.html:39
+msgid "Approved"
+msgstr "منظور شدہ"
+
+#: apps/dues/models.py:149 apps/members/models.py:57
+#: apps/members/models.py:186 templates/members/application_detail.html:45
+msgid "Rejected"
+msgstr "مسترد شدہ"
+
+#: apps/dues/views.py:57
+msgid "Enter a valid amount."
+msgstr "درست رقم درج کریں۔"
+
+#: apps/dues/views.py:67
+#, python-format
+msgid "Payment recorded. Receipt %(r)s."
+msgstr "ادائیگی درج کر دی گئی۔ رسید %(r)s۔"
+
+#: apps/dues/views.py:101
+msgid "Enter a donor name and a valid amount."
+msgstr "عطیہ دہندہ کا نام اور درست رقم درج کریں۔"
+
+#: apps/dues/views.py:112
+#, python-format
+msgid "Donation recorded. Receipt %(r)s."
+msgstr "عطیہ درج کر دیا گیا۔ رسید %(r)s۔"
+
+#: apps/dues/views.py:147
+msgid "Enter a category and a valid amount."
+msgstr "زمرہ اور درست رقم درج کریں۔"
+
+#: apps/dues/views.py:157
+#, python-format
+msgid "Expense #%(id)s logged, pending approval."
+msgstr "اخراجات #%(id)s درج کر دیا گیا، منظوری زیر التوا۔"
+
+#: apps/dues/views.py:170
+#, python-format
+msgid "Expense #%(id)s %(d)s."
+msgstr "اخراجات #%(id)s %(d)s۔"
+
+#: apps/dues/views.py:194
+msgid "Maintenance Dues Receipt"
+msgstr "مینٹیننس واجبات کی رسید"
+
+#: apps/dues/views.py:198 templates/dues/billing_board.html:18
+#: templates/members/application_detail.html:23
+#: templates/members/apply_review.html:17 templates/members/queue.html:17
+msgid "Property"
+msgstr "جائیداد"
+
+#: apps/dues/views.py:201 apps/members/views.py:262
+#: templates/dues/billing_board.html:18
+msgid "Member"
+msgstr "رکن"
+
+#: apps/dues/views.py:202
+msgid "Billing period"
+msgstr "بلنگ مدت"
+
+#: apps/dues/views.py:203 apps/dues/views.py:229 apps/members/views.py:266
+msgid "Payment method"
+msgstr "ادائیگی کا طریقہ"
+
+#: apps/dues/views.py:204 apps/dues/views.py:230 apps/members/views.py:267
+msgid "Reference"
+msgstr "حوالہ"
+
+#: apps/dues/views.py:205
+msgid "Invoice balance"
+msgstr "انوائس بقایا"
+
+#: apps/dues/views.py:209 apps/members/views.py:271
+msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
+msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
+
+#: apps/dues/views.py:221
+msgid "Donation Receipt"
+msgstr "عطیہ کی رسید"
+
+#: apps/dues/views.py:225 templates/dues/donations.html:18
+msgid "Donor"
+msgstr "عطیہ دہندہ"
+
+#: apps/dues/views.py:228 apps/members/views.py:265
+#: templates/dues/donations.html:18
+msgid "Purpose"
+msgstr "مقصد"
+
+#: apps/dues/views.py:228
+msgid "General fund"
+msgstr "عمومی فنڈ"
+
+#: apps/dues/views.py:234
+msgid "Thank you for supporting M.W.A.R — “Hands of Hope”."
+msgstr "M.W.A.R کی معاونت کا شکریہ — ”اُمید کے ہاتھ“۔"
+
+#: apps/locality/models.py:46 templates/locality/property_list.html:15
+msgid "House"
+msgstr "مکان"
+
+#: apps/locality/models.py:47
+msgid "Plot"
+msgstr "پلاٹ"
+
+#: apps/locality/models.py:48
+msgid "Apartment"
+msgstr "اپارٹمنٹ"
+
+#: apps/locality/models.py:49
+msgid "Commercial"
+msgstr "کمرشل"
+
+#: apps/locality/models.py:52
+msgid "Occupied"
+msgstr "آباد"
+
+#: apps/locality/models.py:53
+msgid "Vacant"
+msgstr "خالی"
+
+#: apps/locality/models.py:54
+msgid "Under construction"
+msgstr "زیر تعمیر"
+
+#: apps/members/forms.py:17
+msgid ""
+"I solemnly declare (حلفیہ اقرار) that the information above is correct and I"
+" will abide by the association's constitution."
+msgstr ""
+"میں حلفیہ اقرار کرتا/کرتی ہوں کہ مندرجہ بالا معلومات درست ہیں اور میں ایسوسی"
+" ایشن کے آئین کی پابندی کروں گا/گی۔"
+
+#: apps/members/forms.py:61
+msgid "Request more documents"
+msgstr "مزید دستاویزات طلب کریں"
+
+#: apps/members/forms.py:65 templates/members/application_detail.html:65
+msgid "Notes"
+msgstr "نوٹس"
+
+#: apps/members/models.py:31
+msgid "Owner (مالک)"
+msgstr "مالک"
+
+#: apps/members/models.py:32
+msgid "Tenant (کرایہ دار)"
+msgstr "کرایہ دار"
+
+#: apps/members/models.py:36 templates/core/about.html:16
+msgid "Permanent Member (مستقل ممبر)"
+msgstr "مستقل رکن"
+
+#: apps/members/models.py:37 templates/core/about.html:17
+msgid "Associate Member (ایسوسی ایٹ ممبر)"
+msgstr "ایسوسی ایٹ رکن"
+
+#: apps/members/models.py:55 apps/members/models.py:154
+msgid "Suspended"
+msgstr "معطل"
+
+#: apps/members/models.py:56 apps/members/models.py:153
+msgid "Expired"
+msgstr "میعاد ختم"
+
+#: apps/members/models.py:180
+msgid "Draft"
+msgstr "مسودہ"
+
+#: apps/members/models.py:181
+msgid "Submitted"
+msgstr "جمع شدہ"
+
+#: apps/members/models.py:182
+msgid "Documents required"
+msgstr "دستاویزات درکار"
+
+#: apps/members/models.py:183
+msgid "Under review"
+msgstr "زیر جائزہ"
+
+#: apps/members/models.py:184
+msgid "Secretary approved"
+msgstr "سیکریٹری کی منظوری"
+
+#: apps/members/models.py:268 templates/members/apply_documents.html:14
+msgid "CNIC (front)"
+msgstr "شناختی کارڈ (سامنے)"
+
+#: apps/members/models.py:269
+msgid "CNIC (back)"
+msgstr "شناختی کارڈ (پیچھے)"
+
+#: apps/members/models.py:270 templates/members/apply_documents.html:15
+msgid "Tenancy agreement"
+msgstr "کرایہ نامہ"
+
+#: apps/members/models.py:271
+msgid "Photograph"
+msgstr "تصویر"
+
+#: apps/members/models.py:295
+msgid "Revoked"
+msgstr "منسوخ"
+
+#: apps/members/views.py:47
+msgid "Application started. Now upload your documents."
+msgstr "درخواست شروع ہو گئی۔ اب اپنی دستاویزات اپ لوڈ کریں۔"
+
+#: apps/members/views.py:60
+msgid "Document uploaded."
+msgstr "دستاویز اپ لوڈ ہو گئی۔"
+
+#: apps/members/views.py:154
+msgid "You do not have final-approval rights."
+msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
+
+#: apps/members/views.py:164
+#, python-format
+msgid "Approved. Member %(num)s issued with fee receipt and ID card."
+msgstr ""
+"منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
+
+#: apps/members/views.py:175
+msgid "Review recorded."
+msgstr "جائزہ درج کر دیا گیا۔"
+
+#: apps/members/views.py:205 apps/members/views.py:283
+msgid "No member card yet — your membership may still be pending."
+msgstr "ابھی تک کوئی رکنیتی کارڈ نہیں — آپ کی رکنیت شاید ابھی زیر التوا ہے۔"
+
+#: apps/members/views.py:258
+msgid "Registration Fee Receipt"
+msgstr "رجسٹریشن فیس کی رسید"
+
+#: apps/members/views.py:265
+msgid "One-time membership registration fee"
+msgstr "یک بار رکنیت رجسٹریشن فیس"
+
+#: apps/tickets/models.py:16
+msgid "Water"
+msgstr "پانی"
+
+#: apps/tickets/models.py:17
+msgid "Sewerage"
+msgstr "نکاسیِ آب"
+
+#: apps/tickets/models.py:18
+msgid "Electricity"
+msgstr "بجلی"
+
+#: apps/tickets/models.py:19
+msgid "Security"
+msgstr "سیکیورٹی"
+
+#: apps/tickets/models.py:20
+msgid "Sanitation"
+msgstr "صفائی"
+
+#: apps/tickets/models.py:21
+msgid "Streetlights"
+msgstr "اسٹریٹ لائٹس"
+
+#: apps/tickets/models.py:22
+msgid "Encroachment"
+msgstr "تجاوزات"
+
+#: apps/tickets/models.py:23
+msgid "Parks / common areas"
+msgstr "پارکس / مشترکہ علاقے"
+
+#: apps/tickets/models.py:27
+msgid "Low"
+msgstr "کم"
+
+#: apps/tickets/models.py:28
+msgid "Medium"
+msgstr "درمیانہ"
+
+#: apps/tickets/models.py:29
+msgid "High"
+msgstr "زیادہ"
+
+#: apps/tickets/models.py:30
+msgid "Urgent"
+msgstr "فوری"
+
+#: apps/tickets/models.py:33
+msgid "Open"
+msgstr "کھلا"
+
+#: apps/tickets/models.py:34
+msgid "Assigned"
+msgstr "تفویض شدہ"
+
+#: apps/tickets/models.py:35
+msgid "In progress"
+msgstr "زیر عمل"
+
+#: apps/tickets/models.py:36
+msgid "Resolved"
+msgstr "حل شدہ"
+
+#: apps/tickets/models.py:37
+msgid "Closed"
+msgstr "بند"
+
+#: apps/tickets/models.py:38
+msgid "Reopened"
+msgstr "دوبارہ کھولا گیا"
+
+#: apps/tickets/views.py:48
+#, python-format
+msgid "Complaint #%(n)s registered."
+msgstr "شکایت #%(n)s درج کر دی گئی۔"
+
+#: apps/tickets/views.py:58
+msgid "You can only view your own complaints."
+msgstr "آپ صرف اپنی شکایات دیکھ سکتے ہیں۔"
+
+#: apps/tickets/views.py:96
+msgid "Status updated."
+msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
+
+#: templates/accounts/login.html:3 templates/accounts/login.html:7
+#: templates/accounts/login.html:13 templates/accounts/register.html:20
+#: templates/base.html:40
+msgid "Sign in"
+msgstr "سائن اِن"
+
+#: templates/accounts/login.html:15
+msgid "New resident?"
+msgstr "نئے رہائشی؟"
+
+#: templates/accounts/login.html:15
+msgid "Create an account"
+msgstr "اکاؤنٹ بنائیں"
+
+#: templates/accounts/register.html:3 templates/accounts/register.html:18
+msgid "Create account"
+msgstr "اکاؤنٹ بنائیں"
+
+#: templates/accounts/register.html:7
+msgid "Create your account"
+msgstr "اپنا اکاؤنٹ بنائیں"
+
+#: templates/accounts/register.html:20
+msgid "Already registered?"
+msgstr "پہلے سے رجسٹرڈ ہیں؟"
+
+#: templates/base.html:21 templates/base.html:69 templates/core/about.html:7
+#: templates/core/contact.html:8 templates/core/home.html:12
+#: templates/members/card.html:10
+msgid "Reg. No."
+msgstr "رجسٹریشن نمبر"
+
+#: templates/base.html:25 templates/content/project_list.html:3
+msgid "Projects"
+msgstr "منصوبے"
+
+#: templates/base.html:26 templates/content/notice_list.html:3
+#: templates/content/notice_list.html:7 templates/core/home.html:34
+msgid "Notices"
+msgstr "نوٹس"
+
+#: templates/base.html:27 templates/content/event_list.html:3
+msgid "Events"
+msgstr "تقریبات"
+
+#: templates/base.html:28 templates/dues/_finance_nav.html:6
+msgid "Transparency"
+msgstr "شفافیت"
+
+#: templates/base.html:29 templates/core/home.html:9
+msgid "Become a Member"
+msgstr "رکن بنیں"
+
+#: templates/base.html:32
+msgid "Staff"
+msgstr "عملہ"
+
+#: templates/base.html:34 templates/members/dashboard.html:3
+msgid "My Dashboard"
+msgstr "میرا ڈیش بورڈ"
+
+#: templates/base.html:35 templates/content/notifications.html:3
+#: templates/content/notifications.html:7
+msgid "Notifications"
+msgstr "اطلاعات"
+
+#: templates/base.html:38
+msgid "Sign out"
+msgstr "سائن آؤٹ"
+
+#: templates/content/event_detail.html:6
+msgid "All events"
+msgstr "تمام تقریبات"
+
+#: templates/content/event_detail.html:12 templates/content/event_list.html:23
+msgid "Members only"
+msgstr "صرف اراکین کے لیے"
+
+#: templates/content/event_form.html:3 templates/content/event_form.html:7
+msgid "New event"
+msgstr "نئی تقریب"
+
+#: templates/content/event_form.html:10 templates/content/notice_create.html:9
+#: templates/tickets/list.html:15
+msgid "Title"
+msgstr "عنوان"
+
+#: templates/content/event_form.html:11
+msgid "Starts at"
+msgstr "آغاز"
+
+#: templates/content/event_form.html:12
+msgid "Ends at (optional)"
+msgstr "اختتام (اختیاری)"
+
+#: templates/content/event_form.html:13
+msgid "Location"
+msgstr "مقام"
+
+#: templates/content/event_form.html:13
+msgid "e.g. Community hall, Sector W"
+msgstr "مثلاً کمیونٹی ہال، سیکٹر W"
+
+#: templates/content/event_form.html:14 templates/tickets/detail.html:15
+msgid "Description"
+msgstr "تفصیل"
+
+#: templates/content/event_form.html:15
+msgid "Visible to the public (not just members)"
+msgstr "عوام کے لیے قابلِ رؤیت (صرف اراکین کے لیے نہیں)"
+
+#: templates/content/event_form.html:16
+msgid "Create event"
+msgstr "تقریب بنائیں"
+
+#: templates/content/event_list.html:7
+msgid "Community Events"
+msgstr "کمیونٹی تقریبات"
+
+#: templates/content/event_list.html:8
+msgid "+ New event"
+msgstr "+ نئی تقریب"
+
+#: templates/content/event_list.html:11
+msgid "Upcoming"
+msgstr "آئندہ"
+
+#: templates/content/event_list.html:26
+msgid "No upcoming events."
+msgstr "کوئی آئندہ تقریب نہیں۔"
+
+#: templates/content/event_list.html:30
+msgid "Past events"
+msgstr "گزشتہ تقریبات"
+
+#: templates/content/notice_create.html:6
+msgid "Broadcast a notice"
+msgstr "نوٹس نشر کریں"
+
+#: templates/content/notice_create.html:10
+msgid "Message"
+msgstr "پیغام"
+
+#: templates/content/notice_create.html:11
+msgid "Audience"
+msgstr "سامعین"
+
+#: templates/content/notice_create.html:14
+msgid "Also send by SMS"
+msgstr "ایس ایم ایس کے ذریعے بھی بھیجیں"
+
+#: templates/content/notice_create.html:15
+msgid "Also send by email"
+msgstr "ای میل کے ذریعے بھی بھیجیں"
+
+#: templates/content/notice_create.html:17
+msgid "Publish"
+msgstr "شائع کریں"
+
+#: templates/content/notice_list.html:9
+msgid "+ Broadcast"
+msgstr "+ نشر کریں"
+
+#: templates/content/notice_list.html:16
+msgid "SMS sent"
+msgstr "ایس ایم ایس بھیجا گیا"
+
+#: templates/content/notice_list.html:18
+msgid "No notices."
+msgstr "کوئی نوٹس نہیں۔"
+
+#: templates/content/notifications.html:10
+msgid "Mark all as read"
+msgstr "سب کو پڑھا ہوا نشان زد کریں"
+
+#: templates/content/notifications.html:23
+msgid "ago"
+msgstr "پہلے"
+
+#: templates/content/notifications.html:26
+msgid "You have no notifications."
+msgstr "آپ کے پاس کوئی اطلاع نہیں۔"
+
+#: templates/content/project_detail.html:6
+msgid "All projects"
+msgstr "تمام منصوبے"
+
+#: templates/content/project_detail.html:11
+#: templates/content/project_list.html:13
+msgid "Budget:"
+msgstr "بجٹ:"
+
+#: templates/content/project_list.html:6
+msgid "Community Projects"
+msgstr "کمیونٹی منصوبے"
+
+#: templates/content/project_list.html:15
+msgid "No projects published."
+msgstr "کوئی منصوبہ شائع نہیں ہوا۔"
+
+#: templates/core/_pagination.html:5
+msgid "Previous"
+msgstr "پچھلا"
+
+#: templates/core/_pagination.html:7
+#, python-format
+msgid "Page %(n)s of %(total)s"
+msgstr "صفحہ %(n)s از %(total)s"
+
+#: templates/core/_pagination.html:9
+msgid "Next"
+msgstr "اگلا"
+
+#: templates/core/about.html:5
+msgid "About the Association"
+msgstr "ایسوسی ایشن کے بارے میں"
+
+#: templates/core/about.html:7
+msgid "is a registered Resident Welfare Association serving the residents of"
+msgstr "ایک رجسٹرڈ رہائشی فلاحی ایسوسی ایشن ہے جو خدمت کرتی ہے"
+
+#: templates/core/about.html:11
+msgid "Vision & Mission"
+msgstr "وژن اور مشن"
+
+#: templates/core/about.html:12
+msgid ""
+"To maintain a safe, clean and well-served neighbourhood — through "
+"transparent management of maintenance dues, responsive handling of resident "
+"complaints, and community projects funded openly and accountably."
+msgstr ""
+"ایک محفوظ، صاف اور بہتر سہولیات والے محلے کو برقرار رکھنا — مینٹیننس واجبات "
+"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز"
+" میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
+
+#: templates/core/about.html:15
+msgid "Membership classes"
+msgstr "رکنیت کی اقسام"
+
+#: templates/core/about.html:16
+msgid "a resident who owns their plot/house."
+msgstr "ایک رہائشی جو اپنے پلاٹ/مکان کا مالک ہے۔"
+
+#: templates/core/about.html:17
+msgid "a resident who is a tenant."
+msgstr "ایک رہائشی جو کرایہ دار ہے۔"
+
+#: templates/core/contact.html:5
+msgid "Contact"
+msgstr "رابطہ"
+
+#: templates/core/contact.html:9
+msgid ""
+"Office hours: Mon–Sat, 10am–6pm. Walk in for assisted registration and to "
+"pay dues at the desk."
+msgstr ""
+"دفتری اوقات: پیر تا ہفتہ، صبح 10 بجے تا شام 6 بجے۔ معاونت کے ساتھ رجسٹریشن "
+"اور ڈیسک پر واجبات کی ادائیگی کے لیے تشریف لائیں۔"
+
+#: templates/core/home.html:6
+msgid "A connected, transparent Gulshan-e-Maymar"
+msgstr "ایک مربوط، شفاف گلشنِ معمار"
+
+#: templates/core/home.html:7
+msgid ""
+"The official digital platform of the Maymar Welfare Association for "
+"Residents — manage your membership, dues, and complaints, and see exactly "
+"how the association serves your neighbourhood."
+msgstr ""
+"معمار ویلفیئر ایسوسی ایشن برائے ریزیڈنٹس کا سرکاری ڈیجیٹل پلیٹ فارم — اپنی "
+"رکنیت، واجبات اور شکایات کا انتظام کریں، اور دیکھیں کہ ایسوسی ایشن آپ کے "
+"محلے کی کس طرح خدمت کرتی ہے۔"
+
+#: templates/core/home.html:10
+msgid "View Finances"
+msgstr "مالیات دیکھیں"
+
+#: templates/core/home.html:18 templates/core/staff_dashboard.html:8
+msgid "Active Members"
+msgstr "فعال اراکین"
+
+#: templates/core/home.html:19
+msgid "Registration Fee"
+msgstr "رجسٹریشن فیس"
+
+#: templates/core/home.html:20
+msgid "Membership Classes"
+msgstr "رکنیت کی اقسام"
+
+#: templates/core/home.html:21
+msgid "Complaint Desk"
+msgstr "شکایت ڈیسک"
+
+#: templates/core/home.html:26
+msgid "Latest Projects"
+msgstr "تازہ ترین منصوبے"
+
+#: templates/core/home.html:30
+msgid "No projects published yet."
+msgstr "ابھی تک کوئی منصوبہ شائع نہیں ہوا۔"
+
+#: templates/core/home.html:31
+msgid "All projects →"
+msgstr "تمام منصوبے ←"
+
+#: templates/core/home.html:37
+msgid "No public notices."
+msgstr "کوئی عوامی نوٹس نہیں۔"
+
+#: templates/core/home.html:38
+msgid "All notices →"
+msgstr "تمام نوٹس ←"
+
+#: templates/core/home.html:43
+msgid "How membership works"
+msgstr "رکنیت کیسے کام کرتی ہے"
+
+#: templates/core/home.html:45
+msgid "Apply online"
+msgstr "آن لائن درخواست دیں"
+
+#: templates/core/home.html:45
+msgid ""
+"Fill the digital form, tell us your property and whether you own or rent."
+msgstr ""
+"ڈیجیٹل فارم پُر کریں، ہمیں اپنی جائیداد اور یہ بتائیں کہ آپ مالک ہیں یا "
+"کرایہ دار۔"
+
+#: templates/core/home.html:46 templates/members/apply_documents.html:12
+msgid "Upload documents"
+msgstr "دستاویزات اپ لوڈ کریں"
+
+#: templates/core/home.html:46
+msgid "CNIC for owners; CNIC plus tenancy agreement for tenants."
+msgstr ""
+"مالکان کے لیے شناختی کارڈ؛ کرایہ داروں کے لیے شناختی کارڈ کے ساتھ کرایہ "
+"نامہ۔"
+
+#: templates/core/home.html:47
+msgid "Get approved"
+msgstr "منظوری حاصل کریں"
+
+#: templates/core/home.html:47
+msgid ""
+"The Secretary and Chairman review; you receive a member number and ID card."
+msgstr ""
+"سیکریٹری اور چیئرمین جائزہ لیتے ہیں؛ آپ کو رکن نمبر اور شناختی کارڈ ملتا ہے۔"
+
+#: templates/core/staff_dashboard.html:3 templates/core/staff_dashboard.html:6
+msgid "Staff Dashboard"
+msgstr "عملہ ڈیش بورڈ"
+
+#: templates/core/staff_dashboard.html:10
+msgid "Applications in Queue"
+msgstr "قطار میں درخواستیں"
+
+#: templates/core/staff_dashboard.html:12
+msgid "Open Complaints"
+msgstr "کھلی شکایات"
+
+#: templates/core/staff_dashboard.html:14
+msgid "Unpaid Invoices"
+msgstr "غیر ادا شدہ انوائسز"
+
+#: templates/core/staff_dashboard.html:19
+msgid "Quick actions"
+msgstr "فوری اقدامات"
+
+#: templates/core/staff_dashboard.html:21 templates/members/queue.html:3
+#: templates/members/queue.html:7
+msgid "Membership Queue"
+msgstr "رکنیت کی قطار"
+
+#: templates/core/staff_dashboard.html:22
+msgid "Assisted Registration (walk-in)"
+msgstr "معاونت کے ساتھ رجسٹریشن (واک اِن)"
+
+#: templates/core/staff_dashboard.html:23 templates/dues/_finance_nav.html:3
+#: templates/dues/billing_board.html:3 templates/dues/billing_board.html:6
+msgid "Dues & Billing"
+msgstr "واجبات اور بلنگ"
+
+#: templates/core/staff_dashboard.html:24 templates/core/transparency.html:11
+#: templates/dues/_finance_nav.html:4 templates/dues/donations.html:3
+#: templates/dues/donations.html:8 templates/dues/donations.html:15
+msgid "Donations"
+msgstr "عطیات"
+
+#: templates/core/staff_dashboard.html:25 templates/core/transparency.html:12
+#: templates/dues/_finance_nav.html:5 templates/dues/expenses.html:3
+#: templates/dues/expenses.html:8
+msgid "Expenses"
+msgstr "اخراجات"
+
+#: templates/core/staff_dashboard.html:26
+#: templates/locality/property_list.html:3
+#: templates/locality/property_list.html:6
+msgid "Property Registry"
+msgstr "جائیداد رجسٹری"
+
+#: templates/core/staff_dashboard.html:28
+msgid "Broadcast a Notice"
+msgstr "نوٹس نشر کریں"
+
+#: templates/core/staff_dashboard.html:33
+msgid "Finance snapshot"
+msgstr "مالیاتی جھلک"
+
+#: templates/core/staff_dashboard.html:34
+msgid "Dues collected:"
+msgstr "جمع شدہ واجبات:"
+
+#: templates/core/staff_dashboard.html:35
+msgid "Donations:"
+msgstr "عطیات:"
+
+#: templates/core/staff_dashboard.html:36
+msgid "Expenses:"
+msgstr "اخراجات:"
+
+#: templates/core/staff_dashboard.html:37
+msgid "Balance:"
+msgstr "بقایا:"
+
+#: templates/core/staff_dashboard.html:38
+msgid "Collection rate:"
+msgstr "وصولی کی شرح:"
+
+#: templates/core/transparency.html:3 templates/core/transparency.html:6
+msgid "Financial Transparency"
+msgstr "مالیاتی شفافیت"
+
+#: templates/core/transparency.html:7
+msgid ""
+"Published openly so every resident and donor can see how the association's "
+"funds are raised and spent."
+msgstr ""
+"کھلے عام شائع کیا جاتا ہے تاکہ ہر رہائشی اور عطیہ دہندہ دیکھ سکے کہ ایسوسی "
+"ایشن کے فنڈز کیسے جمع اور خرچ کیے جاتے ہیں۔"
+
+#: templates/core/transparency.html:10
+msgid "Dues Collected"
+msgstr "جمع شدہ واجبات"
+
+#: templates/core/transparency.html:13
+msgid "Dues Collection Rate"
+msgstr "واجبات کی وصولی کی شرح"
+
+#: templates/core/transparency.html:18
+msgid "Recent expenses"
+msgstr "حالیہ اخراجات"
+
+#: templates/core/transparency.html:20 templates/dues/expense_form.html:11
+#: templates/dues/expenses.html:23 templates/tickets/list.html:15
+msgid "Category"
+msgstr "زمرہ"
+
+#: templates/core/transparency.html:20 templates/dues/donations.html:18
+msgid "Date"
+msgstr "تاریخ"
+
+#: templates/core/transparency.html:20 templates/dues/donations.html:18
+#: templates/dues/expenses.html:23
+msgid "Amount"
+msgstr "رقم"
+
+#: templates/core/transparency.html:24
+msgid "No expenses recorded."
+msgstr "کوئی اخراجات درج نہیں۔"
+
+#: templates/core/transparency.html:29
+msgid "Donor wall"
+msgstr "عطیہ دہندگان کی دیوار"
+
+#: templates/core/transparency.html:32
+msgid "No public donations yet."
+msgstr "ابھی تک کوئی عوامی عطیہ نہیں۔"
+
+#: templates/dues/billing_board.html:9
+msgid "Billed"
+msgstr "بل کیا گیا"
+
+#: templates/dues/billing_board.html:10
+msgid "Collected"
+msgstr "وصول شدہ"
+
+#: templates/dues/billing_board.html:11
+msgid "Invoices"
+msgstr "انوائسز"
+
+#: templates/dues/billing_board.html:14 templates/dues/expenses.html:19
+#: templates/tickets/list.html:11
+msgid "All"
+msgstr "تمام"
+
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+msgid "Period"
+msgstr "مدت"
+
+#: templates/dues/billing_board.html:18 templates/dues/my_dues.html:8
+msgid "Due"
+msgstr "واجب"
+
+#: templates/dues/billing_board.html:18 templates/dues/expenses.html:23
+#: templates/dues/my_dues.html:8 templates/locality/property_list.html:15
+#: templates/members/dashboard.html:11 templates/members/queue.html:17
+#: templates/tickets/detail.html:41 templates/tickets/list.html:15
+msgid "Status"
+msgstr "اسٹیٹس"
+
+#: templates/dues/billing_board.html:29 templates/dues/record_payment.html:6
+msgid "Record payment"
+msgstr "ادائیگی درج کریں"
+
+#: templates/dues/billing_board.html:30 templates/dues/donations.html:18
+#: templates/dues/donations.html:29 templates/dues/expenses.html:28
+#: templates/dues/my_dues.html:14
+msgid "Receipt"
+msgstr "رسید"
+
+#: templates/dues/billing_board.html:33
+msgid "No invoices. Generate a billing run from the admin or seed data."
+msgstr "کوئی انوائس نہیں۔ ایڈمن یا سیڈ ڈیٹا سے بلنگ رن بنائیں۔"
+
+#: templates/dues/donations.html:10 templates/dues/record_donation.html:3
+#: templates/dues/record_donation.html:7
+msgid "Record a donation"
+msgstr "عطیہ درج کریں"
+
+#: templates/dues/donations.html:14
+msgid "Total received"
+msgstr "کل وصول شدہ"
+
+#: templates/dues/donations.html:18 templates/dues/record_donation.html:13
+#: templates/dues/record_payment.html:13
+msgid "Method"
+msgstr "طریقہ"
+
+#: templates/dues/donations.html:28
+msgid "Yes"
+msgstr "ہاں"
+
+#: templates/dues/donations.html:28
+msgid "No"
+msgstr "نہیں"
+
+#: templates/dues/donations.html:31
+msgid "No donations recorded yet."
+msgstr "ابھی تک کوئی عطیہ درج نہیں۔"
+
+#: templates/dues/expense_form.html:3 templates/dues/expense_form.html:7
+#: templates/dues/expenses.html:10
+msgid "Log an expense"
+msgstr "اخراجات درج کریں"
+
+#: templates/dues/expense_form.html:8
+msgid ""
+"Recorded as pending until a Chairman or authorised officer approves it."
+msgstr "چیئرمین یا مجاز افسر کی منظوری تک زیر التوا کے طور پر درج رہتا ہے۔"
+
+#: templates/dues/expense_form.html:11
+msgid "e.g. Security wages, Street lighting"
+msgstr "مثلاً سیکیورٹی تنخواہیں، اسٹریٹ لائٹنگ"
+
+#: templates/dues/expense_form.html:12 templates/dues/record_donation.html:12
+#: templates/dues/record_payment.html:12
+msgid "Amount (PKR)"
+msgstr "رقم (PKR)"
+
+#: templates/dues/expense_form.html:13
+msgid "Incurred on"
+msgstr "تاریخِ اخراجات"
+
+#: templates/dues/expense_form.html:14
+msgid "Description (optional)"
+msgstr "تفصیل (اختیاری)"
+
+#: templates/dues/expense_form.html:15
+msgid "Receipt / bill (optional)"
+msgstr "رسید / بل (اختیاری)"
+
+#: templates/dues/expense_form.html:16
+msgid "Submit for approval"
+msgstr "منظوری کے لیے جمع کریں"
+
+#: templates/dues/expenses.html:14
+msgid "Pending approval"
+msgstr "منظوری زیر التوا"
+
+#: templates/dues/expenses.html:15
+msgid "Approved / paid"
+msgstr "منظور شدہ / ادا شدہ"
+
+#: templates/dues/expenses.html:16
+msgid "Entries"
+msgstr "اندراجات"
+
+#: templates/dues/expenses.html:23
+msgid "Incurred"
+msgstr "تاریخ"
+
+#: templates/dues/expenses.html:23
+msgid "Requested by"
+msgstr "درخواست کنندہ"
+
+#: templates/dues/expenses.html:44
+msgid "No expenses logged."
+msgstr "کوئی اخراجات درج نہیں۔"
+
+#: templates/dues/my_dues.html:3 templates/dues/my_dues.html:6
+msgid "My Dues"
+msgstr "میرے واجبات"
+
+#: templates/dues/my_dues.html:8
+msgid "Plan"
+msgstr "پلان"
+
+#: templates/dues/my_dues.html:15
+msgid "No dues on record."
+msgstr "ریکارڈ پر کوئی واجبات نہیں۔"
+
+#: templates/dues/record_donation.html:8
+msgid ""
+"Issues a numbered receipt and logs the contribution to the transparency "
+"ledger."
+msgstr ""
+"ایک نمبر شدہ رسید جاری کرتا ہے اور عطیہ کو شفافیت لیجر میں درج کرتا ہے۔"
+
+#: templates/dues/record_donation.html:11
+msgid "Donor name"
+msgstr "عطیہ دہندہ کا نام"
+
+#: templates/dues/record_donation.html:15
+msgid "Purpose (optional)"
+msgstr "مقصد (اختیاری)"
+
+#: templates/dues/record_donation.html:15
+msgid "e.g. Ramzan ration drive"
+msgstr "مثلاً رمضان راشن مہم"
+
+#: templates/dues/record_donation.html:16
+#: templates/dues/record_payment.html:15
+msgid "Reference (optional)"
+msgstr "حوالہ (اختیاری)"
+
+#: templates/dues/record_donation.html:17
+msgid "Show on the public donor wall (donor has consented)"
+msgstr "عوامی عطیہ دہندگان کی دیوار پر دکھائیں (عطیہ دہندہ نے رضامندی دی ہے)"
+
+#: templates/dues/record_donation.html:18
+#: templates/dues/record_payment.html:16
+msgid "Record & issue receipt"
+msgstr "درج کریں اور رسید جاری کریں"
+
+#: templates/dues/record_payment.html:8
+msgid "Balance due:"
+msgstr "واجب الادا بقایا:"
+
+#: templates/locality/property_list.html:7
+msgid ""
+"Authoritative registry of Sectors → Sub-Sectors → Properties in Gulshan-e-"
+"Maymar."
+msgstr "گلشنِ معمار میں سیکٹرز ← ذیلی سیکٹرز ← جائیدادوں کی مستند رجسٹری۔"
+
+#: templates/locality/property_list.html:7
+msgid "properties"
+msgstr "جائیدادیں"
+
+#: templates/locality/property_list.html:9
+msgid "All sectors"
+msgstr "تمام سیکٹرز"
+
+#: templates/locality/property_list.html:10
+msgid "Any status"
+msgstr "کوئی بھی اسٹیٹس"
+
+#: templates/locality/property_list.html:11
+msgid "House no."
+msgstr "مکان نمبر"
+
+#: templates/locality/property_list.html:12
+msgid "Filter"
+msgstr "فلٹر"
+
+#: templates/locality/property_list.html:15
+msgid "Sub-Sector"
+msgstr "ذیلی سیکٹر"
+
+#: templates/locality/property_list.html:15
+msgid "Type"
+msgstr "قسم"
+
+#: templates/locality/property_list.html:20
+msgid "No properties."
+msgstr "کوئی جائیداد نہیں۔"
+
+#: templates/members/application_detail.html:3
+#: templates/members/application_detail.html:8
+msgid "Application"
+msgstr "درخواست"
+
+#: templates/members/application_detail.html:6
+msgid "Back to queue"
+msgstr "قطار پر واپس"
+
+#: templates/members/application_detail.html:14
+msgid "Applicant details"
+msgstr "درخواست گزار کی تفصیلات"
+
+#: templates/members/application_detail.html:16
+#: templates/members/apply_review.html:13
+msgid "Name"
+msgstr "نام"
+
+#: templates/members/application_detail.html:17
+#: templates/members/apply_review.html:14
+msgid "Father/Husband"
+msgstr "والد/شوہر"
+
+#: templates/members/application_detail.html:18
+#: templates/members/apply_form.html:22 templates/members/apply_review.html:15
+msgid "CNIC"
+msgstr "شناختی کارڈ"
+
+#: templates/members/application_detail.html:19
+msgid "masked"
+msgstr "پوشیدہ"
+
+#: templates/members/application_detail.html:19
+msgid "PII access logged"
+msgstr "ذاتی معلومات تک رسائی درج"
+
+#: templates/members/application_detail.html:21
+msgid "Profession"
+msgstr "پیشہ"
+
+#: templates/members/application_detail.html:22
+msgid "Household size"
+msgstr "اہلِ خانہ کی تعداد"
+
+#: templates/members/application_detail.html:24
+#: templates/members/apply_review.html:18
+msgid "Residency"
+msgstr "رہائش"
+
+#: templates/members/application_detail.html:25
+msgid "Declaration"
+msgstr "اقرارنامہ"
+
+#: templates/members/application_detail.html:25
+msgid "accepted"
+msgstr "قبول شدہ"
+
+#: templates/members/application_detail.html:30
+#: templates/members/apply_documents.html:8
+#: templates/members/apply_form.html:8 templates/members/apply_review.html:7
+msgid "Documents"
+msgstr "دستاویزات"
+
+#: templates/members/application_detail.html:33
+msgid "verified"
+msgstr "تصدیق شدہ"
+
+#: templates/members/application_detail.html:34
+msgid "No documents."
+msgstr "کوئی دستاویز نہیں۔"
+
+#: templates/members/application_detail.html:41
+msgid "Member number:"
+msgstr "رکن نمبر:"
+
+#: templates/members/application_detail.html:42
+msgid "View issued card (public verify)"
+msgstr "جاری شدہ کارڈ دیکھیں (عوامی تصدیق)"
+
+#: templates/members/application_detail.html:48
+msgid "Secretary approved — awaiting Chairman"
+msgstr "سیکریٹری کی منظوری — چیئرمین کا انتظار"
+
+#: templates/members/application_detail.html:53
+msgid "Registration fee method (Rs 500)"
+msgstr "رجسٹریشن فیس کا طریقہ (روپے 500)"
+
+#: templates/members/application_detail.html:56
+msgid "Final approve — issue number, receipt & card"
+msgstr "حتمی منظوری — نمبر، رسید اور کارڈ جاری کریں"
+
+#: templates/members/application_detail.html:58
+msgid "Final approval requires the Chairman."
+msgstr "حتمی منظوری کے لیے چیئرمین درکار ہے۔"
+
+#: templates/members/application_detail.html:64
+msgid "Secretary decision"
+msgstr "سیکریٹری کا فیصلہ"
+
+#: templates/members/application_detail.html:66
+msgid "Record review"
+msgstr "جائزہ درج کریں"
+
+#: templates/members/apply_documents.html:3
+msgid "Upload Documents"
+msgstr "دستاویزات اپ لوڈ کریں"
+
+#: templates/members/apply_documents.html:7
+#: templates/members/apply_form.html:7 templates/members/apply_review.html:6
+msgid "Details"
+msgstr "تفصیلات"
+
+#: templates/members/apply_documents.html:9
+#: templates/members/apply_form.html:9 templates/members/apply_review.html:8
+msgid "Submit"
+msgstr "جمع کریں"
+
+#: templates/members/apply_documents.html:14
+msgid "Required:"
+msgstr "درکار:"
+
+#: templates/members/apply_documents.html:19
+msgid "Document type"
+msgstr "دستاویز کی قسم"
+
+#: templates/members/apply_documents.html:20
+msgid "File"
+msgstr "فائل"
+
+#: templates/members/apply_documents.html:21
+msgid "Upload"
+msgstr "اپ لوڈ"
+
+#: templates/members/apply_documents.html:25
+msgid "Uploaded"
+msgstr "اپ لوڈ شدہ"
+
+#: templates/members/apply_documents.html:28
+msgid "No documents uploaded yet."
+msgstr "ابھی تک کوئی دستاویز اپ لوڈ نہیں ہوئی۔"
+
+#: templates/members/apply_documents.html:32
+msgid "Add another"
+msgstr "ایک اور شامل کریں"
+
+#: templates/members/apply_documents.html:33
+msgid "Review & submit →"
+msgstr "جائزہ لیں اور جمع کریں ←"
+
+#: templates/members/apply_form.html:3 templates/members/apply_form.html:12
+msgid "Membership Application"
+msgstr "رکنیت کی درخواست"
+
+#: templates/members/apply_form.html:13
+msgid ""
+"حلفیہ اقرار — Please provide accurate information. Owners become Permanent "
+"Members; tenants become Associate Members."
+msgstr ""
+"حلفیہ اقرار — براہ کرم درست معلومات فراہم کریں۔ مالکان مستقل رکن بنتے ہیں؛ "
+"کرایہ دار ایسوسی ایٹ رکن بنتے ہیں۔"
+
+#: templates/members/apply_form.html:19
+msgid "Father's / Husband's name"
+msgstr "والد / شوہر کا نام"
+
+#: templates/members/apply_form.html:22
+msgid "Format: 42101-1234567-1"
+msgstr "فارمیٹ: 42101-1234567-1"
+
+#: templates/members/apply_form.html:26
+msgid "Profession (پیشہ)"
+msgstr "پیشہ"
+
+#: templates/members/apply_form.html:27
+msgid "Household size (تعداد اہلِ خانہ)"
+msgstr "اہلِ خانہ کی تعداد"
+
+#: templates/members/apply_form.html:29
+msgid "Property (House → Sub-Sector → Sector)"
+msgstr "جائیداد (مکان ← ذیلی سیکٹر ← سیکٹر)"
+
+#: templates/members/apply_form.html:31
+msgid "Are you the owner or a tenant?"
+msgstr "کیا آپ مالک ہیں یا کرایہ دار؟"
+
+#: templates/members/apply_form.html:33
+msgid ""
+"Tenants (Associate Members) must also upload a tenancy agreement in the next"
+" step."
+msgstr ""
+"کرایہ داروں (ایسوسی ایٹ اراکین) کو اگلے مرحلے میں کرایہ نامہ بھی اپ لوڈ کرنا"
+" ہوگا۔"
+
+#: templates/members/apply_form.html:37
+msgid "Continue to documents"
+msgstr "دستاویزات کی طرف جاری رکھیں"
+
+#: templates/members/apply_review.html:11
+msgid "Review your application"
+msgstr "اپنی درخواست کا جائزہ لیں"
+
+#: templates/members/apply_review.html:19 templates/members/dashboard.html:13
+#: templates/members/queue.html:17
+msgid "Class"
+msgstr "قسم"
+
+#: templates/members/apply_review.html:23
+msgid "Submit application"
+msgstr "درخواست جمع کریں"
+
+#: templates/members/apply_success.html:7
+msgid "Application submitted"
+msgstr "درخواست جمع ہو گئی"
+
+#: templates/members/apply_success.html:8
+msgid "Your application is"
+msgstr "آپ کی درخواست ہے"
+
+#: templates/members/apply_success.html:9
+msgid ""
+"The Secretary will review your details and documents, followed by the "
+"Chairman's final approval. You'll be notified by SMS. On approval you "
+"receive your membership number and ID card."
+msgstr ""
+"سیکریٹری آپ کی تفصیلات اور دستاویزات کا جائزہ لیں گے، اس کے بعد چیئرمین کی "
+"حتمی منظوری ہوگی۔ آپ کو ایس ایم ایس کے ذریعے مطلع کیا جائے گا۔ منظوری پر آپ "
+"کو اپنا رکنیت نمبر اور شناختی کارڈ ملے گا۔"
+
+#: templates/members/apply_success.html:10
+msgid "Back to home"
+msgstr "ہوم پر واپس"
+
+#: templates/members/card.html:3 templates/members/card.html:6
+msgid "Member ID Card"
+msgstr "رکنیتی شناختی کارڈ"
+
+#: templates/members/card.html:24
+msgid "Scan to verify at"
+msgstr "تصدیق کے لیے اسکین کریں:"
+
+#: templates/members/card.html:28
+msgid "Download PDF card"
+msgstr "PDF کارڈ ڈاؤن لوڈ کریں"
+
+#: templates/members/card.html:29
+msgid "Print card"
+msgstr "کارڈ پرنٹ کریں"
+
+#: templates/members/dashboard.html:6
+msgid "Welcome"
+msgstr "خوش آمدید"
+
+#: templates/members/dashboard.html:10
+msgid "Member No."
+msgstr "رکن نمبر"
+
+#: templates/members/dashboard.html:12
+msgid "Unpaid dues"
+msgstr "غیر ادا شدہ واجبات"
+
+#: templates/members/dashboard.html:18
+msgid "Property & residency"
+msgstr "جائیداد اور رہائش"
+
+#: templates/members/dashboard.html:22
+msgid "No linked property."
+msgstr "کوئی منسلک جائیداد نہیں۔"
+
+#: templates/members/dashboard.html:24
+msgid "View my ID card"
+msgstr "میرا شناختی کارڈ دیکھیں"
+
+#: templates/members/dashboard.html:25
+msgid "Download fee receipt (PDF)"
+msgstr "فیس رسید ڈاؤن لوڈ کریں (PDF)"
+
+#: templates/members/dashboard.html:29
+msgid "Recent dues"
+msgstr "حالیہ واجبات"
+
+#: templates/members/dashboard.html:33
+msgid "No invoices yet."
+msgstr "ابھی تک کوئی انوائس نہیں۔"
+
+#: templates/members/dashboard.html:34
+msgid "All my dues →"
+msgstr "میرے تمام واجبات ←"
+
+#: templates/members/dashboard.html:39
+msgid "You don't have an approved membership yet."
+msgstr "آپ کے پاس ابھی تک منظور شدہ رکنیت نہیں ہے۔"
+
+#: templates/members/dashboard.html:40
+msgid "Apply for membership"
+msgstr "رکنیت کے لیے درخواست دیں"
+
+#: templates/members/dashboard.html:45
+msgid "My complaints"
+msgstr "میری شکایات"
+
+#: templates/members/dashboard.html:45 templates/tickets/list.html:8
+msgid "+ Raise a complaint"
+msgstr "+ شکایت درج کریں"
+
+#: templates/members/dashboard.html:49
+msgid "No complaints raised."
+msgstr "کوئی شکایت درج نہیں کی گئی۔"
+
+#: templates/members/queue.html:8
+msgid "+ Assisted registration"
+msgstr "+ معاونت کے ساتھ رجسٹریشن"
+
+#: templates/members/queue.html:11
+msgid "All open"
+msgstr "تمام کھلی"
+
+#: templates/members/queue.html:17
+msgid "Applicant"
+msgstr "درخواست گزار"
+
+#: templates/members/queue.html:26
+msgid "Review"
+msgstr "جائزہ"
+
+#: templates/members/queue.html:28
+msgid "Queue is empty."
+msgstr "قطار خالی ہے۔"
+
+#: templates/members/verify.html:3
+msgid "Verify Member Card"
+msgstr "رکنیتی کارڈ کی تصدیق"
+
+#: templates/members/verify.html:9
+msgid "Valid member"
+msgstr "تصدیق شدہ رکن"
+
+#: templates/members/verify.html:16
+msgid "Card not valid"
+msgstr "کارڈ درست نہیں"
+
+#: templates/members/verify.html:17
+msgid "This card could not be verified, or the membership is not active."
+msgstr "اس کارڈ کی تصدیق نہیں ہو سکی، یا رکنیت فعال نہیں ہے۔"
+
+#: templates/members/verify.html:20
+msgid ""
+"Public verification only shows membership status — no personal data is "
+"revealed."
+msgstr ""
+"عوامی تصدیق صرف رکنیت کی حیثیت دکھاتی ہے — کوئی ذاتی معلومات ظاہر نہیں کی "
+"جاتیں۔"
+
+#: templates/tickets/create.html:6
+msgid "Raise a complaint"
+msgstr "شکایت درج کریں"
+
+#: templates/tickets/create.html:7
+msgid ""
+"Water, security, sanitation, streetlights and more. Your property is linked "
+"automatically where known."
+msgstr ""
+"پانی، سیکیورٹی، صفائی، اسٹریٹ لائٹس اور مزید۔ جہاں معلوم ہو، آپ کی جائیداد "
+"خودکار طور پر منسلک ہو جاتی ہے۔"
+
+#: templates/tickets/create.html:13
+msgid "Submit complaint"
+msgstr "شکایت جمع کریں"
+
+#: templates/tickets/detail.html:6
+msgid "Back"
+msgstr "واپس"
+
+#: templates/tickets/detail.html:19
+msgid "Discussion"
+msgstr "گفتگو"
+
+#: templates/tickets/detail.html:22
+msgid "internal"
+msgstr "اندرونی"
+
+#: templates/tickets/detail.html:26
+msgid "No messages yet."
+msgstr "ابھی تک کوئی پیغام نہیں۔"
+
+#: templates/tickets/detail.html:30
+msgid "Add a message"
+msgstr "پیغام شامل کریں"
+
+#: templates/tickets/detail.html:31
+msgid "Internal staff note"
+msgstr "اندرونی عملہ نوٹ"
+
+#: templates/tickets/detail.html:32
+msgid "Post"
+msgstr "پوسٹ کریں"
+
+#: templates/tickets/detail.html:38
+msgid "Manage"
+msgstr "نظم کریں"
+
+#: templates/tickets/detail.html:43
+msgid "Update status"
+msgstr "اسٹیٹس اپ ڈیٹ کریں"
+
+#: templates/tickets/detail.html:45
+msgid "Assigned to:"
+msgstr "تفویض کردہ:"
+
+#: templates/tickets/list.html:3
+msgid "Complaints"
+msgstr "شکایات"
+
+#: templates/tickets/list.html:7
+msgid "Complaints Board"
+msgstr "شکایات بورڈ"
+
+#: templates/tickets/list.html:7
+msgid "My Complaints"
+msgstr "میری شکایات"
+
+#: templates/tickets/list.html:15
+msgid "Priority"
+msgstr "ترجیح"
+
+#: templates/tickets/list.html:23
+msgid "No complaints."
+msgstr "کوئی شکایت نہیں۔"
