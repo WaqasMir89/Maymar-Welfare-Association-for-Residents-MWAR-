@@ -120,8 +120,16 @@ class PublicDocumentTests(TestCase):
 
     def test_user_without_permission_cannot_upload(self):
         self.client.force_login(self.plain)
-        self.assertEqual(self.client.get("/content/documents/upload/").status_code, 403)
-        self.assertEqual(self._upload(self.client).status_code, 403)
+        # Friendly redirect to the library (not a bare 403), and nothing saved.
+        r = self.client.get("/content/documents/upload/")
+        self.assertRedirects(r, "/content/documents/")
+        self.assertEqual(self._upload(self.client).status_code, 302)
+        self.assertEqual(PublicDocument.objects.count(), 0)
+
+    def test_anonymous_upload_redirects_to_login(self):
+        r = self.client.get("/content/documents/upload/")
+        self.assertEqual(r.status_code, 302)
+        self.assertIn("/accounts/login", r["Location"])
 
     def test_public_can_download_published_but_not_draft(self):
         doc = PublicDocument.objects.create(

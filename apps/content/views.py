@@ -153,8 +153,13 @@ def document_download(request: HttpRequest, pk: int) -> HttpResponse:
     return response
 
 
-@permission_required("content.manage_documents", raise_exception=True)
+@login_required
 def document_upload(request: HttpRequest) -> HttpResponse:
+    # Logged-in users without the permission get a friendly nudge rather than a
+    # bare 403; anonymous users are sent to login by @login_required first.
+    if not request.user.has_perm("content.manage_documents"):
+        messages.error(request, _("You don't have permission to upload documents."))
+        return redirect("content:document_list")
     if request.method == "POST":
         title = request.POST.get("title", "").strip()
         upload = request.FILES.get("file")

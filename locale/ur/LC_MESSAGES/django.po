@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 16:29+0500\n"
+"POT-Creation-Date: 2026-06-07 16:48+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -170,23 +170,27 @@ msgstr "نوٹس شائع کر دیا گیا۔"
 msgid "All notifications marked as read."
 msgstr "تمام اطلاعات کو پڑھا ہوا نشان زد کر دیا گیا۔"
 
-#: apps/content/views.py:162
+#: apps/content/views.py:161
+msgid "You don't have permission to upload documents."
+msgstr "آپ کو دستاویزات اپ لوڈ کرنے کی اجازت نہیں ہے۔"
+
+#: apps/content/views.py:167
 msgid "A title and a PDF file are required."
 msgstr "عنوان اور ایک پی ڈی ایف فائل درکار ہے۔"
 
-#: apps/content/views.py:168 apps/content/views.py:181
+#: apps/content/views.py:173 apps/content/views.py:186
 msgid "Only PDF files can be uploaded."
 msgstr "صرف پی ڈی ایف فائلیں اپ لوڈ کی جا سکتی ہیں۔"
 
-#: apps/content/views.py:184 apps/members/views.py:60
+#: apps/content/views.py:189 apps/members/views.py:60
 msgid "Document uploaded."
 msgstr "دستاویز اپ لوڈ ہو گئی۔"
 
-#: apps/content/views.py:198
+#: apps/content/views.py:203
 msgid "A title and start time are required."
 msgstr "عنوان اور آغاز کا وقت درکار ہے۔"
 
-#: apps/content/views.py:208
+#: apps/content/views.py:213
 msgid "Event created."
 msgstr "تقریب بنا دی گئی۔"
 
