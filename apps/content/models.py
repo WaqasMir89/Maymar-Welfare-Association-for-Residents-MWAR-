@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -91,6 +92,39 @@ class Event(TimeStampedModel):
 
     class Meta:
         ordering = ["starts_at"]
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class PublicDocument(TimeStampedModel):
+    """A downloadable PDF in the public document library — bylaws, forms,
+    audited accounts, meeting minutes. Uploaded by staff who hold
+    ``content.manage_documents``; served to anyone when ``is_published``."""
+
+    class Category(models.TextChoices):
+        BYLAWS = "bylaws", _("Constitution & bylaws")
+        FORMS = "forms", _("Forms")
+        REPORTS = "reports", _("Financial reports")
+        MINUTES = "minutes", _("Meeting minutes")
+        OTHER = "other", _("Other")
+
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=400, blank=True)
+    category = models.CharField(max_length=12, choices=Category.choices, default=Category.OTHER)
+    file = models.FileField(
+        upload_to="public_documents/%Y/%m/",
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+    )
+    is_published = models.BooleanField(default=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+        related_name="uploaded_documents",
+    )
+
+    class Meta:
+        ordering = ["category", "-created_at"]
+        permissions = [("manage_documents", "Can upload and manage public documents")]
 
     def __str__(self) -> str:
         return self.title

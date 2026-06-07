@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 11:28+0500\n"
+"POT-Creation-Date: 2026-06-07 16:29+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -78,8 +78,8 @@ msgstr "پروجیکٹ مینیجر"
 msgid "Administrator"
 msgstr "ایڈمنسٹریٹر"
 
-#: apps/accounts/models.py:87 apps/members/models.py:272
-#: apps/tickets/models.py:24
+#: apps/accounts/models.py:87 apps/content/models.py:110
+#: apps/members/models.py:272 apps/tickets/models.py:24
 msgid "Other"
 msgstr "دیگر"
 
@@ -95,44 +95,60 @@ msgstr "اکاؤنٹ بن گیا۔ M.W.A.R میں خوش آمدید۔"
 msgid "You have been signed out."
 msgstr "آپ سائن آؤٹ ہو گئے ہیں۔"
 
-#: apps/content/models.py:17
+#: apps/content/models.py:18
 msgid "Planned"
 msgstr "منصوبہ بند"
 
-#: apps/content/models.py:18 apps/members/models.py:54
+#: apps/content/models.py:19 apps/members/models.py:54
 #: apps/members/models.py:152 apps/members/models.py:294
 msgid "Active"
 msgstr "فعال"
 
-#: apps/content/models.py:19
+#: apps/content/models.py:20
 msgid "Completed"
 msgstr "مکمل"
 
-#: apps/content/models.py:20
+#: apps/content/models.py:21
 msgid "On hold"
 msgstr "ملتوی"
 
-#: apps/content/models.py:60 templates/dues/donations.html:18
+#: apps/content/models.py:61 templates/dues/donations.html:18
 msgid "Public"
 msgstr "عوامی"
 
-#: apps/content/models.py:61
+#: apps/content/models.py:62
 msgid "All members"
 msgstr "تمام اراکین"
 
-#: apps/content/models.py:62
+#: apps/content/models.py:63
 msgid "Specific sector"
 msgstr "مخصوص سیکٹر"
 
-#: apps/content/models.py:103
+#: apps/content/models.py:106
+msgid "Constitution & bylaws"
+msgstr "آئین و ضوابط"
+
+#: apps/content/models.py:107
+msgid "Forms"
+msgstr "فارمز"
+
+#: apps/content/models.py:108
+msgid "Financial reports"
+msgstr "مالیاتی رپورٹس"
+
+#: apps/content/models.py:109
+msgid "Meeting minutes"
+msgstr "اجلاس کی کارروائی"
+
+#: apps/content/models.py:137
 msgid "Info"
 msgstr "معلومات"
 
-#: apps/content/models.py:104
+#: apps/content/models.py:138
 msgid "Success"
 msgstr "کامیاب"
 
-#: apps/content/models.py:105
+#: apps/content/models.py:139
 msgid "Warning"
 msgstr "انتباہ"
 
@@ -154,11 +170,23 @@ msgstr "نوٹس شائع کر دیا گیا۔"
 msgid "All notifications marked as read."
 msgstr "تمام اطلاعات کو پڑھا ہوا نشان زد کر دیا گیا۔"
 
-#: apps/content/views.py:125
+#: apps/content/views.py:162
+msgid "A title and a PDF file are required."
+msgstr "عنوان اور ایک پی ڈی ایف فائل درکار ہے۔"
+
+#: apps/content/views.py:168 apps/content/views.py:181
+msgid "Only PDF files can be uploaded."
+msgstr "صرف پی ڈی ایف فائلیں اپ لوڈ کی جا سکتی ہیں۔"
+
+#: apps/content/views.py:184 apps/members/views.py:60
+msgid "Document uploaded."
+msgstr "دستاویز اپ لوڈ ہو گئی۔"
+
+#: apps/content/views.py:198
 msgid "A title and start time are required."
 msgstr "عنوان اور آغاز کا وقت درکار ہے۔"
 
-#: apps/content/views.py:135
+#: apps/content/views.py:208
 msgid "Event created."
 msgstr "تقریب بنا دی گئی۔"
 
@@ -205,14 +233,16 @@ msgid "Enter a valid Pakistani phone number, e.g. 0301-2345678."
 msgstr "درست پاکستانی فون نمبر درج کریں، مثلاً 0301-2345678۔"
 
 #: apps/dues/models.py:17 apps/members/models.py:312
-#: templates/dues/record_donation.html:14 templates/dues/record_payment.html:14
-#: templates/members/application_detail.html:54
+#: templates/dues/record_donation.html:14
+#: templates/dues/record_payment.html:14
+#: templates/members/application_detail.html:60
 msgid "Cash"
 msgstr "نقد"
 
 #: apps/dues/models.py:18 apps/members/models.py:313
-#: templates/dues/record_donation.html:14 templates/dues/record_payment.html:14
-#: templates/members/application_detail.html:54
+#: templates/dues/record_donation.html:14
+#: templates/dues/record_payment.html:14
+#: templates/members/application_detail.html:60
 msgid "Bank transfer"
 msgstr "بینک ٹرانسفر"
 
@@ -274,12 +304,12 @@ msgid "Pending"
 msgstr "زیر التوا"
 
 #: apps/dues/models.py:148 apps/members/models.py:185
-#: templates/members/application_detail.html:39
+#: templates/members/application_detail.html:45
 msgid "Approved"
 msgstr "منظور شدہ"
 
-#: apps/dues/models.py:149 apps/members/models.py:57 apps/members/models.py:186
-#: templates/members/application_detail.html:45
+#: apps/dues/models.py:149 apps/members/models.py:57
+#: apps/members/models.py:186 templates/members/application_detail.html:51
 msgid "Rejected"
 msgstr "مسترد شدہ"
 
@@ -325,7 +355,7 @@ msgstr "مینٹیننس واجبات کی رسید"
 msgid "Property"
 msgstr "جائیداد"
 
-#: apps/dues/views.py:201 apps/members/views.py:262
+#: apps/dues/views.py:201 apps/members/views.py:300
 #: templates/dues/billing_board.html:18
 msgid "Member"
 msgstr "رکن"
@@ -334,11 +364,11 @@ msgstr "رکن"
 msgid "Billing period"
 msgstr "بلنگ مدت"
 
-#: apps/dues/views.py:203 apps/dues/views.py:229 apps/members/views.py:266
+#: apps/dues/views.py:203 apps/dues/views.py:229 apps/members/views.py:304
 msgid "Payment method"
 msgstr "ادائیگی کا طریقہ"
 
-#: apps/dues/views.py:204 apps/dues/views.py:230 apps/members/views.py:267
+#: apps/dues/views.py:204 apps/dues/views.py:230 apps/members/views.py:305
 msgid "Reference"
 msgstr "حوالہ"
 
@@ -346,7 +376,7 @@ msgstr "حوالہ"
 msgid "Invoice balance"
 msgstr "انوائس بقایا"
 
-#: apps/dues/views.py:209 apps/members/views.py:271
+#: apps/dues/views.py:209 apps/members/views.py:309
 msgid "M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."
 msgstr "M.W.A.R — رجسٹریشن نمبر 0060، گلشنِ معمار، کراچی۔"
 
@@ -358,7 +388,7 @@ msgstr "عطیہ کی رسید"
 msgid "Donor"
 msgstr "عطیہ دہندہ"
 
-#: apps/dues/views.py:228 apps/members/views.py:265
+#: apps/dues/views.py:228 apps/members/views.py:303
 #: templates/dues/donations.html:18
 msgid "Purpose"
 msgstr "مقصد"
@@ -401,17 +431,17 @@ msgstr "زیر تعمیر"
 
 #: apps/members/forms.py:17
 msgid ""
-"I solemnly declare (حلفیہ اقرار) that the information above is correct and I "
-"will abide by the association's constitution."
+"I solemnly declare (حلفیہ اقرار) that the information above is correct and I"
+" will abide by the association's constitution."
 msgstr ""
-"میں حلفیہ اقرار کرتا/کرتی ہوں کہ مندرجہ بالا معلومات درست ہیں اور میں ایسوسی "
-"ایشن کے آئین کی پابندی کروں گا/گی۔"
+"میں حلفیہ اقرار کرتا/کرتی ہوں کہ مندرجہ بالا معلومات درست ہیں اور میں ایسوسی"
+" ایشن کے آئین کی پابندی کروں گا/گی۔"
 
 #: apps/members/forms.py:61
 msgid "Request more documents"
 msgstr "مزید دستاویزات طلب کریں"
 
-#: apps/members/forms.py:65 templates/members/application_detail.html:65
+#: apps/members/forms.py:65 templates/members/application_detail.html:71
 msgid "Notes"
 msgstr "نوٹس"
 
@@ -439,7 +469,7 @@ msgstr "معطل"
 msgid "Expired"
 msgstr "میعاد ختم"
 
-#: apps/members/models.py:180
+#: apps/members/models.py:180 templates/content/document_list.html:21
 msgid "Draft"
 msgstr "مسودہ"
 
@@ -483,10 +513,6 @@ msgstr "منسوخ"
 msgid "Application started. Now upload your documents."
 msgstr "درخواست شروع ہو گئی۔ اب اپنی دستاویزات اپ لوڈ کریں۔"
 
-#: apps/members/views.py:60
-msgid "Document uploaded."
-msgstr "دستاویز اپ لوڈ ہو گئی۔"
-
 #: apps/members/views.py:154
 msgid "You do not have final-approval rights."
 msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
@@ -494,21 +520,22 @@ msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
 #: apps/members/views.py:164
 #, python-format
 msgid "Approved. Member %(num)s issued with fee receipt and ID card."
-msgstr "منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
+msgstr ""
+"منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
 
 #: apps/members/views.py:175
 msgid "Review recorded."
 msgstr "جائزہ درج کر دیا گیا۔"
 
-#: apps/members/views.py:205 apps/members/views.py:283
+#: apps/members/views.py:243 apps/members/views.py:321
 msgid "No member card yet — your membership may still be pending."
 msgstr "ابھی تک کوئی رکنیتی کارڈ نہیں — آپ کی رکنیت شاید ابھی زیر التوا ہے۔"
 
-#: apps/members/views.py:258
+#: apps/members/views.py:296
 msgid "Registration Fee Receipt"
 msgstr "رجسٹریشن فیس کی رسید"
 
-#: apps/members/views.py:265
+#: apps/members/views.py:303
 msgid "One-time membership registration fee"
 msgstr "یک بار رکنیت رجسٹریشن فیس"
 
@@ -599,7 +626,7 @@ msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
 #: templates/accounts/login.html:13 templates/accounts/register.html:20
-#: templates/base.html:40
+#: templates/base.html:41
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -623,7 +650,7 @@ msgstr "اپنا اکاؤنٹ بنائیں"
 msgid "Already registered?"
 msgstr "پہلے سے رجسٹرڈ ہیں؟"
 
-#: templates/base.html:21 templates/base.html:69 templates/core/about.html:7
+#: templates/base.html:21 templates/base.html:70 templates/core/about.html:7
 #: templates/core/contact.html:8 templates/core/home.html:12
 #: templates/members/card.html:10
 msgid "Reg. No."
@@ -642,34 +669,106 @@ msgstr "نوٹس"
 msgid "Events"
 msgstr "تقریبات"
 
-#: templates/base.html:28 templates/dues/_finance_nav.html:6
+#: templates/base.html:28 templates/content/document_list.html:3
+#: templates/members/application_detail.html:30
+#: templates/members/apply_documents.html:8
+#: templates/members/apply_form.html:8 templates/members/apply_review.html:7
+msgid "Documents"
+msgstr "دستاویزات"
+
+#: templates/base.html:29 templates/dues/_finance_nav.html:6
 msgid "Transparency"
 msgstr "شفافیت"
 
-#: templates/base.html:29 templates/core/home.html:9
+#: templates/base.html:30 templates/core/home.html:9
 msgid "Become a Member"
 msgstr "رکن بنیں"
 
-#: templates/base.html:32
+#: templates/base.html:33
 msgid "Staff"
 msgstr "عملہ"
 
-#: templates/base.html:34 templates/members/dashboard.html:3
+#: templates/base.html:35 templates/members/dashboard.html:3
 msgid "My Dashboard"
 msgstr "میرا ڈیش بورڈ"
 
-#: templates/base.html:35 templates/content/notifications.html:3
+#: templates/base.html:36 templates/content/notifications.html:3
 #: templates/content/notifications.html:7
 msgid "Notifications"
 msgstr "اطلاعات"
 
-#: templates/base.html:38
+#: templates/base.html:39
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:71
+#: templates/base.html:72
 msgid "Built by"
 msgstr "تیار کردہ"
+
+#: templates/content/document_form.html:3
+msgid "Upload document"
+msgstr "دستاویز اپ لوڈ کریں"
+
+#: templates/content/document_form.html:7
+msgid "Upload a PDF document"
+msgstr "پی ڈی ایف دستاویز اپ لوڈ کریں"
+
+#: templates/content/document_form.html:8
+msgid ""
+"Published documents are downloadable by the public on the Documents page."
+msgstr "شائع شدہ دستاویزات عوام دستاویزات کے صفحے سے ڈاؤن لوڈ کر سکتے ہیں۔"
+
+#: templates/content/document_form.html:11
+#: templates/content/event_form.html:10 templates/content/notice_create.html:9
+#: templates/tickets/list.html:15
+msgid "Title"
+msgstr "عنوان"
+
+#: templates/content/document_form.html:12 templates/dues/expense_form.html:14
+msgid "Description (optional)"
+msgstr "تفصیل (اختیاری)"
+
+#: templates/content/document_form.html:14 templates/core/transparency.html:20
+#: templates/dues/expense_form.html:11 templates/dues/expenses.html:23
+#: templates/tickets/list.html:15
+msgid "Category"
+msgstr "زمرہ"
+
+#: templates/content/document_form.html:19
+msgid "PDF file"
+msgstr "پی ڈی ایف فائل"
+
+#: templates/content/document_form.html:20
+msgid "Publish now (visible to the public)"
+msgstr "ابھی شائع کریں (عوام کو نظر آئے گا)"
+
+#: templates/content/document_form.html:21
+#: templates/members/apply_documents.html:21
+msgid "Upload"
+msgstr "اپ لوڈ"
+
+#: templates/content/document_list.html:7
+msgid "Document Library"
+msgstr "دستاویزات کی لائبریری"
+
+#: templates/content/document_list.html:8
+msgid "+ Upload PDF"
+msgstr "+ پی ڈی ایف اپ لوڈ کریں"
+
+#: templates/content/document_list.html:10
+msgid ""
+"Constitution, forms, audited accounts and meeting minutes — free to "
+"download."
+msgstr ""
+"آئین، فارمز، آڈٹ شدہ حسابات اور اجلاس کی کارروائی — مفت ڈاؤن لوڈ کریں۔"
+
+#: templates/content/document_list.html:26
+msgid "Download"
+msgstr "ڈاؤن لوڈ کریں"
+
+#: templates/content/document_list.html:34
+msgid "No documents have been published yet."
+msgstr "ابھی تک کوئی دستاویز شائع نہیں ہوئی۔"
 
 #: templates/content/event_detail.html:6
 msgid "All events"
@@ -682,11 +781,6 @@ msgstr "صرف اراکین کے لیے"
 #: templates/content/event_form.html:3 templates/content/event_form.html:7
 msgid "New event"
 msgstr "نئی تقریب"
-
-#: templates/content/event_form.html:10 templates/content/notice_create.html:9
-#: templates/tickets/list.html:15
-msgid "Title"
-msgstr "عنوان"
 
 #: templates/content/event_form.html:11
 msgid "Starts at"
@@ -833,8 +927,8 @@ msgid ""
 "complaints, and community projects funded openly and accountably."
 msgstr ""
 "ایک محفوظ، صاف اور بہتر سہولیات والے محلے کو برقرار رکھنا — مینٹیننس واجبات "
-"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز "
-"میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
+"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز"
+" میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
 
 #: templates/core/about.html:15
 msgid "Membership classes"
@@ -926,8 +1020,8 @@ msgstr "آن لائن درخواست دیں"
 msgid ""
 "Fill the digital form, tell us your property and whether you own or rent."
 msgstr ""
-"ڈیجیٹل فارم پُر کریں، ہمیں اپنی جائیداد اور یہ بتائیں کہ آپ مالک ہیں یا کرایہ "
-"دار۔"
+"ڈیجیٹل فارم پُر کریں، ہمیں اپنی جائیداد اور یہ بتائیں کہ آپ مالک ہیں یا "
+"کرایہ دار۔"
 
 #: templates/core/home.html:46 templates/members/apply_documents.html:12
 msgid "Upload documents"
@@ -936,7 +1030,8 @@ msgstr "دستاویزات اپ لوڈ کریں"
 #: templates/core/home.html:46
 msgid "CNIC for owners; CNIC plus tenancy agreement for tenants."
 msgstr ""
-"مالکان کے لیے شناختی کارڈ؛ کرایہ داروں کے لیے شناختی کارڈ کے ساتھ کرایہ نامہ۔"
+"مالکان کے لیے شناختی کارڈ؛ کرایہ داروں کے لیے شناختی کارڈ کے ساتھ کرایہ "
+"نامہ۔"
 
 #: templates/core/home.html:47
 msgid "Get approved"
@@ -1052,11 +1147,6 @@ msgstr "واجبات کی وصولی کی شرح"
 msgid "Recent expenses"
 msgstr "حالیہ اخراجات"
 
-#: templates/core/transparency.html:20 templates/dues/expense_form.html:11
-#: templates/dues/expenses.html:23 templates/tickets/list.html:15
-msgid "Category"
-msgstr "زمرہ"
-
 #: templates/core/transparency.html:20 templates/dues/donations.html:18
 msgid "Date"
 msgstr "تاریخ"
@@ -1156,7 +1246,8 @@ msgid "Log an expense"
 msgstr "اخراجات درج کریں"
 
 #: templates/dues/expense_form.html:8
-msgid "Recorded as pending until a Chairman or authorised officer approves it."
+msgid ""
+"Recorded as pending until a Chairman or authorised officer approves it."
 msgstr "چیئرمین یا مجاز افسر کی منظوری تک زیر التوا کے طور پر درج رہتا ہے۔"
 
 #: templates/dues/expense_form.html:11
@@ -1171,10 +1262,6 @@ msgstr "رقم (PKR)"
 #: templates/dues/expense_form.html:13
 msgid "Incurred on"
 msgstr "تاریخِ اخراجات"
-
-#: templates/dues/expense_form.html:14
-msgid "Description (optional)"
-msgstr "تفصیل (اختیاری)"
 
 #: templates/dues/expense_form.html:15
 msgid "Receipt / bill (optional)"
@@ -1239,7 +1326,8 @@ msgstr "مقصد (اختیاری)"
 msgid "e.g. Ramzan ration drive"
 msgstr "مثلاً رمضان راشن مہم"
 
-#: templates/dues/record_donation.html:16 templates/dues/record_payment.html:15
+#: templates/dues/record_donation.html:16
+#: templates/dues/record_payment.html:15
 msgid "Reference (optional)"
 msgstr "حوالہ (اختیاری)"
 
@@ -1247,7 +1335,8 @@ msgstr "حوالہ (اختیاری)"
 msgid "Show on the public donor wall (donor has consented)"
 msgstr "عوامی عطیہ دہندگان کی دیوار پر دکھائیں (عطیہ دہندہ نے رضامندی دی ہے)"
 
-#: templates/dues/record_donation.html:18 templates/dues/record_payment.html:16
+#: templates/dues/record_donation.html:18
+#: templates/dues/record_payment.html:16
 msgid "Record & issue receipt"
 msgstr "درج کریں اور رسید جاری کریں"
 
@@ -1350,49 +1439,51 @@ msgstr "اقرارنامہ"
 msgid "accepted"
 msgstr "قبول شدہ"
 
-#: templates/members/application_detail.html:30
-#: templates/members/apply_documents.html:8 templates/members/apply_form.html:8
-#: templates/members/apply_review.html:7
-msgid "Documents"
-msgstr "دستاویزات"
+#: templates/members/application_detail.html:35
+msgid "download"
+msgstr "ڈاؤن لوڈ"
 
-#: templates/members/application_detail.html:33
+#: templates/members/application_detail.html:37
+msgid "(needs document-view permission)"
+msgstr "(دستاویز دیکھنے کی اجازت درکار)"
+
+#: templates/members/application_detail.html:39
 msgid "verified"
 msgstr "تصدیق شدہ"
 
-#: templates/members/application_detail.html:34
+#: templates/members/application_detail.html:40
 msgid "No documents."
 msgstr "کوئی دستاویز نہیں۔"
 
-#: templates/members/application_detail.html:41
+#: templates/members/application_detail.html:47
 msgid "Member number:"
 msgstr "رکن نمبر:"
 
-#: templates/members/application_detail.html:42
+#: templates/members/application_detail.html:48
 msgid "View issued card (public verify)"
 msgstr "جاری شدہ کارڈ دیکھیں (عوامی تصدیق)"
 
-#: templates/members/application_detail.html:48
+#: templates/members/application_detail.html:54
 msgid "Secretary approved — awaiting Chairman"
 msgstr "سیکریٹری کی منظوری — چیئرمین کا انتظار"
 
-#: templates/members/application_detail.html:53
+#: templates/members/application_detail.html:59
 msgid "Registration fee method (Rs 500)"
 msgstr "رجسٹریشن فیس کا طریقہ (روپے 500)"
 
-#: templates/members/application_detail.html:56
+#: templates/members/application_detail.html:62
 msgid "Final approve — issue number, receipt & card"
 msgstr "حتمی منظوری — نمبر، رسید اور کارڈ جاری کریں"
 
-#: templates/members/application_detail.html:58
+#: templates/members/application_detail.html:64
 msgid "Final approval requires the Chairman."
 msgstr "حتمی منظوری کے لیے چیئرمین درکار ہے۔"
 
-#: templates/members/application_detail.html:64
+#: templates/members/application_detail.html:70
 msgid "Secretary decision"
 msgstr "سیکریٹری کا فیصلہ"
 
-#: templates/members/application_detail.html:66
+#: templates/members/application_detail.html:72
 msgid "Record review"
 msgstr "جائزہ درج کریں"
 
@@ -1400,13 +1491,13 @@ msgstr "جائزہ درج کریں"
 msgid "Upload Documents"
 msgstr "دستاویزات اپ لوڈ کریں"
 
-#: templates/members/apply_documents.html:7 templates/members/apply_form.html:7
-#: templates/members/apply_review.html:6
+#: templates/members/apply_documents.html:7
+#: templates/members/apply_form.html:7 templates/members/apply_review.html:6
 msgid "Details"
 msgstr "تفصیلات"
 
-#: templates/members/apply_documents.html:9 templates/members/apply_form.html:9
-#: templates/members/apply_review.html:8
+#: templates/members/apply_documents.html:9
+#: templates/members/apply_form.html:9 templates/members/apply_review.html:8
 msgid "Submit"
 msgstr "جمع کریں"
 
@@ -1421,10 +1512,6 @@ msgstr "دستاویز کی قسم"
 #: templates/members/apply_documents.html:20
 msgid "File"
 msgstr "فائل"
-
-#: templates/members/apply_documents.html:21
-msgid "Upload"
-msgstr "اپ لوڈ"
 
 #: templates/members/apply_documents.html:25
 msgid "Uploaded"
@@ -1480,11 +1567,11 @@ msgstr "کیا آپ مالک ہیں یا کرایہ دار؟"
 
 #: templates/members/apply_form.html:33
 msgid ""
-"Tenants (Associate Members) must also upload a tenancy agreement in the next "
-"step."
+"Tenants (Associate Members) must also upload a tenancy agreement in the next"
+" step."
 msgstr ""
-"کرایہ داروں (ایسوسی ایٹ اراکین) کو اگلے مرحلے میں کرایہ نامہ بھی اپ لوڈ کرنا "
-"ہوگا۔"
+"کرایہ داروں (ایسوسی ایٹ اراکین) کو اگلے مرحلے میں کرایہ نامہ بھی اپ لوڈ کرنا"
+" ہوگا۔"
 
 #: templates/members/apply_form.html:37
 msgid "Continue to documents"

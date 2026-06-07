@@ -23,7 +23,7 @@ from django.utils import timezone
 
 from apps.accounts.models import StaffProfile, User
 from apps.accounts.permissions import CHAIRMAN, FINANCE, MEMBER, SECRETARY
-from apps.content.models import Event, Notice, Project, ProjectUpdate
+from apps.content.models import Event, Notice, Project, ProjectUpdate, PublicDocument
 from apps.content.services import fan_out_notice
 from apps.dues.models import Donation, DuesInvoice, DuesPlan, Expense
 from apps.dues.services import generate_invoices, record_dues_payment
@@ -218,6 +218,41 @@ class Command(BaseCommand):
             "description": "Past event — a wonderful evening of community bonding.",
             "starts_at": timezone.now() - timedelta(days=20),
             "location": "Community Hall", "is_public": True})
+
+        # ---- Public document library (downloadable PDFs) ----
+        if not PublicDocument.objects.exists():
+            from django.core.files.base import ContentFile
+
+            def _sample_pdf(heading: str) -> bytes:
+                import io
+
+                from reportlab.lib.pagesizes import A4
+                from reportlab.pdfgen import canvas
+
+                buf = io.BytesIO()
+                c = canvas.Canvas(buf, pagesize=A4)
+                c.setFont("Helvetica-Bold", 18)
+                c.drawString(72, 760, "M.W.A.R — Reg. No. 0060")
+                c.setFont("Helvetica", 13)
+                c.drawString(72, 730, heading)
+                c.drawString(72, 705, "Gulshan-e-Maymar, Karachi  ·  Hands of Hope")
+                c.showPage()
+                c.save()
+                return buf.getvalue()
+
+            uploader = User.objects.filter(email="chairman@mwar.org.pk").first()
+            for title, cat, desc in (
+                ("M.W.A.R Constitution & Bylaws", PublicDocument.Category.BYLAWS,
+                 "The association's governing document."),
+                ("Membership Application Form", PublicDocument.Category.FORMS,
+                 "Printable form for new applicants."),
+                ("Audited Accounts 2025", PublicDocument.Category.REPORTS,
+                 "Year-end financial statement."),
+            ):
+                doc = PublicDocument(title=title, category=cat, description=desc,
+                                     is_published=True, uploaded_by=uploader)
+                doc.file.save(f"{cat}.pdf", ContentFile(_sample_pdf(title)), save=True)
+            self.stdout.write(self.style.SUCCESS("  3 public documents published"))
 
         members_qs = list(User.objects.filter(member_profile__isnull=False)[:5])
         ticket_data = [

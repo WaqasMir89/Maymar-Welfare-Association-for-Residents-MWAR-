@@ -25,6 +25,7 @@
         <a href="{% url 'content:project_list' %}">{% trans "Projects" %}</a>
         <a href="{% url 'content:notice_list' %}">{% trans "Notices" %}</a>
         <a href="{% url 'content:event_list' %}">{% trans "Events" %}</a>
+        <a href="{% url 'content:document_list' %}">{% trans "Documents" %}</a>
         <a href="{% url 'core:transparency' %}">{% trans "Transparency" %}</a>
         <a href="{% url 'members:apply_start' %}">{% trans "Become a Member" %}</a>
         {% if user.is_authenticated %}

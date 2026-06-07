@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Upload document" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Upload a PDF document" %}</h1>
+    <p class="muted">{% trans "Published documents are downloadable by the public on the Documents page." %}</p>
+    <form method="post" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Title" %}</label><input type="text" name="title" required></div>
+      <div class="field"><label>{% trans "Description (optional)" %}</label><input type="text" name="description"></div>
+      <div class="field">
+        <label>{% trans "Category" %}</label>
+        <select name="category">
+          {% for value, label in categories %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>{% trans "PDF file" %}</label><input type="file" name="file" accept="application/pdf,.pdf" required></div>
+      <label><input type="checkbox" name="is_published" checked> {% trans "Publish now (visible to the public)" %}</label>
+      <button class="btn" type="submit">{% trans "Upload" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

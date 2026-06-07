@@ -33,7 +33,8 @@ class MeSerializer(serializers.ModelSerializer):
         # Only the platform-relevant custom permissions, not the full Django set.
         wanted = {"members.view_pii", "members.approve_membership",
                   "members.review_application", "dues.record_payment",
-                  "dues.approve_expense", "content.broadcast_notice"}
+                  "dues.approve_expense", "content.broadcast_notice",
+                  "content.manage_documents"}
         return sorted(p for p in obj.get_all_permissions() if p in wanted)
 
 

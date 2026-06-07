@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Documents" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="row-between">
+    <h1>{% trans "Document Library" %}</h1>
+    {% if can_manage %}<a class="btn" href="{% url 'content:document_upload' %}">{% trans "+ Upload PDF" %}</a>{% endif %}
+  </div>
+  <p class="muted">{% trans "Constitution, forms, audited accounts and meeting minutes — free to download." %}</p>
+
+  {% for group in groups %}
+  <div class="card" style="margin-top:18px">
+    <h3>{{ group.label }}</h3>
+    <div class="table-wrap"><table class="table">
+      <tbody>
+      {% for d in group.items %}
+        <tr>
+          <td>
+            📄 <strong>{{ d.title }}</strong>
+            {% if not d.is_published %}<span class="badge gray">{% trans "Draft" %}</span>{% endif %}
+            {% if d.description %}<br><span class="muted">{{ d.description }}</span>{% endif %}
+          </td>
+          <td class="muted">{{ d.created_at|date:"d M Y" }}</td>
+          <td style="text-align:end">
+            <a class="btn btn-sm" href="{% url 'content:document_download' d.pk %}">{% trans "Download" %}</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div>
+  {% empty %}
+  <p class="muted" style="margin-top:24px">{% trans "No documents have been published yet." %}</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -36,6 +36,8 @@ const PAGES = [
   ["/dues/staff/expenses/new/", "08d-expense-form.png", { login: "finance" }],
   ["/complaints/", "09-complaints.png", { login: "secretary" }],
   ["/content/events/", "11-events.png", { login: "secretary" }],
+  ["/content/documents/", "11a-documents.png", { login: "secretary" }],
+  ["/content/documents/upload/", "11b-document-upload.png", { login: "secretary" }],
   ["/content/notifications/", "12-notifications.png", { login: "member" }],
   ["/members/dashboard/", "13-member-dashboard.png", { login: "member" }],
   ["/", "10-home-urdu.png", { urdu: true }],

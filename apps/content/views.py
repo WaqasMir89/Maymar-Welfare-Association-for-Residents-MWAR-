@@ -14,7 +14,7 @@ from apps.accounts.permissions import is_staff_member, staff_member_test
 from apps.core.sms import send_sms
 from apps.members.models import MemberProfile
 
-from .models import Event, Notice, Notification, Project
+from .models import Event, Notice, Notification, Project, PublicDocument
 from .services import fan_out_notice
 
 
@@ -115,6 +115,79 @@ def event_detail(request: HttpRequest, pk: int) -> HttpResponse:
     qs = Event.objects.all() if request.user.is_authenticated else Event.objects.filter(is_public=True)
     event = get_object_or_404(qs, pk=pk)
     return render(request, "content/event_detail.html", {"event": event})
+
+
+# ---------------------------------------------------------------------------
+# Public document library — staff upload PDFs, anyone downloads
+# ---------------------------------------------------------------------------
+def document_list(request: HttpRequest) -> HttpResponse:
+    documents = PublicDocument.objects.filter(is_published=True)
+    can_manage = request.user.has_perm("content.manage_documents")
+    if can_manage:                       # managers also see unpublished drafts
+        documents = PublicDocument.objects.all()
+    # Group by category for display, preserving the human-readable label.
+    groups: dict[str, dict] = {}
+    for doc in documents:
+        groups.setdefault(doc.category, {"label": doc.get_category_display(), "items": []})
+        groups[doc.category]["items"].append(doc)
+    return render(
+        request,
+        "content/document_list.html",
+        {"groups": groups.values(), "can_manage": can_manage},
+    )
+
+
+def document_download(request: HttpRequest, pk: int) -> HttpResponse:
+    """Public PDF download. Unpublished drafts are reachable only by managers."""
+    qs = PublicDocument.objects.all()
+    if not request.user.has_perm("content.manage_documents"):
+        qs = qs.filter(is_published=True)
+    document = get_object_or_404(qs, pk=pk)
+
+    from django.http import FileResponse
+
+    response = FileResponse(document.file.open("rb"), content_type="application/pdf")
+    filename = document.file.name.rsplit("/", 1)[-1]
+    disp = "inline" if request.GET.get("inline") == "1" else "attachment"
+    response["Content-Disposition"] = f'{disp}; filename="{filename}"'
+    return response
+
+
+@permission_required("content.manage_documents", raise_exception=True)
+def document_upload(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        upload = request.FILES.get("file")
+        if not title or not upload:
+            messages.error(request, _("A title and a PDF file are required."))
+            return redirect("content:document_upload")
+        name = (upload.name or "").lower()
+        if not name.endswith(".pdf") or upload.content_type not in (
+            "application/pdf", "application/x-pdf", "application/octet-stream"
+        ):
+            messages.error(request, _("Only PDF files can be uploaded."))
+            return redirect("content:document_upload")
+        document = PublicDocument(
+            title=title,
+            description=request.POST.get("description", "").strip(),
+            category=request.POST.get("category", PublicDocument.Category.OTHER),
+            file=upload,
+            is_published=bool(request.POST.get("is_published")),
+            uploaded_by=request.user,
+        )
+        try:
+            document.full_clean()        # runs the FileExtensionValidator too
+        except Exception:
+            messages.error(request, _("Only PDF files can be uploaded."))
+            return redirect("content:document_upload")
+        document.save()
+        messages.success(request, _("Document uploaded."))
+        return redirect("content:document_list")
+    return render(
+        request,
+        "content/document_form.html",
+        {"categories": PublicDocument.Category.choices},
+    )
 
 
 @staff_member_test

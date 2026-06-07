@@ -15,4 +15,7 @@ urlpatterns = [
     path("events/", views.event_list, name="event_list"),
     path("events/new/", views.event_create, name="event_create"),
     path("events/<int:pk>/", views.event_detail, name="event_detail"),
+    path("documents/", views.document_list, name="document_list"),
+    path("documents/upload/", views.document_upload, name="document_upload"),
+    path("documents/<int:pk>/download/", views.document_download, name="document_download"),
 ]

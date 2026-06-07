@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from django.contrib.auth.models import Permission
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
 
 from apps.accounts.models import User
-from apps.content.models import Event, Notice, Notification
+from apps.content.models import Event, Notice, Notification, PublicDocument
 from apps.content.services import fan_out_notice, notify
 from apps.locality.models import Property, Sector, SubSector
 from apps.members.models import MemberProfile, Residency, ResidencyType
@@ -81,3 +83,63 @@ class EventVisibilityTests(TestCase):
         self.client.force_login(User.objects.create_user("u@x.pk", "password123"))
         r = self.client.get("/content/events/")
         self.assertContains(r, "Members AGM")
+
+
+class PublicDocumentTests(TestCase):
+    """Staff with manage_documents upload PDFs; anyone downloads published ones."""
+
+    PDF = b"%PDF-1.4 minimal"
+
+    def setUp(self):
+        self.manager = User.objects.create_user("mgr@x.pk", "password123")
+        self.manager.user_permissions.add(
+            Permission.objects.get(codename="manage_documents",
+                                    content_type__app_label="content")
+        )
+        self.plain = User.objects.create_user("plain@x.pk", "password123")
+
+    def _upload(self, client, name="bylaws.pdf", ctype="application/pdf", **extra):
+        data = {"title": "Constitution", "category": "bylaws", "is_published": "on"}
+        data.update(extra)
+        data["file"] = SimpleUploadedFile(name, self.PDF, content_type=ctype)
+        return client.post("/content/documents/upload/", data)
+
+    def test_manager_can_upload_pdf(self):
+        self.client.force_login(self.manager)
+        r = self._upload(self.client)
+        self.assertEqual(r.status_code, 302)
+        doc = PublicDocument.objects.get(title="Constitution")
+        self.assertEqual(doc.category, "bylaws")
+        self.assertEqual(doc.uploaded_by, self.manager)
+        doc.file.delete(save=False)
+
+    def test_non_pdf_is_rejected(self):
+        self.client.force_login(self.manager)
+        self._upload(self.client, name="x.exe", ctype="application/octet-stream")
+        self.assertEqual(PublicDocument.objects.count(), 0)
+
+    def test_user_without_permission_cannot_upload(self):
+        self.client.force_login(self.plain)
+        self.assertEqual(self.client.get("/content/documents/upload/").status_code, 403)
+        self.assertEqual(self._upload(self.client).status_code, 403)
+
+    def test_public_can_download_published_but_not_draft(self):
+        doc = PublicDocument.objects.create(
+            title="Published", category="forms", is_published=True,
+            file=SimpleUploadedFile("p.pdf", self.PDF, content_type="application/pdf"),
+        )
+        draft = PublicDocument.objects.create(
+            title="Draft", category="minutes", is_published=False,
+            file=SimpleUploadedFile("d.pdf", self.PDF, content_type="application/pdf"),
+        )
+        r = self.client.get(f"/content/documents/{doc.pk}/download/")
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("attachment", r["Content-Disposition"])
+        body = b"".join(r.streaming_content) if hasattr(r, "streaming_content") else r.content
+        self.assertEqual(body, self.PDF)
+        self.assertEqual(self.client.get(f"/content/documents/{draft.pk}/download/").status_code, 404)
+        doc.file.delete(save=False)
+        draft.file.delete(save=False)
+
+    def test_list_page_renders_for_public(self):
+        self.assertEqual(self.client.get("/content/documents/").status_code, 200)
