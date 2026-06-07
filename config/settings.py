@@ -10,6 +10,7 @@ PostgreSQL + real backends purely through environment variables.
 """
 
 from datetime import timedelta
+import os
 from pathlib import Path
 
 import environ
@@ -29,8 +30,8 @@ env = environ.Env(
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
-DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", "").split(",")
 
 # ---------------------------------------------------------------------------
 # Applications
