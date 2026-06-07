@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Notifications" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="row-between">
+    <h1>{% trans "Notifications" %}</h1>
+    {% if unread_notifications %}
+    <form method="post" action="{% url 'content:notifications_read_all' %}">{% csrf_token %}
+      <button class="btn btn-ghost btn-sm" type="submit">{% trans "Mark all as read" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="card" style="padding:0">
+    {% for n in notifications %}
+    <a href="{% url 'content:notification_read' n.pk %}"
+       class="notif-row {% if not n.is_read %}unread{% endif %}">
+      <span class="notif-dot {{ n.level }}"></span>
+      <span class="notif-main">
+        <strong>{{ n.title }}</strong>
+        {% if n.body %}<span class="muted">{{ n.body|truncatechars:120 }}</span>{% endif %}
+      </span>
+      <span class="muted notif-time">{{ n.created_at|timesince }} {% trans "ago" %}</span>
+    </a>
+    {% empty %}
+    <p class="muted" style="padding:24px">{% trans "You have no notifications." %}</p>
+    {% endfor %}
+  </div>
+  {% include "core/_pagination.html" with page=notifications %}
+</div>
+{% endblock %}

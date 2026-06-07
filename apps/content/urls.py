@@ -9,4 +9,10 @@ urlpatterns = [
     path("projects/<slug:slug>/", views.project_detail, name="project_detail"),
     path("notices/", views.notice_list, name="notice_list"),
     path("notices/new/", views.notice_create, name="notice_create"),
+    path("notifications/", views.notification_list, name="notification_list"),
+    path("notifications/<int:pk>/read/", views.notification_read, name="notification_read"),
+    path("notifications/read-all/", views.notifications_read_all, name="notifications_read_all"),
+    path("events/", views.event_list, name="event_list"),
+    path("events/new/", views.event_create, name="event_create"),
+    path("events/<int:pk>/", views.event_detail, name="event_detail"),
 ]

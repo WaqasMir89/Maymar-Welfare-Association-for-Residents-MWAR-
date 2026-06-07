@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "New event" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "New event" %}</h1>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Title" %}</label><input type="text" name="title" required></div>
+      <div class="field"><label>{% trans "Starts at" %}</label><input type="datetime-local" name="starts_at" required></div>
+      <div class="field"><label>{% trans "Ends at (optional)" %}</label><input type="datetime-local" name="ends_at"></div>
+      <div class="field"><label>{% trans "Location" %}</label><input type="text" name="location" placeholder="{% trans 'e.g. Community hall, Sector W' %}"></div>
+      <div class="field"><label>{% trans "Description" %}</label><textarea name="description" rows="4"></textarea></div>
+      <label><input type="checkbox" name="is_public" checked> {% trans "Visible to the public (not just members)" %}</label>
+      <button class="btn" type="submit">{% trans "Create event" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

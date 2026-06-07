@@ -81,7 +81,7 @@ internals:
 
 ```bash
 source ../.venv/bin/activate
-python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api   # 28 tests
+python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api apps.content.tests   # 35 tests
 ```
 
 Or poke a single flow through the Django test client / shell, e.g. confirm PII
@@ -116,6 +116,7 @@ use the driver above to verify without a display.
 | Chairman (final approval, `view_pii`) | `chairman@mwar.org.pk` | `staff12345` |
 | Secretary (review, `view_pii`) | `secretary@mwar.org.pk` | `staff12345` |
 | Finance (record payments) | `finance@mwar.org.pk` | `staff12345` |
+| Member (self-service: card, dues, inbox) | `member@mwar.org.pk` | `member12345` |
 
 ## Gotchas
 

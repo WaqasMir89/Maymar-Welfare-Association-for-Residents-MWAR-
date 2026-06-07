@@ -94,3 +94,38 @@ class Event(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.title
+
+
+class Notification(TimeStampedModel):
+    """A per-user in-app notification (the inbox behind the nav bell)."""
+
+    class Level(models.TextChoices):
+        INFO = "info", _("Info")
+        SUCCESS = "success", _("Success")
+        WARNING = "warning", _("Warning")
+
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications"
+    )
+    title = models.CharField(max_length=180)
+    body = models.TextField(blank=True)
+    url = models.CharField(max_length=300, blank=True)
+    level = models.CharField(max_length=10, choices=Level.choices, default=Level.INFO)
+    notice = models.ForeignKey(
+        Notice, null=True, blank=True, on_delete=models.SET_NULL, related_name="notifications"
+    )
+    is_read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["recipient", "is_read"])]
+
+    def __str__(self) -> str:
+        return f"{self.title} → {self.recipient}"
+
+    def mark_read(self):
+        if not self.is_read:
+            self.is_read = True
+            self.read_at = timezone.now()
+            self.save(update_fields=["is_read", "read_at", "updated_at"])

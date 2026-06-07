@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ event.title }} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <a href="{% url 'content:event_list' %}" class="muted">← {% trans "All events" %}</a>
+  <div class="card" style="margin-top:12px">
+    <h1>{{ event.title }}</h1>
+    <p><strong>🗓️ {{ event.starts_at|date:"l, d F Y · g:i A" }}</strong>
+      {% if event.ends_at %} – {{ event.ends_at|date:"g:i A" }}{% endif %}</p>
+    {% if event.location %}<p>📍 {{ event.location }}</p>{% endif %}
+    {% if not event.is_public %}<span class="badge gray">{% trans "Members only" %}</span>{% endif %}
+    {% if event.description %}<div style="margin-top:14px">{{ event.description|linebreaks }}</div>{% endif %}
+  </div>
+</div>
+{% endblock %}

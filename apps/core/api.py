@@ -11,7 +11,6 @@ from __future__ import annotations
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import exception_handler as drf_exception_handler
 
 
 class StandardPagination(PageNumberPagination):
@@ -63,6 +62,11 @@ _CODE_BY_STATUS = {
 
 
 def envelope_exception_handler(exc, context):
+    # Imported lazily: importing rest_framework.views at module top triggers
+    # APIView's class body to resolve DEFAULT_RENDERER_CLASSES, which re-imports
+    # this module mid-definition (circular import).
+    from rest_framework.views import exception_handler as drf_exception_handler
+
     response = drf_exception_handler(exc, context)
     if response is None:
         return None

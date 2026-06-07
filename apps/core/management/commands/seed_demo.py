@@ -23,11 +23,12 @@ from django.utils import timezone
 
 from apps.accounts.models import StaffProfile, User
 from apps.accounts.permissions import CHAIRMAN, FINANCE, MEMBER, SECRETARY
-from apps.content.models import Notice, Project, ProjectUpdate
+from apps.content.models import Event, Notice, Project, ProjectUpdate
+from apps.content.services import fan_out_notice
 from apps.dues.models import Donation, DuesInvoice, DuesPlan, Expense
 from apps.dues.services import generate_invoices, record_dues_payment
 from apps.locality.models import Property, Sector, SubSector
-from apps.members.models import MembershipApplication, ResidencyType
+from apps.members.models import MemberProfile, MembershipApplication, ResidencyType
 from apps.members.services import chairman_approve, secretary_review, submit_application
 from apps.tickets.models import Ticket
 
@@ -179,12 +180,44 @@ class Command(BaseCommand):
                 ProjectUpdate.objects.create(project=p, title="Project kicked off",
                                              body="Work has begun; updates will follow here.")
 
-        Notice.objects.get_or_create(title="Water supply schedule revised",
+        # ---- A demo member login (seed members otherwise have no account) ----
+        first_profile = MemberProfile.objects.filter(status="active").order_by("member_number").first()
+        if first_profile and not first_profile.user:
+            member_user, created = User.objects.get_or_create(
+                email="member@mwar.org.pk",
+                defaults={"full_name": first_profile.full_name, "phone": first_profile.phone},
+            )
+            if created:
+                member_user.set_password("member12345")
+                member_user.save()
+                member_user.groups.add(Group.objects.get(name=MEMBER))
+            first_profile.user = member_user
+            first_profile.save(update_fields=["user"])
+
+        # ---- Notices (fan out to in-app notifications) ----
+        n1, c1 = Notice.objects.get_or_create(title="Water supply schedule revised",
             defaults={"body": "From Monday, water will be supplied 6–9am and 6–9pm.",
                       "audience": Notice.Audience.PUBLIC, "created_by": secretary})
-        Notice.objects.get_or_create(title="Annual General Meeting — Sunday 10am",
+        n2, c2 = Notice.objects.get_or_create(title="Annual General Meeting — Sunday 10am",
             defaults={"body": "All members are invited to the AGM at the community hall.",
                       "audience": Notice.Audience.ALL_MEMBERS, "created_by": chairman})
+        for notice, created in ((n1, c1), (n2, c2)):
+            if created:
+                fan_out_notice(notice)
+
+        # ---- Community events ----
+        Event.objects.get_or_create(title="Annual General Meeting", defaults={
+            "description": "Yearly review of accounts, projects and elections.",
+            "starts_at": timezone.now() + timedelta(days=14, hours=10),
+            "location": "Community Hall, Sector W", "is_public": False})
+        Event.objects.get_or_create(title="Neighbourhood Cleanliness Drive", defaults={
+            "description": "Join hands to clean and green our streets. Tools provided.",
+            "starts_at": timezone.now() + timedelta(days=5, hours=8),
+            "location": "Sector W Park", "is_public": True})
+        Event.objects.get_or_create(title="Eid Milan Community Gathering", defaults={
+            "description": "Past event — a wonderful evening of community bonding.",
+            "starts_at": timezone.now() - timedelta(days=20),
+            "location": "Community Hall", "is_public": True})
 
         members_qs = list(User.objects.filter(member_profile__isnull=False)[:5])
         ticket_data = [

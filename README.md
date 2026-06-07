@@ -49,6 +49,7 @@ Open http://127.0.0.1:8000. Demo logins (created by `seed_demo`):
 | Chairman (final approval, `view_pii`) | `chairman@mwar.org.pk` | `staff12345` |
 | Secretary (review, `view_pii`) | `secretary@mwar.org.pk` | `staff12345` |
 | Finance (record payments) | `finance@mwar.org.pk` | `staff12345` |
+| Member (self-service) | `member@mwar.org.pk` | `member12345` |
 
 ## Key flows to try
 
@@ -75,7 +76,7 @@ Open http://127.0.0.1:8000. Demo logins (created by `seed_demo`):
 ## Tests
 
 ```bash
-python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api
+python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api apps.content.tests
 ```
 
 Covers the critical paths: CNIC encrypt/mask, two-step approval (+ idempotency

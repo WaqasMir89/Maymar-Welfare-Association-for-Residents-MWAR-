@@ -24,6 +24,7 @@
       <nav class="nav-links">
         <a href="{% url 'content:project_list' %}">{% trans "Projects" %}</a>
         <a href="{% url 'content:notice_list' %}">{% trans "Notices" %}</a>
+        <a href="{% url 'content:event_list' %}">{% trans "Events" %}</a>
         <a href="{% url 'core:transparency' %}">{% trans "Transparency" %}</a>
         <a href="{% url 'members:apply_start' %}">{% trans "Become a Member" %}</a>
         {% if user.is_authenticated %}
@@ -31,6 +32,9 @@
             <a href="{% url 'staff_dashboard' %}">{% trans "Staff" %}</a>
           {% endif %}
           <a href="{% url 'members:dashboard' %}">{% trans "My Dashboard" %}</a>
+          <a class="nav-bell" href="{% url 'content:notification_list' %}" title="{% trans 'Notifications' %}">
+            🔔{% if unread_notifications %}<span class="bell-badge">{{ unread_notifications }}</span>{% endif %}
+          </a>
           <a href="{% url 'accounts:logout' %}">{% trans "Sign out" %}</a>
         {% else %}
           <a href="{% url 'accounts:login' %}">{% trans "Sign in" %}</a>

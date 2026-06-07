@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Events" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="row-between">
+    <h1>{% trans "Community Events" %}</h1>
+    {% if can_manage %}<a class="btn" href="{% url 'content:event_create' %}">{% trans "+ New event" %}</a>{% endif %}
+  </div>
+
+  <h3>{% trans "Upcoming" %}</h3>
+  <div class="grid grid-2">
+    {% for e in upcoming %}
+    <a href="{% url 'content:event_detail' e.pk %}" class="card event-card" style="text-decoration:none">
+      <div class="event-date">
+        <span class="day">{{ e.starts_at|date:"d" }}</span>
+        <span class="mon">{{ e.starts_at|date:"M" }}</span>
+      </div>
+      <div>
+        <strong>{{ e.title }}</strong>
+        <p class="muted" style="margin:4px 0">{{ e.starts_at|date:"D, d M Y · g:i A" }}</p>
+        {% if e.location %}<p class="muted" style="margin:0">📍 {{ e.location }}</p>{% endif %}
+        {% if not e.is_public %}<span class="badge gray">{% trans "Members only" %}</span>{% endif %}
+      </div>
+    </a>
+    {% empty %}<p class="muted">{% trans "No upcoming events." %}</p>{% endfor %}
+  </div>
+
+  {% if past %}
+  <h3 style="margin-top:28px">{% trans "Past events" %}</h3>
+  <div class="table-wrap"><table class="table">
+    <tbody>
+    {% for e in past %}
+      <tr><td>{{ e.starts_at|date:"d M Y" }}</td>
+          <td><a href="{% url 'content:event_detail' e.pk %}">{{ e.title }}</a></td>
+          <td class="muted">{{ e.location }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% endif %}
+</div>
+{% endblock %}

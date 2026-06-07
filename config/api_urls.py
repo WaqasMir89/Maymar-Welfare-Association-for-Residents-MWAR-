@@ -22,6 +22,7 @@ from apps.accounts.api import MeView, RegisterView
 from apps.content.api import (
     EventViewSet,
     NoticeViewSet,
+    NotificationViewSet,
     ProjectViewSet,
     PublicNewsView,
     PublicProjectsView,
@@ -44,6 +45,7 @@ router.register("tickets", TicketViewSet, basename="api-ticket")
 router.register("projects", ProjectViewSet, basename="api-project")
 router.register("events", EventViewSet, basename="api-event")
 router.register("notices", NoticeViewSet, basename="api-notice")
+router.register("notifications", NotificationViewSet, basename="api-notification")
 
 auth_patterns = [
     path("register", RegisterView.as_view(), name="api-register"),

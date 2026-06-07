@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from drf_spectacular.utils import OpenApiTypes, extend_schema
 from rest_framework import serializers, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Event, Notice, Project
+from .models import Event, Notice, Notification, Project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -55,6 +56,31 @@ class NoticeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ["id", "title", "body", "url", "level", "is_read", "created_at"]
+
+
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    """The caller's own in-app notifications. ``?unread=true`` filters unread."""
+
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = self.request.user.notifications.all()
+        if self.request.query_params.get("unread") == "true":
+            qs = qs.filter(is_read=False)
+        return qs
+
+    @action(detail=True, methods=["post"])
+    def read(self, request, pk=None):
+        notification = self.get_object()
+        notification.mark_read()
+        return Response(self.get_serializer(notification).data)
 
 
 # --------------------------------------------------------------- PUBLIC --

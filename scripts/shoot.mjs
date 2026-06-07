@@ -35,6 +35,9 @@ const PAGES = [
   ["/dues/staff/expenses/", "08c-expenses.png", { login: "finance" }],
   ["/dues/staff/expenses/new/", "08d-expense-form.png", { login: "finance" }],
   ["/complaints/", "09-complaints.png", { login: "secretary" }],
+  ["/content/events/", "11-events.png", { login: "secretary" }],
+  ["/content/notifications/", "12-notifications.png", { login: "member" }],
+  ["/members/dashboard/", "13-member-dashboard.png", { login: "member" }],
   ["/", "10-home-urdu.png", { urdu: true }],
 ].filter((p) => p[1]);
 
@@ -42,6 +45,7 @@ const CREDS = {
   secretary: ["secretary@mwar.org.pk", "staff12345"],
   finance: ["finance@mwar.org.pk", "staff12345"],
   admin: ["admin@mwar.org.pk", "admin12345"],
+  member: ["member@mwar.org.pk", "member12345"],
 };
 
 async function login(page, who) {

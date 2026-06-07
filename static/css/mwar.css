@@ -169,6 +169,39 @@ input[type=tel], input[type=date], select, textarea {
 .pill-nav a { background: #fff; border: 1px solid var(--border); padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--ink-600); }
 .pill-nav a.active { background: var(--brand-700); color: #fff; border-color: var(--brand-700); }
 
+/* ---- Notification bell + inbox ---- */
+.nav-bell { position: relative; }
+.bell-badge {
+  position: absolute; top: -6px; inset-inline-end: -10px;
+  background: var(--accent-danger); color: #fff; font-size: 10px; font-weight: 800;
+  min-width: 16px; height: 16px; line-height: 16px; text-align: center;
+  border-radius: 999px; padding: 0 4px;
+}
+.notif-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+  border-bottom: 1px solid var(--border); color: var(--ink-900); text-decoration: none;
+}
+.notif-row:last-child { border-bottom: 0; }
+.notif-row:hover { background: var(--brand-050); }
+.notif-row.unread { background: #f6f9ff; }
+.notif-main { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.notif-time { white-space: nowrap; font-size: 12px; }
+.notif-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--ink-600); flex: none; }
+.notif-dot.info { background: var(--brand-700); }
+.notif-dot.success { background: var(--accent-success); }
+.notif-dot.warning { background: var(--accent-warning); }
+.notif-row:not(.unread) .notif-dot { background: var(--border); }
+
+/* ---- Event cards ---- */
+.event-card { display: flex; gap: 16px; align-items: flex-start; }
+.event-date {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--brand-050); color: var(--brand-900); border-radius: 10px;
+  width: 56px; height: 56px; flex: none;
+}
+.event-date .day { font-size: 20px; font-weight: 800; line-height: 1; }
+.event-date .mon { font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
 /* ---- Wizard steps ---- */
 .steps { display: flex; gap: 8px; margin-bottom: 24px; }
 .steps .step { flex: 1; text-align: center; padding: 10px; border-radius: 10px; background: #fff; border: 1px solid var(--border); font-size: 13px; color: var(--ink-300); }
