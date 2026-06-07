@@ -31,6 +31,7 @@ const PAGES = [
   ["/accounts/password-reset/", "05a-password-reset.png", {}],
   ["/staff/", "06-staff-dashboard.png", { login: "secretary" }],
   ["/members/staff/queue/", "07-membership-queue.png", { login: "secretary" }],
+  ["/dues/staff/dashboard/", "07a-finance-dashboard.png", { login: "finance" }],
   ["/dues/staff/billing/", "08-billing-board.png", { login: "finance" }],
   ["/dues/staff/donations/", "08a-donations.png", { login: "finance" }],
   ["/dues/staff/donations/record/", "08b-donation-form.png", { login: "finance" }],

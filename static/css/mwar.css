@@ -243,3 +243,12 @@ footer.site .footer-credit a { font-weight: 600; }
 .roadmap-head { display: flex; gap: var(--space); align-items: center; margin-bottom: 2px; }
 .roadmap-period { font-weight: 700; color: var(--brand-900); }
 @media (max-width: 640px) { .chairman-card { flex-direction: column; } }
+
+/* Finance dashboard inline bar chart */
+.barchart { display: flex; flex-direction: column; gap: 3px; }
+.barchart .bar { height: 9px; border-radius: 5px; min-width: 2px; }
+.barchart .bar.in { background: var(--success, #1E8E5A); }
+.barchart .bar.out { background: #d9744a; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-inline-end: 5px; vertical-align: middle; }
+.legend-dot.in { background: var(--success, #1E8E5A); }
+.legend-dot.out { background: #d9744a; }

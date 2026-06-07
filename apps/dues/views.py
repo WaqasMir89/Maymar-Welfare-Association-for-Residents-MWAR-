@@ -33,6 +33,63 @@ def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> Http
     return response
 
 
+# ---------------------------------------------------------------------------
+# Finance dashboard + downloadable reports
+# ---------------------------------------------------------------------------
+@staff_member_test
+def finance_dashboard(request: HttpRequest) -> HttpResponse:
+    from apps.dues.reports import finance_dashboard as _data
+
+    return render(request, "dues/finance_dashboard.html", _data())
+
+
+@staff_member_test
+def export_pending_dues(request: HttpRequest) -> HttpResponse:
+    from apps.core.exports import csv_response
+
+    qs = (DuesInvoice.objects
+          .filter(status__in=["unpaid", "partial", "overdue"])
+          .select_related("property", "member", "plan")
+          .order_by("due_date"))
+    rows = ([inv.property, inv.member.full_name if inv.member else "—", inv.plan.name,
+             inv.period_start, inv.amount_due, inv.amount_paid, inv.balance,
+             inv.due_date, inv.get_status_display()] for inv in qs)
+    return csv_response(
+        "pending-dues.csv",
+        ["Property", "Member", "Plan", "Period", "Amount due", "Amount paid",
+         "Balance", "Due date", "Status"],
+        rows,
+    )
+
+
+@staff_member_test
+def export_monthly_finance(request: HttpRequest) -> HttpResponse:
+    from apps.core.exports import csv_response
+    from apps.dues.reports import monthly_breakdown
+
+    rows = ([r["label"], r["dues"], r["donations"], r["collected"], r["spent"], r["net"]]
+            for r in monthly_breakdown(12))
+    return csv_response(
+        "monthly-finance.csv",
+        ["Month", "Dues collected", "Donations", "Total collected", "Spent", "Net"],
+        rows,
+    )
+
+
+def export_public_finance(request: HttpRequest) -> HttpResponse:
+    """Public, PII-free month-wise collection vs spending report."""
+    from apps.core.exports import csv_response
+    from apps.dues.reports import monthly_breakdown
+
+    rows = ([r["label"], r["collected"], r["spent"], r["net"]]
+            for r in monthly_breakdown(12))
+    return csv_response(
+        "mwar-collection-and-spending.csv",
+        ["Month", "Collected (PKR)", "Spent (PKR)", "Net (PKR)"],
+        rows,
+    )
+
+
 @staff_member_test
 def billing_board(request: HttpRequest) -> HttpResponse:
     qs = DuesInvoice.objects.select_related(

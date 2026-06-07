@@ -35,9 +35,11 @@ def about(request: HttpRequest) -> HttpResponse:
 
 def transparency(request: HttpRequest) -> HttpResponse:
     """Public financial transparency page."""
-    from apps.dues.reports import transparency_summary
+    from apps.dues.reports import monthly_breakdown, transparency_summary
 
-    return render(request, "core/transparency.html", transparency_summary())
+    context = transparency_summary()
+    context["monthly"] = monthly_breakdown(12)
+    return render(request, "core/transparency.html", context)
 
 
 def contact(request: HttpRequest) -> HttpResponse:

@@ -95,3 +95,26 @@ def ticket_update_status(request: HttpRequest, pk: int) -> HttpResponse:
             ticket.save()
             messages.success(request, _("Status updated."))
     return redirect("complaints:detail", pk=pk)
+
+
+@staff_member_test
+def export_pending_complaints(request: HttpRequest) -> HttpResponse:
+    """Download the open complaints queue as CSV."""
+    from apps.core.exports import csv_response
+
+    qs = (Ticket.objects
+          .exclude(status__in=[Ticket.Status.RESOLVED, Ticket.Status.CLOSED])
+          .select_related("created_by", "assigned_to", "property")
+          .order_by("-priority", "created_at"))
+    rows = ([t.ticket_number, t.title, t.get_category_display(),
+             t.get_priority_display(), t.get_status_display(),
+             t.created_by.get_full_name() if t.created_by else "—",
+             t.property or "—",
+             t.assigned_to.get_full_name() if t.assigned_to else "—",
+             t.created_at.strftime("%Y-%m-%d")] for t in qs)
+    return csv_response(
+        "pending-complaints.csv",
+        ["Ticket", "Title", "Category", "Priority", "Status", "Raised by",
+         "Property", "Assigned to", "Created"],
+        rows,
+    )

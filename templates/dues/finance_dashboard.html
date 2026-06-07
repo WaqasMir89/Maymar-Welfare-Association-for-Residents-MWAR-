@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Finance Dashboard" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  {% include "dues/_finance_nav.html" with active="dashboard" %}
+  <h1>{% trans "Finance Dashboard" %}</h1>
+
+  <div class="grid grid-4" style="margin-top:8px">
+    <div class="kpi success"><div class="value">Rs {{ dues_collected|floatformat:0|intcomma }}</div><div class="label">{% trans "Dues collected" %}</div></div>
+    <div class="kpi"><div class="value">Rs {{ donations_total|floatformat:0|intcomma }}</div><div class="label">{% trans "Donations" %}</div></div>
+    <div class="kpi warning"><div class="value">Rs {{ expenses_total|floatformat:0|intcomma }}</div><div class="label">{% trans "Spent" %}</div></div>
+    <div class="kpi {% if balance < 0 %}warning{% else %}success{% endif %}"><div class="value">Rs {{ balance|floatformat:0|intcomma }}</div><div class="label">{% trans "Balance" %}</div></div>
+  </div>
+  <div class="grid grid-2" style="margin-top:14px">
+    <div class="kpi"><div class="value">{{ collection_rate }}%</div><div class="label">{% trans "Collection rate" %}</div></div>
+    <a href="{% url 'dues:billing_board' %}?status=overdue" class="kpi warning" style="text-decoration:none"><div class="value">Rs {{ arrears_total|floatformat:0|intcomma }}</div><div class="label">{% trans "Outstanding arrears" %} ({{ arrears_count }})</div></a>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="row-between"><h3>{% trans "Month-wise collection vs spending" %}</h3>
+      <a class="btn btn-ghost btn-sm" href="{% url 'dues:export_monthly_finance' %}">⬇ {% trans "CSV" %}</a></div>
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{% trans "Month" %}</th><th></th><th style="text-align:end">{% trans "Collected" %}</th><th style="text-align:end">{% trans "Spent" %}</th><th style="text-align:end">{% trans "Net" %}</th></tr></thead>
+      <tbody>
+      {% for r in monthly %}
+        <tr>
+          <td>{{ r.label }}</td>
+          <td style="width:42%">
+            <div class="barchart">
+              <div class="bar in" style="width:{% widthratio r.collected peak 100 %}%"></div>
+              <div class="bar out" style="width:{% widthratio r.spent peak 100 %}%"></div>
+            </div>
+          </td>
+          <td style="text-align:end;color:var(--success,#1E8E5A)">Rs {{ r.collected|floatformat:0|intcomma }}</td>
+          <td style="text-align:end;color:#b4471f">Rs {{ r.spent|floatformat:0|intcomma }}</td>
+          <td style="text-align:end"><strong>Rs {{ r.net|floatformat:0|intcomma }}</strong></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="muted" style="margin-top:8px"><span class="legend-dot in"></span>{% trans "Collected" %} &nbsp; <span class="legend-dot out"></span>{% trans "Spent" %}</p>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:24px">
+    <div class="card">
+      <h3>{% trans "Spending by category" %}</h3>
+      <div class="table-wrap"><table class="table">
+        <tbody>
+        {% for c in expense_categories %}
+          <tr><td>{{ c.category }}</td><td style="text-align:end">Rs {{ c.total|floatformat:0|intcomma }}</td></tr>
+        {% empty %}<tr><td class="muted">{% trans "No spending recorded." %}</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3>{% trans "Download reports" %}</h3>
+      <p class="muted">{% trans "Export current data as CSV (opens in Excel)." %}</p>
+      <div class="stack">
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:export_pending_dues' %}">⬇ {% trans "Pending dues (arrears)" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'complaints:export_pending' %}">⬇ {% trans "Pending complaints" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:export_monthly_finance' %}">⬇ {% trans "Month-wise finance" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:export_public_finance' %}">⬇ {% trans "Public collection & spending" %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

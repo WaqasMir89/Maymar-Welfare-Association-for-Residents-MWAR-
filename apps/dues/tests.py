@@ -199,3 +199,76 @@ class PaymentSubmissionTests(TestCase):
         stranger = User.objects.create_user("x@x.pk", "pw1234567890")
         self.client.force_login(stranger)
         self.assertEqual(self.client.get(url).status_code, 403)
+
+
+class ReportsAndExportsTests(TestCase):
+    """Month-wise breakdown maths + CSV report downloads with access control."""
+
+    def setUp(self):
+        from datetime import date
+
+        from django.contrib.auth.models import Group, Permission
+
+        sector = Sector.objects.create(name="Sector W", code="W")
+        sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        self.prop = Property.objects.create(sub_sector=sub, house_number="3",
+                                            status=Property.Status.OCCUPIED)
+        self.plan = DuesPlan.objects.create(name="Monthly", amount=Decimal("1500.00"))
+        self.finance = User.objects.create_user("fin@x.pk", "pw1234567890")
+        self.finance.groups.add(Group.objects.create(name="Finance Officer"))
+        self.finance.user_permissions.add(
+            Permission.objects.get(codename="record_payment", content_type__app_label="dues")
+        )
+        # One unpaid invoice (arrears) + one payment + one expense this month.
+        self.invoice = DuesInvoice.objects.create(
+            property=self.prop, plan=self.plan, period_start=date(2026, 1, 1),
+            period_end=date(2026, 1, 31), amount_due=Decimal("1500.00"),
+            due_date=date(2026, 1, 10), status=DuesInvoice.Status.UNPAID,
+        )
+        paid = DuesInvoice.objects.create(
+            property=self.prop, plan=self.plan, period_start=date(2026, 2, 1),
+            period_end=date(2026, 2, 28), amount_due=Decimal("1500.00"),
+            due_date=date(2026, 2, 10), status=DuesInvoice.Status.UNPAID,
+        )
+        record_dues_payment(paid, amount=Decimal("1500"), method="cash", user=self.finance)
+        create_expense(category="Security", amount=Decimal("500"), user=self.finance)
+        Expense.objects.update(status=Expense.Status.PAID)
+
+    def test_monthly_breakdown_buckets_in_and_out(self):
+        from apps.dues.reports import monthly_breakdown
+
+        rows = monthly_breakdown(12)
+        self.assertEqual(len(rows), 12)
+        totals_in = sum(r["collected"] for r in rows)
+        totals_out = sum(r["spent"] for r in rows)
+        self.assertEqual(totals_in, Decimal("1500"))
+        self.assertEqual(totals_out, Decimal("500"))
+
+    def test_pending_dues_csv_lists_only_outstanding(self):
+        self.client.force_login(self.finance)
+        r = self.client.get("/dues/staff/reports/pending-dues.csv")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r["Content-Type"].split(";")[0], "text/csv")
+        body = r.content.decode("utf-8")
+        self.assertIn("Balance", body)            # header present
+        self.assertEqual(body.count("\r\n"), 2)   # header + 1 unpaid invoice row
+
+    def test_public_finance_csv_is_open_and_pii_free(self):
+        r = self.client.get("/dues/reports/collection-and-spending.csv")   # anonymous
+        self.assertEqual(r.status_code, 200)
+        body = r.content.decode("utf-8")
+        self.assertIn("Collected (PKR)", body)
+        self.assertNotIn("Member", body)
+
+    def test_staff_reports_require_staff(self):
+        # Anonymous is redirected to login by the staff gate.
+        self.assertEqual(
+            self.client.get("/dues/staff/reports/pending-dues.csv").status_code, 302
+        )
+        self.assertEqual(self.client.get("/complaints/export.csv").status_code, 302)
+
+    def test_finance_dashboard_renders(self):
+        self.client.force_login(self.finance)
+        r = self.client.get("/dues/staff/dashboard/")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Month-wise collection vs spending")

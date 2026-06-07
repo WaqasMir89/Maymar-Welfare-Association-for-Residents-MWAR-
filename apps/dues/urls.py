@@ -6,6 +6,10 @@ app_name = "dues"
 
 urlpatterns = [
     path("staff/billing/", views.billing_board, name="billing_board"),
+    path("staff/dashboard/", views.finance_dashboard, name="finance_dashboard"),
+    path("staff/reports/pending-dues.csv", views.export_pending_dues, name="export_pending_dues"),
+    path("staff/reports/monthly-finance.csv", views.export_monthly_finance, name="export_monthly_finance"),
+    path("reports/collection-and-spending.csv", views.export_public_finance, name="export_public_finance"),
     path("staff/invoices/<int:pk>/pay/", views.record_payment, name="record_payment"),
     path("staff/donations/", views.donation_list, name="donation_list"),
     path("staff/donations/record/", views.record_donation_view, name="record_donation"),

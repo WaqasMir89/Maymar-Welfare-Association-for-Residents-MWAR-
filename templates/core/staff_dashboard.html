@@ -14,6 +14,16 @@
       <div class="value">{{ arrears }}</div><div class="label">{% trans "Unpaid Invoices" %}</div></a>
   </div>
 
+  <div class="card" style="margin-top:24px">
+    <div class="row-between"><h3>{% trans "Finance & reports" %}</h3>
+      <a class="btn" href="{% url 'dues:finance_dashboard' %}">{% trans "Open Finance Dashboard" %}</a></div>
+    <div class="stack" style="margin-top:8px">
+      <a class="btn btn-ghost btn-block" href="{% url 'dues:export_pending_dues' %}">⬇ {% trans "Download: Pending dues (arrears)" %}</a>
+      <a class="btn btn-ghost btn-block" href="{% url 'complaints:export_pending' %}">⬇ {% trans "Download: Pending complaints" %}</a>
+      <a class="btn btn-ghost btn-block" href="{% url 'dues:export_monthly_finance' %}">⬇ {% trans "Download: Month-wise finance" %}</a>
+    </div>
+  </div>
+
   <div class="grid grid-2" style="margin-top:24px">
     <div class="card">
       <h3>{% trans "Quick actions" %}</h3>

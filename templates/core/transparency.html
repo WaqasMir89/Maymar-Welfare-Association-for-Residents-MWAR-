@@ -13,6 +13,24 @@
     <div class="kpi"><div class="value">{{ collection_rate }}%</div><div class="label">{% trans "Dues Collection Rate" %}</div></div>
   </div>
 
+  <div class="card" style="margin-top:24px">
+    <div class="row-between">
+      <h3>{% trans "Month-wise collection & spending" %}</h3>
+      <a class="btn btn-ghost btn-sm" href="{% url 'dues:export_public_finance' %}">⬇ {% trans "Download report (CSV)" %}</a>
+    </div>
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{% trans "Month" %}</th><th style="text-align:end">{% trans "Collected" %}</th><th style="text-align:end">{% trans "Spent" %}</th><th style="text-align:end">{% trans "Net" %}</th></tr></thead>
+      <tbody>
+      {% for r in monthly %}
+        <tr><td>{{ r.label }}</td>
+          <td style="text-align:end;color:var(--success,#1E8E5A)">Rs {{ r.collected|floatformat:0|intcomma }}</td>
+          <td style="text-align:end;color:#b4471f">Rs {{ r.spent|floatformat:0|intcomma }}</td>
+          <td style="text-align:end"><strong>Rs {{ r.net|floatformat:0|intcomma }}</strong></td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div>
+
   <div class="grid grid-2" style="margin-top:24px">
     <div class="card">
       <h3>{% trans "Recent expenses" %}</h3>
