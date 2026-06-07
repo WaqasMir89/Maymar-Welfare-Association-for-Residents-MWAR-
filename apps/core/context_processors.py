@@ -17,10 +17,17 @@ BRAND = {
 
 
 def brand(request: HttpRequest) -> dict:
+    from apps.accounts.permissions import is_staff_member
+
     lang = translation.get_language() or "en"
     return {
         "brand": BRAND,
         "is_rtl": lang.startswith("ur"),
         "active_lang": lang,
         "currency": settings.CURRENCY,
+        # Group-based staff check (not the is_staff flag) — drives the Staff nav
+        # link so every committee role (incl. Finance Officer) can reach it.
+        "is_staff_member": (
+            is_staff_member(request.user) if getattr(request, "user", None) is not None else False
+        ),
     }

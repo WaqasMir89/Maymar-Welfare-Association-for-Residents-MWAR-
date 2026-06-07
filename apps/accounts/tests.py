@@ -48,3 +48,30 @@ class PasswordResetFlowTests(TestCase):
         r = self.client.post("/accounts/password-reset/", {"email": "ghost@nowhere.pk"})
         self.assertRedirects(r, "/accounts/password-reset/done/")
         self.assertEqual(len(mail.outbox), 0)
+
+
+class StaffNavLinkTests(TestCase):
+    """Every committee role — including Finance Officer — must see the Staff
+    dashboard link and be able to open it. Regression for the old check that
+    only showed it to holders of members.review_application."""
+
+    def _user_in(self, group_name):
+        from django.contrib.auth.models import Group
+
+        u = User.objects.create_user(f"{group_name}@x.pk", "pw1234567890")
+        u.groups.add(Group.objects.create(name=group_name))
+        return u
+
+    def test_finance_officer_sees_staff_link_and_dashboard(self):
+        finance = self._user_in("Finance Officer")
+        self.client.force_login(finance)
+        home = self.client.get("/")
+        self.assertContains(home, "/staff/")
+        self.assertEqual(self.client.get("/staff/").status_code, 200)
+
+    def test_plain_member_does_not_see_staff_link(self):
+        member = User.objects.create_user("plain@x.pk", "pw1234567890")
+        self.client.force_login(member)
+        home = self.client.get("/").content.decode()
+        self.assertNotIn(">Staff<", home)
+        self.assertEqual(self.client.get("/staff/").status_code, 302)

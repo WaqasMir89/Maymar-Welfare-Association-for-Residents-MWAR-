@@ -36,7 +36,7 @@
         <a href="{% url 'core:transparency' %}">{% trans "Transparency" %}</a>
         <a href="{% url 'members:apply_start' %}">{% trans "Become a Member" %}</a>
         {% if user.is_authenticated %}
-          {% if perms.members.review_application or user.is_superuser %}
+          {% if is_staff_member %}
             <a href="{% url 'staff_dashboard' %}">{% trans "Staff" %}</a>
           {% endif %}
           <a href="{% url 'members:dashboard' %}">{% trans "My Dashboard" %}</a>
