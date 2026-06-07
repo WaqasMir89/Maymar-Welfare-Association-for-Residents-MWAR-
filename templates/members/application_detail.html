@@ -29,7 +29,13 @@
     <div class="card">
       <h3>{% trans "Documents" %}</h3>
       {% for d in documents %}
-        <p>📎 {{ d.get_doc_type_display }} <span class="muted">{{ d.file.name }}</span>
+        <p>📎
+           {% if can_view_pii %}
+             <a href="{% url 'members:application_document' d.pk %}" target="_blank" rel="noopener">{{ d.get_doc_type_display }}</a>
+             <a class="muted" href="{% url 'members:application_document' d.pk %}?download=1">{% trans "download" %}</a>
+           {% else %}
+             {{ d.get_doc_type_display }} <span class="muted">{% trans "(needs document-view permission)" %}</span>
+           {% endif %}
            {% if d.verified %}<span class="badge green">{% trans "verified" %}</span>{% endif %}</p>
       {% empty %}<p class="muted">{% trans "No documents." %}</p>{% endfor %}
 

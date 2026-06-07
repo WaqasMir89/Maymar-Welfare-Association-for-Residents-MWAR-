@@ -176,6 +176,44 @@ def application_review(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect("members:application_detail", pk=pk)
 
 
+@staff_member_test
+def application_document(request: HttpRequest, pk: int) -> HttpResponse:
+    """Stream a privately-stored identity document to a reviewer.
+
+    Identity documents are PII (the `view_pii` permission is literally "Can view
+    unmasked CNIC and identity documents"), so access is gated on it and every
+    read is logged as a PII_ACCESS event — same standard as the unmasked CNIC.
+    """
+    document = get_object_or_404(
+        ApplicationDocument.objects.select_related("application"), pk=pk
+    )
+    if not request.user.has_perm("members.view_pii"):
+        from django.core.exceptions import PermissionDenied
+
+        raise PermissionDenied
+
+    from apps.core.models import AuditLog
+    from apps.core.services import record_audit
+
+    record_audit(
+        AuditLog.Action.PII_ACCESS,
+        "ApplicationDocument",
+        document.pk,
+        actor=request.user,
+        metadata={"context": "document_view",
+                  "application": document.application_id,
+                  "doc_type": document.doc_type},
+    )
+
+    from django.http import FileResponse
+
+    response = FileResponse(document.file.open("rb"))
+    disp = "attachment" if request.GET.get("download") == "1" else "inline"
+    filename = document.file.name.rsplit("/", 1)[-1]
+    response["Content-Disposition"] = f'{disp}; filename="{filename}"'
+    return response
+
+
 # ---------------------------------------------------------------------------
 # Member self-service + card + public verification
 # ---------------------------------------------------------------------------

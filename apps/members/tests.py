@@ -135,3 +135,54 @@ class PdfTests(TestCase):
         )
         self.assertTrue(pdf.startswith(b"%PDF-"))
         self.assertGreater(len(pdf), 1000)
+
+
+class ApplicationDocumentAccessTests(TestCase):
+    """Reviewers with view_pii can open uploaded identity docs; others cannot,
+    and every successful read is audited as a PII_ACCESS event."""
+
+    def setUp(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        sector = Sector.objects.create(name="Sector D", code="D")
+        sub = SubSector.objects.create(sector=sector, name="Sub 1", code="1")
+        prop = Property.objects.create(sub_sector=sub, house_number="9")
+        self.app = MembershipApplication.objects.create(
+            full_name="Sara Ali", father_or_husband_name="Ali", cnic=CNIC,
+            phone="0301-1112233", property=prop, residency_type=ResidencyType.OWNER,
+            declaration_accepted=True,
+        )
+        self.doc = self.app.documents.create(
+            doc_type="cnic_front",
+            file=SimpleUploadedFile("cnic_front.txt", b"id-bytes", content_type="text/plain"),
+        )
+        self.url = f"/members/staff/documents/{self.doc.pk}/"
+
+        # A reviewer needs both staff-group membership (to pass @staff_member_test)
+        # and the view_pii permission (to pass the document gate).
+        staff_group = Group.objects.create(name="Secretary")
+        self.reviewer = User.objects.create_user("rev@x.pk", "pw1234567890", full_name="Rev")
+        self.reviewer.groups.add(staff_group)
+        self.reviewer.user_permissions.add(Permission.objects.get(codename="view_pii"))
+        # A staff member without view_pii.
+        self.plain_staff = User.objects.create_user("fin@x.pk", "pw1234567890", full_name="Fin")
+        self.plain_staff.groups.add(staff_group)
+
+    def test_reviewer_with_view_pii_gets_file_and_audit(self):
+        self.client.force_login(self.reviewer)
+        before = AuditLog.objects.filter(
+            action="pii_access", entity_type="ApplicationDocument").count()
+        r = self.client.get(self.url)
+        self.assertEqual(r.status_code, 200)
+        body = b"".join(r.streaming_content) if hasattr(r, "streaming_content") else r.content
+        self.assertEqual(body, b"id-bytes")
+        after = AuditLog.objects.filter(
+            action="pii_access", entity_type="ApplicationDocument").count()
+        self.assertEqual(after, before + 1)
+
+    def test_staff_without_view_pii_is_forbidden(self):
+        self.client.force_login(self.plain_staff)
+        self.assertEqual(self.client.get(self.url).status_code, 403)
+
+    def test_anonymous_is_redirected_to_login(self):
+        self.assertEqual(self.client.get(self.url).status_code, 302)

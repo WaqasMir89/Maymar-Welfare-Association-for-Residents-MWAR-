@@ -22,4 +22,5 @@ urlpatterns = [
     path("staff/queue/", views.application_queue, name="application_queue"),
     path("staff/applications/<int:pk>/", views.application_detail, name="application_detail"),
     path("staff/applications/<int:pk>/review/", views.application_review, name="application_review"),
+    path("staff/documents/<int:pk>/", views.application_document, name="application_document"),
 ]
