@@ -10,6 +10,7 @@ PostgreSQL + real backends purely through environment variables.
 """
 
 from datetime import timedelta
+import os
 from pathlib import Path
 
 import environ
