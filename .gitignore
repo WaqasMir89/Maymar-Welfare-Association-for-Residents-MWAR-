@@ -1,12 +1,41 @@
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+venv/
 .venv/
-db.sqlite3
 .env
-/staticfiles/
+.env.*
+.python-version
+
+# Django
+db.sqlite3
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
 /media/
 /private_media/
-/scripts/shots/
+/staticfiles/
+
+# Testing / coverage
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Node / frontend
 node_modules/
-package-lock.json
+npm-debug.log*
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Local/generated
+/scripts/shots/
 *.log
