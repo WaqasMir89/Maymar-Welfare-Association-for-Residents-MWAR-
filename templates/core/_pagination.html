@@ -1,0 +1,12 @@
+{% load i18n %}
+{% if page.paginator.num_pages > 1 %}
+<nav class="pagination">
+  {% if page.has_previous %}
+    <a class="btn btn-ghost" href="?{% if request.GET.status %}status={{ request.GET.status }}&amp;{% endif %}page={{ page.previous_page_number }}">{% trans "Previous" %}</a>
+  {% endif %}
+  <span>{% blocktrans with n=page.number total=page.paginator.num_pages %}Page {{ n }} of {{ total }}{% endblocktrans %}</span>
+  {% if page.has_next %}
+    <a class="btn btn-ghost" href="?{% if request.GET.status %}status={{ request.GET.status }}&amp;{% endif %}page={{ page.next_page_number }}">{% trans "Next" %}</a>
+  {% endif %}
+</nav>
+{% endif %}

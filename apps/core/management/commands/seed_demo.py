@@ -160,6 +160,11 @@ class Command(BaseCommand):
             Expense.objects.create(category=cat, amount=Decimal(amt),
                                    status=Expense.Status.PAID, requested_by=finance,
                                    approved_by=chairman, incurred_on=date.today() - timedelta(days=5))
+        # A couple left pending so the approval workflow is demonstrable.
+        for cat, amt in [("Generator fuel", 22000), ("CCTV maintenance", 15000)]:
+            Expense.objects.create(category=cat, amount=Decimal(amt),
+                                   status=Expense.Status.PENDING, requested_by=finance,
+                                   incurred_on=date.today() - timedelta(days=2))
 
         # ---- Projects, notices, tickets ----
         for title, status, budget in [

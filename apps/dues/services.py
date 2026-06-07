@@ -15,7 +15,7 @@ from apps.core.services import record_audit
 from apps.locality.models import Property
 from apps.members.models import ResidencyType
 
-from .models import DuesInvoice, DuesPayment, DuesPlan
+from .models import Donation, DuesInvoice, DuesPayment, DuesPlan, Expense
 
 
 def _period_bounds(plan: DuesPlan, year: int, month: int) -> tuple[date, date, date]:
@@ -26,16 +26,23 @@ def _period_bounds(plan: DuesPlan, year: int, month: int) -> tuple[date, date, d
     return start, end, due
 
 
-def _next_dues_receipt() -> str:
-    year = timezone.now().year
-    prefix = f"DUE-{year}-"
+def _next_receipt(model, field: str, prefix: str) -> str:
+    """Next zero-padded receipt number for ``PREFIX-YEAR-#####`` schemes."""
     last = (
-        DuesPayment.objects.filter(receipt_number__startswith=prefix)
-        .aggregate(m=Max("receipt_number"))
+        model.objects.filter(**{f"{field}__startswith": prefix})
+        .aggregate(m=Max(field))
         .get("m")
     )
     seq = int(last.split("-")[-1]) + 1 if last else 1
     return f"{prefix}{seq:05d}"
+
+
+def _next_dues_receipt() -> str:
+    return _next_receipt(DuesPayment, "receipt_number", f"DUE-{timezone.now().year}-")
+
+
+def _next_donation_receipt() -> str:
+    return _next_receipt(Donation, "receipt_number", f"DON-{timezone.now().year}-")
 
 
 @transaction.atomic
@@ -112,3 +119,56 @@ def record_dues_payment(invoice: DuesInvoice, *, amount: Decimal, method: str, u
                  metadata={"invoice": invoice.pk, "amount": str(amount),
                            "receipt": payment.receipt_number})
     return payment
+
+
+@transaction.atomic
+def record_donation(*, donor_name: str, amount: Decimal, user, method: str = "cash",
+                    purpose: str = "", reference: str = "", donor_member=None,
+                    is_public: bool = False) -> Donation:
+    """Record a donation and issue a receipt. Audited like any money-in event."""
+    donation = Donation.objects.create(
+        donor_name=donor_name.strip(),
+        donor_member=donor_member,
+        amount=amount,
+        purpose=purpose.strip(),
+        method=method,
+        reference=reference.strip(),
+        receipt_number=_next_donation_receipt(),
+        received_by=user,
+        is_public=is_public,
+    )
+    record_audit(AuditLog.Action.PAYMENT, "Donation", donation.pk, actor=user,
+                 metadata={"amount": str(amount), "receipt": donation.receipt_number,
+                           "public": is_public})
+    return donation
+
+
+@transaction.atomic
+def create_expense(*, category: str, amount: Decimal, user, description: str = "",
+                   incurred_on=None, attachment=None) -> Expense:
+    """Raise an expense request (status ``pending`` until approved)."""
+    expense = Expense.objects.create(
+        category=category.strip(),
+        amount=amount,
+        description=description.strip(),
+        incurred_on=incurred_on or timezone.now().date(),
+        requested_by=user,
+        attachment=attachment,
+        status=Expense.Status.PENDING,
+    )
+    record_audit(AuditLog.Action.CREATE, "Expense", expense.pk, actor=user,
+                 metadata={"category": expense.category, "amount": str(amount)})
+    return expense
+
+
+@transaction.atomic
+def decide_expense(expense: Expense, *, approve: bool, user) -> Expense:
+    """Approve or reject a pending expense. Idempotent once decided."""
+    if expense.status != Expense.Status.PENDING:
+        return expense
+    expense.status = Expense.Status.APPROVED if approve else Expense.Status.REJECTED
+    expense.approved_by = user
+    expense.save(update_fields=["status", "approved_by", "updated_at"])
+    record_audit(AuditLog.Action.UPDATE, "Expense", expense.pk, actor=user,
+                 metadata={"decision": expense.status, "amount": str(expense.amount)})
+    return expense

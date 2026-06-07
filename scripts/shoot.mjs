@@ -30,6 +30,10 @@ const PAGES = [
   ["/staff/", "06-staff-dashboard.png", { login: "secretary" }],
   ["/members/staff/queue/", "07-membership-queue.png", { login: "secretary" }],
   ["/dues/staff/billing/", "08-billing-board.png", { login: "finance" }],
+  ["/dues/staff/donations/", "08a-donations.png", { login: "finance" }],
+  ["/dues/staff/donations/record/", "08b-donation-form.png", { login: "finance" }],
+  ["/dues/staff/expenses/", "08c-expenses.png", { login: "finance" }],
+  ["/dues/staff/expenses/new/", "08d-expense-form.png", { login: "finance" }],
   ["/complaints/", "09-complaints.png", { login: "secretary" }],
   ["/", "10-home-urdu.png", { urdu: true }],
 ].filter((p) => p[1]);

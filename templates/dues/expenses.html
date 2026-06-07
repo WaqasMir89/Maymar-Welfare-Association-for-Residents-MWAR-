@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Expenses" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  {% include "dues/_finance_nav.html" with active="expenses" %}
+  <div class="row-between">
+    <h1>{% trans "Expenses" %}</h1>
+    {% if perms.dues.record_payment %}
+    <a class="btn" href="{% url 'dues:expense_create' %}">{% trans "Log an expense" %}</a>
+    {% endif %}
+  </div>
+  <div class="grid grid-3">
+    <div class="kpi warning"><div class="value">Rs {{ pending_total|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Pending approval" %}</div></div>
+    <div class="kpi success"><div class="value">Rs {{ approved_total|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Approved / paid" %}</div></div>
+    <div class="kpi"><div class="value">{{ expenses.paginator.count }}</div><div class="label">{% trans "Entries" %}</div></div>
+  </div>
+  <div class="pill-nav" style="margin-top:18px">
+    <a href="{% url 'dues:expense_list' %}" class="{% if not status %}active{% endif %}">{% trans "All" %}</a>
+    {% for v, l in status_choices %}<a href="?status={{ v }}" class="{% if status == v %}active{% endif %}">{{ l }}</a>{% endfor %}
+  </div>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>#</th><th>{% trans "Category" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Incurred" %}</th><th>{% trans "Requested by" %}</th><th>{% trans "Status" %}</th>{% if can_approve %}<th></th>{% endif %}</tr></thead>
+    <tbody>
+    {% for e in expenses %}
+      <tr>
+        <td>{{ e.pk }}</td>
+        <td>{{ e.category }}{% if e.attachment %} <a href="{{ e.attachment.url }}" title="{% trans 'Receipt' %}">📎</a>{% endif %}</td>
+        <td>Rs {{ e.amount|floatformat:0|intcomma }}</td>
+        <td>{{ e.incurred_on|date:"d M Y" }}</td>
+        <td>{{ e.requested_by.get_full_name|default:e.requested_by.email|default:"—" }}</td>
+        <td><span class="badge {% if e.status == 'approved' or e.status == 'paid' %}green{% elif e.status == 'rejected' %}red{% else %}amber{% endif %}">{{ e.get_status_display }}</span></td>
+        {% if can_approve %}
+        <td>
+          {% if e.status == 'pending' %}
+          <form class="inline-form" method="post" action="{% url 'dues:expense_decide' e.pk %}">{% csrf_token %}
+            <button class="btn btn-success btn-sm" name="decision" value="approve">{% trans "Approve" %}</button>
+            <button class="btn btn-ghost btn-sm" name="decision" value="reject">{% trans "Reject" %}</button>
+          </form>
+          {% else %}<span class="muted">{{ e.approved_by.get_full_name|default:e.approved_by.email|default:"—" }}</span>{% endif %}
+        </td>
+        {% endif %}
+      </tr>
+    {% empty %}<tr><td colspan="7" class="muted">{% trans "No expenses logged." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+  {% include "core/_pagination.html" with page=expenses %}
+</div>
+{% endblock %}

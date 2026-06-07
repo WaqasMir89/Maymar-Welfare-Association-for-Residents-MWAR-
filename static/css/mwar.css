@@ -83,6 +83,7 @@ h1, h2, h3 { color: var(--brand-900); line-height: 1.25; margin: 0 0 0.5em; }
 .btn-success { background: var(--accent-success); }
 .btn-danger { background: var(--accent-danger); }
 .btn-block { width: 100%; }
+.btn-sm { padding: 5px 12px; font-size: 13px; }
 
 /* ---- Cards ---- */
 .card {
@@ -161,6 +162,9 @@ input[type=tel], input[type=date], select, textarea {
 .section-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: calc(var(--space)*2); gap: 12px; flex-wrap: wrap; }
 .muted { color: var(--ink-600); }
 .stack > * + * { margin-top: calc(var(--space) * 2); }
+.row-between { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: calc(var(--space)*2); }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; color: var(--ink-600); font-size: 14px; }
+.inline-form { display: inline; }
 .pill-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
 .pill-nav a { background: #fff; border: 1px solid var(--border); padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--ink-600); }
 .pill-nav a.active { background: var(--brand-700); color: #fff; border-color: var(--brand-700); }

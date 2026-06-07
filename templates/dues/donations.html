@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n humanize %}
+{% block title %}{% trans "Donations" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  {% include "dues/_finance_nav.html" with active="donations" %}
+  <div class="row-between">
+    <h1>{% trans "Donations" %}</h1>
+    {% if perms.dues.record_payment %}
+    <a class="btn btn-success" href="{% url 'dues:record_donation' %}">{% trans "Record a donation" %}</a>
+    {% endif %}
+  </div>
+  <div class="grid grid-3">
+    <div class="kpi success"><div class="value">Rs {{ total|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Total received" %}</div></div>
+    <div class="kpi"><div class="value">{{ donations.paginator.count }}</div><div class="label">{% trans "Donations" %}</div></div>
+  </div>
+  <div class="table-wrap" style="margin-top:18px"><table class="table">
+    <thead><tr><th>{% trans "Receipt" %}</th><th>{% trans "Donor" %}</th><th>{% trans "Purpose" %}</th><th>{% trans "Method" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Date" %}</th><th>{% trans "Public" %}</th></tr></thead>
+    <tbody>
+    {% for d in donations %}
+      <tr>
+        <td><code>{{ d.receipt_number }}</code></td>
+        <td>{{ d.donor_name }}</td>
+        <td>{{ d.purpose|default:"—" }}</td>
+        <td>{{ d.get_method_display }}</td>
+        <td>Rs {{ d.amount|floatformat:0|intcomma }}</td>
+        <td>{{ d.donated_at|date:"d M Y" }}</td>
+        <td>{% if d.is_public %}<span class="badge green">{% trans "Yes" %}</span>{% else %}<span class="muted">{% trans "No" %}</span>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="muted">{% trans "No donations recorded yet." %}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+  {% include "core/_pagination.html" with page=donations %}
+</div>
+{% endblock %}

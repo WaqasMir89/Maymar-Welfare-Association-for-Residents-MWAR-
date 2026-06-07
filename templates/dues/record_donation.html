@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Record a donation" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Record a donation" %}</h1>
+    <p class="muted">{% trans "Issues a numbered receipt and logs the contribution to the transparency ledger." %}</p>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Donor name" %}</label><input type="text" name="donor_name" required></div>
+      <div class="field"><label>{% trans "Amount (PKR)" %}</label><input type="number" step="0.01" min="1" name="amount" required></div>
+      <div class="field"><label>{% trans "Method" %}</label>
+        <select name="method"><option value="cash">{% trans "Cash" %}</option><option value="bank_transfer">{% trans "Bank transfer" %}</option><option value="jazzcash">JazzCash</option><option value="easypaisa">EasyPaisa</option></select></div>
+      <div class="field"><label>{% trans "Purpose (optional)" %}</label><input type="text" name="purpose" placeholder="{% trans 'e.g. Ramzan ration drive' %}"></div>
+      <div class="field"><label>{% trans "Reference (optional)" %}</label><input type="text" name="reference"></div>
+      <label><input type="checkbox" name="is_public"> {% trans "Show on the public donor wall (donor has consented)" %}</label>
+      <button class="btn btn-success" type="submit">{% trans "Record & issue receipt" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

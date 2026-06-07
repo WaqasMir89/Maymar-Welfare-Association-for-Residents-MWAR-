@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Log an expense" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Log an expense" %}</h1>
+    <p class="muted">{% trans "Recorded as pending until a Chairman or authorised officer approves it." %}</p>
+    <form method="post" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Category" %}</label><input type="text" name="category" placeholder="{% trans 'e.g. Security wages, Street lighting' %}" required></div>
+      <div class="field"><label>{% trans "Amount (PKR)" %}</label><input type="number" step="0.01" min="1" name="amount" required></div>
+      <div class="field"><label>{% trans "Incurred on" %}</label><input type="date" name="incurred_on"></div>
+      <div class="field"><label>{% trans "Description (optional)" %}</label><textarea name="description" rows="3"></textarea></div>
+      <div class="field"><label>{% trans "Receipt / bill (optional)" %}</label><input type="file" name="attachment"></div>
+      <button class="btn" type="submit">{% trans "Submit for approval" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

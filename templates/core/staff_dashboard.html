@@ -21,6 +21,8 @@
         <a class="btn btn-block" href="{% url 'members:application_queue' %}">{% trans "Membership Queue" %}</a>
         <a class="btn btn-ghost btn-block" href="{% url 'members:apply_start' %}">{% trans "Assisted Registration (walk-in)" %}</a>
         <a class="btn btn-ghost btn-block" href="{% url 'dues:billing_board' %}">{% trans "Dues & Billing" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:donation_list' %}">{% trans "Donations" %}</a>
+        <a class="btn btn-ghost btn-block" href="{% url 'dues:expense_list' %}">{% trans "Expenses" %}</a>
         <a class="btn btn-ghost btn-block" href="{% url 'locality:property_list' %}">{% trans "Property Registry" %}</a>
         {% if perms.content.broadcast_notice or user.is_superuser %}
         <a class="btn btn-ghost btn-block" href="{% url 'content:notice_create' %}">{% trans "Broadcast a Notice" %}</a>

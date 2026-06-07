@@ -4,6 +4,7 @@
 {% block content %}
 <div class="container page">
   <h1>{% trans "Dues & Billing" %}</h1>
+  {% include "dues/_finance_nav.html" with active="billing" %}
   <div class="grid grid-3">
     <div class="kpi"><div class="value">Rs {{ totals.billed|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Billed" %}</div></div>
     <div class="kpi success"><div class="value">Rs {{ totals.paid|default:0|floatformat:0|intcomma }}</div><div class="label">{% trans "Collected" %}</div></div>
