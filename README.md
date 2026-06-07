@@ -75,11 +75,37 @@ Open http://127.0.0.1:8000. Demo logins (created by `seed_demo`):
 ## Tests
 
 ```bash
-python manage.py test apps.members.tests apps.dues.tests
+python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api
 ```
 
 Covers the critical paths: CNIC encrypt/mask, two-step approval (+ idempotency
-+ audit), dues billing run and idempotent payments.
++ audit), dues billing run and idempotent payments, PDF generation, and the REST
+API contract (envelope, JWT, RBAC scoping, PII masking + audit, idempotency).
+
+## REST API (doc 04)
+
+The secondary surface lives under `/api/v1/` (JWT via `djangorestframework-simplejwt`).
+The server-rendered HTMX UI remains primary; the API is for a future mobile/PWA
+client and staff integrations.
+
+- **OpenAPI schema:** `/api/v1/schema` · **Swagger UI:** `/api/v1/docs`
+- **Auth:** `POST /api/v1/auth/login` → `{access, refresh}`; `GET /api/v1/auth/me`.
+- **Envelope:** success `{ "success": true, "data": … }`; lists add `meta`;
+  errors `{ "success": false, "error": { code, message, fields? } }`.
+- **Resources:** sectors, properties, members (CNIC masked unless `view_pii`,
+  every unmasked read audited), dues invoices + idempotent `payments`
+  (`Idempotency-Key` header), donations, expenses (+approve/reject), tickets
+  (role-scoped, threaded messages), projects/events/notices, and the public
+  `GET /api/v1/public/{projects,news,reports}` + `GET /api/v1/verify/card/{token}`.
+
+```bash
+# quick smoke
+curl -s localhost:8000/api/v1/public/reports
+TOK=$(curl -s -X POST localhost:8000/api/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"chairman@mwar.org.pk","password":"staff12345"}' | jq -r .data.access)
+curl -s localhost:8000/api/v1/auth/me -H "Authorization: Bearer $TOK"
+```
 
 ## Run / screenshot harness
 

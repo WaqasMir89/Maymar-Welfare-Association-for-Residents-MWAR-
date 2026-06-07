@@ -81,7 +81,7 @@ internals:
 
 ```bash
 source ../.venv/bin/activate
-python manage.py test apps.members.tests apps.dues.tests   # 12 critical-path tests
+python manage.py test apps.members.tests apps.dues.tests apps.core.tests_api   # 28 tests
 ```
 
 Or poke a single flow through the Django test client / shell, e.g. confirm PII

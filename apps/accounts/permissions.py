@@ -84,4 +84,14 @@ def is_staff_member(user) -> bool:
     return in_group(user, FINANCE, PROJECT_MANAGER, SECRETARY, CHAIRMAN, ADMIN, SUPER_ADMIN)
 
 
+def role_names(user) -> list[str]:
+    """The role-group names a user belongs to (for API `me`/token claims)."""
+    if not getattr(user, "is_authenticated", False):
+        return []
+    names = list(user.groups.values_list("name", flat=True))
+    if user.is_superuser and SUPER_ADMIN not in names:
+        names.append(SUPER_ADMIN)
+    return names
+
+
 staff_member_test = user_passes_test(is_staff_member)

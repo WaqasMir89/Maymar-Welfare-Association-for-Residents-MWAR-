@@ -18,6 +18,7 @@ urlpatterns = [
     path("dues/", include("apps.dues.urls")),
     path("complaints/", include("apps.tickets.urls")),
     path("content/", include("apps.content.urls")),
+    path("api/v1/", include("config.api_urls")),
 ]
 
 if settings.DEBUG:

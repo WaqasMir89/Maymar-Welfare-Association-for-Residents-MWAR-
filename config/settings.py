@@ -9,6 +9,7 @@ Dev defaults to SQLite + console email + fake SMS; production switches to
 PostgreSQL + real backends purely through environment variables.
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -46,6 +47,8 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
@@ -190,6 +193,7 @@ SMS_BACKEND = env("SMS_BACKEND", default="apps.core.sms.ConsoleSMSBackend")
 # ---------------------------------------------------------------------------
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
@@ -197,6 +201,35 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "apps.core.api.StandardPagination",
     "PAGE_SIZE": 25,
+    # Wrap every response in the doc-04 envelope and normalise errors.
+    "DEFAULT_RENDERER_CLASSES": [
+        "apps.core.api.EnvelopeJSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+    "EXCEPTION_HANDLER": "apps.core.api.envelope_exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "auth": "10/min",
+        "submit": "20/hour",
+    },
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "M.W.A.R Digital Platform API",
+    "DESCRIPTION": "Secondary REST surface (doc 04). Primary UI is server-rendered Django + HTMX.",
+    "VERSION": "2.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/api/v1",
 }
 
 # ---------------------------------------------------------------------------
