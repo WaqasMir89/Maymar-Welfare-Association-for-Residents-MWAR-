@@ -8,7 +8,13 @@ from django.test import TestCase
 from django.utils import timezone
 
 from apps.accounts.models import User
-from apps.content.models import Event, Notice, Notification, PublicDocument
+from apps.content.models import (
+    Event,
+    Notice,
+    Notification,
+    OrganizationProfile,
+    PublicDocument,
+)
 from apps.content.services import fan_out_notice, notify
 from apps.locality.models import Property, Sector, SubSector
 from apps.members.models import MemberProfile, Residency, ResidencyType
@@ -151,3 +157,35 @@ class PublicDocumentTests(TestCase):
 
     def test_list_page_renders_for_public(self):
         self.assertEqual(self.client.get("/content/documents/").status_code, 200)
+
+
+class OrganizationProfileTests(TestCase):
+    def test_profile_is_a_singleton(self):
+        a = OrganizationProfile.load()
+        a.chairman_name = "Imran"
+        a.save()
+        b = OrganizationProfile.load()
+        self.assertEqual(a.pk, 1)
+        self.assertEqual(b.pk, 1)
+        self.assertEqual(OrganizationProfile.objects.count(), 1)
+        self.assertEqual(b.chairman_name, "Imran")
+
+    def test_about_page_shows_chairman_message_and_roadmap(self):
+        org = OrganizationProfile.load()
+        org.chairman_name = "Imran Chairman"
+        org.chairman_message = "Welcome to the M.W.A.R family."
+        org.vision = "A safe neighbourhood."
+        org.save()
+        org.goals.create(order=0, title="Transparent finances")
+        org.milestones.create(order=0, period="Q1", title="Digitise dues", status="done")
+
+        r = self.client.get("/about/")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Message from the Chairman")
+        self.assertContains(r, "Welcome to the M.W.A.R family.")
+        self.assertContains(r, "Transparent finances")
+        self.assertContains(r, "Digitise dues")
+
+    def test_about_page_renders_without_content(self):
+        # A fresh install with an empty profile must still render.
+        self.assertEqual(self.client.get("/about/").status_code, 200)

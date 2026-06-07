@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 17:25+0500\n"
+"POT-Creation-Date: 2026-06-07 17:47+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -59,7 +59,7 @@ msgstr "پورا نام"
 msgid "phone"
 msgstr "فون"
 
-#: apps/accounts/models.py:82
+#: apps/accounts/models.py:82 templates/core/about.html:24
 msgid "Chairman"
 msgstr "چیئرمین"
 
@@ -96,7 +96,7 @@ msgstr "اکاؤنٹ بن گیا۔ M.W.A.R میں خوش آمدید۔"
 msgid "You have been signed out."
 msgstr "آپ سائن آؤٹ ہو گئے ہیں۔"
 
-#: apps/content/models.py:18
+#: apps/content/models.py:18 apps/content/models.py:186
 msgid "Planned"
 msgstr "منصوبہ بند"
 
@@ -141,15 +141,23 @@ msgstr "مالیاتی رپورٹس"
 msgid "Meeting minutes"
 msgstr "اجلاس کی کارروائی"
 
-#: apps/content/models.py:137
+#: apps/content/models.py:187 apps/tickets/models.py:35
+msgid "In progress"
+msgstr "زیر عمل"
+
+#: apps/content/models.py:188
+msgid "Done"
+msgstr "مکمل"
+
+#: apps/content/models.py:210
 msgid "Info"
 msgstr "معلومات"
 
-#: apps/content/models.py:138
+#: apps/content/models.py:211
 msgid "Success"
 msgstr "کامیاب"
 
-#: apps/content/models.py:139
+#: apps/content/models.py:212
 msgid "Warning"
 msgstr "انتباہ"
 
@@ -505,11 +513,11 @@ msgstr "مالک"
 msgid "Tenant (کرایہ دار)"
 msgstr "کرایہ دار"
 
-#: apps/members/models.py:36 templates/core/about.html:16
+#: apps/members/models.py:36 templates/core/about.html:78
 msgid "Permanent Member (مستقل ممبر)"
 msgstr "مستقل رکن"
 
-#: apps/members/models.py:37 templates/core/about.html:17
+#: apps/members/models.py:37 templates/core/about.html:79
 msgid "Associate Member (ایسوسی ایٹ ممبر)"
 msgstr "ایسوسی ایٹ رکن"
 
@@ -647,10 +655,6 @@ msgstr "کھلا"
 msgid "Assigned"
 msgstr "تفویض شدہ"
 
-#: apps/tickets/models.py:35
-msgid "In progress"
-msgstr "زیر عمل"
-
 #: apps/tickets/models.py:36
 msgid "Resolved"
 msgstr "حل شدہ"
@@ -679,7 +683,7 @@ msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
 #: templates/accounts/login.html:19
 #: templates/accounts/password_reset_complete.html:9
-#: templates/accounts/register.html:20 templates/base.html:41
+#: templates/accounts/register.html:20 templates/base.html:42
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -824,58 +828,62 @@ msgstr "اپنا اکاؤنٹ بنائیں"
 msgid "Already registered?"
 msgstr "پہلے سے رجسٹرڈ ہیں؟"
 
-#: templates/base.html:21 templates/base.html:70 templates/core/about.html:7
+#: templates/base.html:21 templates/base.html:71 templates/core/about.html:8
 #: templates/core/contact.html:8 templates/core/home.html:12
 #: templates/members/card.html:10
 msgid "Reg. No."
 msgstr "رجسٹریشن نمبر"
 
-#: templates/base.html:25 templates/content/project_list.html:3
+#: templates/base.html:25 templates/core/about.html:3
+msgid "About"
+msgstr "تعارف"
+
+#: templates/base.html:26 templates/content/project_list.html:3
 msgid "Projects"
 msgstr "منصوبے"
 
-#: templates/base.html:26 templates/content/notice_list.html:3
+#: templates/base.html:27 templates/content/notice_list.html:3
 #: templates/content/notice_list.html:7 templates/core/home.html:34
 msgid "Notices"
 msgstr "نوٹس"
 
-#: templates/base.html:27 templates/content/event_list.html:3
+#: templates/base.html:28 templates/content/event_list.html:3
 msgid "Events"
 msgstr "تقریبات"
 
-#: templates/base.html:28 templates/content/document_list.html:3
+#: templates/base.html:29 templates/content/document_list.html:3
 #: templates/members/application_detail.html:30
 #: templates/members/apply_documents.html:8
 #: templates/members/apply_form.html:8 templates/members/apply_review.html:7
 msgid "Documents"
 msgstr "دستاویزات"
 
-#: templates/base.html:29 templates/dues/_finance_nav.html:7
+#: templates/base.html:30 templates/dues/_finance_nav.html:7
 msgid "Transparency"
 msgstr "شفافیت"
 
-#: templates/base.html:30 templates/core/home.html:9
+#: templates/base.html:31 templates/core/home.html:9
 msgid "Become a Member"
 msgstr "رکن بنیں"
 
-#: templates/base.html:33
+#: templates/base.html:34
 msgid "Staff"
 msgstr "عملہ"
 
-#: templates/base.html:35 templates/members/dashboard.html:3
+#: templates/base.html:36 templates/members/dashboard.html:3
 msgid "My Dashboard"
 msgstr "میرا ڈیش بورڈ"
 
-#: templates/base.html:36 templates/content/notifications.html:3
+#: templates/base.html:37 templates/content/notifications.html:3
 #: templates/content/notifications.html:7
 msgid "Notifications"
 msgstr "اطلاعات"
 
-#: templates/base.html:39
+#: templates/base.html:40
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:72
+#: templates/base.html:73
 msgid "Built by"
 msgstr "تیار کردہ"
 
@@ -1082,37 +1090,43 @@ msgstr "صفحہ %(n)s از %(total)s"
 msgid "Next"
 msgstr "اگلا"
 
-#: templates/core/about.html:5
+#: templates/core/about.html:6
 msgid "About the Association"
 msgstr "ایسوسی ایشن کے بارے میں"
 
-#: templates/core/about.html:7
+#: templates/core/about.html:8
 msgid "is a registered Resident Welfare Association serving the residents of"
 msgstr "ایک رجسٹرڈ رہائشی فلاحی ایسوسی ایشن ہے جو خدمت کرتی ہے"
 
-#: templates/core/about.html:11
-msgid "Vision & Mission"
-msgstr "وژن اور مشن"
+#: templates/core/about.html:22
+msgid "Message from the Chairman"
+msgstr "چیئرمین کا پیغام"
 
-#: templates/core/about.html:12
-msgid ""
-"To maintain a safe, clean and well-served neighbourhood — through "
-"transparent management of maintenance dues, responsive handling of resident "
-"complaints, and community projects funded openly and accountably."
-msgstr ""
-"ایک محفوظ، صاف اور بہتر سہولیات والے محلے کو برقرار رکھنا — مینٹیننس واجبات "
-"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز"
-" میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
+#: templates/core/about.html:32
+msgid "Our Vision"
+msgstr "ہمارا وژن"
 
-#: templates/core/about.html:15
+#: templates/core/about.html:36
+msgid "Our Mission"
+msgstr "ہمارا مشن"
+
+#: templates/core/about.html:43
+msgid "Our Goals"
+msgstr "ہمارے اہداف"
+
+#: templates/core/about.html:57
+msgid "Annual Roadmap"
+msgstr "سالانہ روڈ میپ"
+
+#: templates/core/about.html:77
 msgid "Membership classes"
 msgstr "رکنیت کی اقسام"
 
-#: templates/core/about.html:16
+#: templates/core/about.html:78
 msgid "a resident who owns their plot/house."
 msgstr "ایک رہائشی جو اپنے پلاٹ/مکان کا مالک ہے۔"
 
-#: templates/core/about.html:17
+#: templates/core/about.html:79
 msgid "a resident who is a tenant."
 msgstr "ایک رہائشی جو کرایہ دار ہے۔"
 
@@ -2115,3 +2129,15 @@ msgstr "ترجیح"
 #: templates/tickets/list.html:23
 msgid "No complaints."
 msgstr "کوئی شکایت نہیں۔"
+
+#~ msgid "Vision & Mission"
+#~ msgstr "وژن اور مشن"
+
+#~ msgid ""
+#~ "To maintain a safe, clean and well-served neighbourhood — through "
+#~ "transparent management of maintenance dues, responsive handling of resident "
+#~ "complaints, and community projects funded openly and accountably."
+#~ msgstr ""
+#~ "ایک محفوظ، صاف اور بہتر سہولیات والے محلے کو برقرار رکھنا — مینٹیننس واجبات "
+#~ "کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز"
+#~ " میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"

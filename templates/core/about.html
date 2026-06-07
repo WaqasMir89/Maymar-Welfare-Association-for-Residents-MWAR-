@@ -1,16 +1,78 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% block title %}{% trans "About" %} — {{ brand.short }}{% endblock %}
 {% block content %}
-<div class="container narrow page stack">
+<div class="container page stack">
   <h1>{% trans "About the Association" %}</h1>
   <div class="card">
     <p><strong>{{ brand.name }}</strong> ({{ brand.short }}) {% trans "is a registered Resident Welfare Association serving the residents of" %} {{ brand.locality }}. {% trans "Reg. No." %} {{ brand.reg_no }}.</p>
-    <p class="muted">{{ brand.name_ur }}</p>
+    <p class="muted">{{ brand.name_ur }} · “{{ brand.tagline }}”</p>
   </div>
+
+  {% if org.chairman_message %}
+  <div class="card chairman-card">
+    <div class="chairman-photo">
+      {% if org.chairman_photo %}
+        <img src="{{ org.chairman_photo.url }}" alt="{{ org.chairman_name }}">
+      {% else %}
+        <span class="avatar-initials">{{ org.chairman_name|slice:":1"|default:"C" }}</span>
+      {% endif %}
+    </div>
+    <div class="chairman-body">
+      <h3>{% trans "Message from the Chairman" %}</h3>
+      {% for para in org.chairman_message.splitlines %}{% if para.strip %}<p>{{ para }}</p>{% endif %}{% endfor %}
+      <p class="chairman-sign">— <strong>{{ org.chairman_name|default:_("Chairman") }}</strong><br>
+        <span class="muted">{{ org.chairman_title }}, {{ brand.short }}</span></p>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="grid grid-2">
+    {% if org.vision %}
+    <div class="card"><h3>🌟 {% trans "Our Vision" %}</h3>
+      {% for para in org.vision.splitlines %}{% if para.strip %}<p>{{ para }}</p>{% endif %}{% endfor %}</div>
+    {% endif %}
+    {% if org.mission %}
+    <div class="card"><h3>🎯 {% trans "Our Mission" %}</h3>
+      {% for para in org.mission.splitlines %}{% if para.strip %}<p>{{ para }}</p>{% endif %}{% endfor %}</div>
+    {% endif %}
+  </div>
+
+  {% if goals %}
   <div class="card">
-    <h3>{% trans "Vision & Mission" %}</h3>
-    <p>{% trans "To maintain a safe, clean and well-served neighbourhood — through transparent management of maintenance dues, responsive handling of resident complaints, and community projects funded openly and accountably." %}</p>
+    <h3>{% trans "Our Goals" %}</h3>
+    <div class="grid grid-2">
+      {% for g in goals %}
+      <div class="goal-item">
+        <strong>{{ g.title }}</strong>
+        {% if g.description %}<p class="muted" style="margin:4px 0 0">{{ g.description }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
   </div>
+  {% endif %}
+
+  {% if milestones %}
+  <div class="card">
+    <h3>{% trans "Annual Roadmap" %}{% if org.roadmap_year %} — {{ org.roadmap_year }}{% endif %}</h3>
+    <ul class="roadmap">
+      {% for m in milestones %}
+      <li class="roadmap-item status-{{ m.status }}">
+        <span class="roadmap-dot"></span>
+        <div>
+          <div class="roadmap-head">
+            <span class="roadmap-period">{{ m.period }}</span>
+            <span class="badge {% if m.status == 'done' %}green{% elif m.status == 'in_progress' %}amber{% else %}gray{% endif %}">{{ m.get_status_display }}</span>
+          </div>
+          <strong>{{ m.title }}</strong>
+          {% if m.description %}<p class="muted" style="margin:2px 0 0">{{ m.description }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   <div class="card">
     <h3>{% trans "Membership classes" %}</h3>
     <p><strong>{% trans "Permanent Member (مستقل ممبر)" %}</strong> — {% trans "a resident who owns their plot/house." %}</p>

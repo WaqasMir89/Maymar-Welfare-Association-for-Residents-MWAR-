@@ -130,6 +130,79 @@ class PublicDocument(TimeStampedModel):
         return self.title
 
 
+class OrganizationProfile(TimeStampedModel):
+    """Singleton holding the public 'About' content — the Chairman's message,
+    photo, vision, mission and roadmap year. Edited by staff in the admin."""
+
+    chairman_name = models.CharField(max_length=120, blank=True)
+    chairman_title = models.CharField(max_length=80, default="Chairman")
+    chairman_photo = models.ImageField(upload_to="organization/", null=True, blank=True)
+    chairman_message = models.TextField(blank=True)
+    vision = models.TextField(blank=True)
+    mission = models.TextField(blank=True)
+    roadmap_year = models.PositiveIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
+    class Meta:
+        permissions = [("manage_organization", "Can edit the organization About page")]
+
+    def __str__(self) -> str:
+        return "Organization profile"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1                      # enforce a single row
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls) -> "OrganizationProfile":
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
+class OrganizationGoal(TimeStampedModel):
+    """A strategic goal shown on the About page."""
+
+    profile = models.ForeignKey(
+        OrganizationProfile, on_delete=models.CASCADE, related_name="goals"
+    )
+    order = models.PositiveIntegerField(default=0)
+    title = models.CharField(max_length=160)
+    description = models.CharField(max_length=400, blank=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class RoadmapMilestone(TimeStampedModel):
+    """One item on the annual roadmap timeline."""
+
+    class Status(models.TextChoices):
+        PLANNED = "planned", _("Planned")
+        IN_PROGRESS = "in_progress", _("In progress")
+        DONE = "done", _("Done")
+
+    profile = models.ForeignKey(
+        OrganizationProfile, on_delete=models.CASCADE, related_name="milestones"
+    )
+    order = models.PositiveIntegerField(default=0)
+    period = models.CharField(max_length=40, help_text="e.g. Q1 · Jan–Mar")
+    title = models.CharField(max_length=160)
+    description = models.CharField(max_length=400, blank=True)
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.PLANNED)
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
+        return f"{self.period}: {self.title}"
+
+
 class Notification(TimeStampedModel):
     """A per-user in-app notification (the inbox behind the nav bell)."""
 

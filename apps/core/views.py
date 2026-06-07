@@ -23,7 +23,14 @@ def home(request: HttpRequest) -> HttpResponse:
 
 
 def about(request: HttpRequest) -> HttpResponse:
-    return render(request, "core/about.html")
+    from apps.content.models import OrganizationProfile
+
+    profile = OrganizationProfile.load()
+    return render(request, "core/about.html", {
+        "org": profile,
+        "goals": profile.goals.all(),
+        "milestones": profile.milestones.all(),
+    })
 
 
 def transparency(request: HttpRequest) -> HttpResponse:

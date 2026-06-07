@@ -23,7 +23,14 @@ from django.utils import timezone
 
 from apps.accounts.models import StaffProfile, User
 from apps.accounts.permissions import CHAIRMAN, FINANCE, MEMBER, SECRETARY
-from apps.content.models import Event, Notice, Project, ProjectUpdate, PublicDocument
+from apps.content.models import (
+    Event,
+    Notice,
+    OrganizationProfile,
+    Project,
+    ProjectUpdate,
+    PublicDocument,
+)
 from apps.content.services import fan_out_notice
 from apps.dues.models import Donation, DuesInvoice, DuesPlan, Expense
 from apps.dues.services import generate_invoices, record_dues_payment
@@ -257,6 +264,51 @@ class Command(BaseCommand):
                                      is_published=True, uploaded_by=uploader)
                 doc.file.save(f"{cat}.pdf", ContentFile(_sample_pdf(title)), save=True)
             self.stdout.write(self.style.SUCCESS("  3 public documents published"))
+
+        # ---- About page: Chairman's message, vision, mission, goals, roadmap ----
+        org = OrganizationProfile.load()
+        if not org.chairman_message:
+            org.chairman_name = chairman.full_name
+            org.chairman_title = "Chairman"
+            org.roadmap_year = today.year
+            org.chairman_message = (
+                "Assalam-o-Alaikum and welcome to the M.W.A.R family.\n\n"
+                "For years our community in Gulshan-e-Maymar has grown stronger by "
+                "standing together. As Chairman, my commitment is simple: every rupee "
+                "you contribute is accounted for, every complaint is heard, and every "
+                "decision is taken in the open.\n\n"
+                "This platform is part of that promise — a transparent home for your "
+                "membership, your dues, and the projects we build together. Thank you "
+                "for your trust. Together, we are Hands of Hope."
+            )
+            org.vision = (
+                "A safe, clean and self-reliant neighbourhood where every resident "
+                "feels a sense of ownership, dignity and belonging."
+            )
+            org.mission = (
+                "To serve the residents of Gulshan-e-Maymar through transparent "
+                "management of maintenance dues, responsive handling of complaints, "
+                "and community projects funded openly and accountably."
+            )
+            org.updated_by = chairman
+            org.save()
+            org.goals.all().delete()
+            for i, (t, d) in enumerate([
+                ("Transparent finances", "Publish income and expenses every quarter for all members to see."),
+                ("Reliable maintenance", "Keep streets clean, lit and secure through well-funded services."),
+                ("Responsive grievance redress", "Resolve resident complaints quickly and fairly."),
+                ("Inclusive community", "Bring owners and tenants together through shared events and projects."),
+            ]):
+                org.goals.create(order=i, title=t, description=d)
+            org.milestones.all().delete()
+            for i, (period, t, d, status) in enumerate([
+                ("Q1 · Jan–Mar", "Digitise membership & dues", "Onboard all members onto the new platform.", "done"),
+                ("Q2 · Apr–Jun", "Streetlight & security upgrade", "Replace failing lights and add guard posts.", "in_progress"),
+                ("Q3 · Jul–Sep", "Park renovation", "Rebuild the Sector W community park.", "planned"),
+                ("Q4 · Oct–Dec", "Annual audit & AGM", "Publish audited accounts and hold elections.", "planned"),
+            ]):
+                org.milestones.create(order=i, period=period, title=t, description=d, status=status)
+            self.stdout.write(self.style.SUCCESS("  About page seeded (chairman's message, goals, roadmap)"))
 
         members_qs = list(User.objects.filter(member_profile__isnull=False)[:5])
         ticket_data = [

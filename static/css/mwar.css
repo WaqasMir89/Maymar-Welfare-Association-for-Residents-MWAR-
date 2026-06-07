@@ -224,3 +224,22 @@ footer.site { background: var(--brand-900); color: #b9c8e6; padding: calc(var(--
 footer.site a { color: #dce6f7; }
 footer.site .footer-credit { margin-top: calc(var(--space)*2); padding-top: calc(var(--space)*2); border-top: 1px solid rgba(255,255,255,.12); font-size: 13px; color: #93a6cb; }
 footer.site .footer-credit a { font-weight: 600; }
+
+/* About page — Chairman's message, goals, roadmap timeline */
+.chairman-card { display: flex; gap: calc(var(--space)*3); align-items: flex-start; }
+.chairman-photo img, .chairman-photo .avatar-initials {
+  width: 140px; height: 140px; border-radius: 16px; object-fit: cover; flex: 0 0 auto;
+  display: grid; place-items: center; background: var(--brand-700); color: #fff;
+  font-size: 56px; font-weight: 800; }
+.chairman-body { flex: 1 1 auto; }
+.chairman-sign { margin-top: calc(var(--space)*2); }
+.goal-item { padding: calc(var(--space)*2); border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.roadmap { list-style: none; margin: var(--space) 0 0; padding: 0; }
+.roadmap-item { position: relative; display: flex; gap: calc(var(--space)*2); padding: 0 0 calc(var(--space)*3) calc(var(--space)*3); border-inline-start: 2px solid var(--border); }
+.roadmap-item:last-child { border-inline-start-color: transparent; padding-bottom: 0; }
+.roadmap-dot { position: absolute; inset-inline-start: -7px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--brand-700); }
+.roadmap-item.status-done .roadmap-dot { background: var(--success, #1E8E5A); }
+.roadmap-item.status-planned .roadmap-dot { background: #b9c2d6; }
+.roadmap-head { display: flex; gap: var(--space); align-items: center; margin-bottom: 2px; }
+.roadmap-period { font-weight: 700; color: var(--brand-900); }
+@media (max-width: 640px) { .chairman-card { flex-direction: column; } }
