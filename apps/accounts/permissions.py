@@ -48,6 +48,7 @@ ROLE_PERMISSIONS: dict[str, list[str]] = {
         PERM_BROADCAST_NOTICE,
         PERM_MANAGE_DOCUMENTS,
         PERM_MANAGE_ASSETS,
+        PERM_RECORD_PAYMENT,
         PERM_APPROVE_EXPENSE,
     ],
     ADMIN: [
