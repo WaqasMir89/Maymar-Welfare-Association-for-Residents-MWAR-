@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 10:00+0500\n"
+"POT-Creation-Date: 2026-06-07 11:28+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -205,15 +205,13 @@ msgid "Enter a valid Pakistani phone number, e.g. 0301-2345678."
 msgstr "درست پاکستانی فون نمبر درج کریں، مثلاً 0301-2345678۔"
 
 #: apps/dues/models.py:17 apps/members/models.py:312
-#: templates/dues/record_donation.html:14
-#: templates/dues/record_payment.html:14
+#: templates/dues/record_donation.html:14 templates/dues/record_payment.html:14
 #: templates/members/application_detail.html:54
 msgid "Cash"
 msgstr "نقد"
 
 #: apps/dues/models.py:18 apps/members/models.py:313
-#: templates/dues/record_donation.html:14
-#: templates/dues/record_payment.html:14
+#: templates/dues/record_donation.html:14 templates/dues/record_payment.html:14
 #: templates/members/application_detail.html:54
 msgid "Bank transfer"
 msgstr "بینک ٹرانسفر"
@@ -280,8 +278,8 @@ msgstr "زیر التوا"
 msgid "Approved"
 msgstr "منظور شدہ"
 
-#: apps/dues/models.py:149 apps/members/models.py:57
-#: apps/members/models.py:186 templates/members/application_detail.html:45
+#: apps/dues/models.py:149 apps/members/models.py:57 apps/members/models.py:186
+#: templates/members/application_detail.html:45
 msgid "Rejected"
 msgstr "مسترد شدہ"
 
@@ -403,11 +401,11 @@ msgstr "زیر تعمیر"
 
 #: apps/members/forms.py:17
 msgid ""
-"I solemnly declare (حلفیہ اقرار) that the information above is correct and I"
-" will abide by the association's constitution."
+"I solemnly declare (حلفیہ اقرار) that the information above is correct and I "
+"will abide by the association's constitution."
 msgstr ""
-"میں حلفیہ اقرار کرتا/کرتی ہوں کہ مندرجہ بالا معلومات درست ہیں اور میں ایسوسی"
-" ایشن کے آئین کی پابندی کروں گا/گی۔"
+"میں حلفیہ اقرار کرتا/کرتی ہوں کہ مندرجہ بالا معلومات درست ہیں اور میں ایسوسی "
+"ایشن کے آئین کی پابندی کروں گا/گی۔"
 
 #: apps/members/forms.py:61
 msgid "Request more documents"
@@ -496,8 +494,7 @@ msgstr "آپ کو حتمی منظوری کا اختیار نہیں ہے۔"
 #: apps/members/views.py:164
 #, python-format
 msgid "Approved. Member %(num)s issued with fee receipt and ID card."
-msgstr ""
-"منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
+msgstr "منظور ہو گیا۔ رکن %(num)s کو فیس رسید اور شناختی کارڈ جاری کر دیا گیا۔"
 
 #: apps/members/views.py:175
 msgid "Review recorded."
@@ -670,6 +667,10 @@ msgstr "اطلاعات"
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
+#: templates/base.html:71
+msgid "Built by"
+msgstr "تیار کردہ"
+
 #: templates/content/event_detail.html:6
 msgid "All events"
 msgstr "تمام تقریبات"
@@ -832,8 +833,8 @@ msgid ""
 "complaints, and community projects funded openly and accountably."
 msgstr ""
 "ایک محفوظ، صاف اور بہتر سہولیات والے محلے کو برقرار رکھنا — مینٹیننس واجبات "
-"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز"
-" میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
+"کے شفاف انتظام، رہائشیوں کی شکایات کے بروقت ازالے، اور کھلے اور جوابدہ انداز "
+"میں مالی اعانت یافتہ کمیونٹی منصوبوں کے ذریعے۔"
 
 #: templates/core/about.html:15
 msgid "Membership classes"
@@ -925,8 +926,8 @@ msgstr "آن لائن درخواست دیں"
 msgid ""
 "Fill the digital form, tell us your property and whether you own or rent."
 msgstr ""
-"ڈیجیٹل فارم پُر کریں، ہمیں اپنی جائیداد اور یہ بتائیں کہ آپ مالک ہیں یا "
-"کرایہ دار۔"
+"ڈیجیٹل فارم پُر کریں، ہمیں اپنی جائیداد اور یہ بتائیں کہ آپ مالک ہیں یا کرایہ "
+"دار۔"
 
 #: templates/core/home.html:46 templates/members/apply_documents.html:12
 msgid "Upload documents"
@@ -935,8 +936,7 @@ msgstr "دستاویزات اپ لوڈ کریں"
 #: templates/core/home.html:46
 msgid "CNIC for owners; CNIC plus tenancy agreement for tenants."
 msgstr ""
-"مالکان کے لیے شناختی کارڈ؛ کرایہ داروں کے لیے شناختی کارڈ کے ساتھ کرایہ "
-"نامہ۔"
+"مالکان کے لیے شناختی کارڈ؛ کرایہ داروں کے لیے شناختی کارڈ کے ساتھ کرایہ نامہ۔"
 
 #: templates/core/home.html:47
 msgid "Get approved"
@@ -1156,8 +1156,7 @@ msgid "Log an expense"
 msgstr "اخراجات درج کریں"
 
 #: templates/dues/expense_form.html:8
-msgid ""
-"Recorded as pending until a Chairman or authorised officer approves it."
+msgid "Recorded as pending until a Chairman or authorised officer approves it."
 msgstr "چیئرمین یا مجاز افسر کی منظوری تک زیر التوا کے طور پر درج رہتا ہے۔"
 
 #: templates/dues/expense_form.html:11
@@ -1240,8 +1239,7 @@ msgstr "مقصد (اختیاری)"
 msgid "e.g. Ramzan ration drive"
 msgstr "مثلاً رمضان راشن مہم"
 
-#: templates/dues/record_donation.html:16
-#: templates/dues/record_payment.html:15
+#: templates/dues/record_donation.html:16 templates/dues/record_payment.html:15
 msgid "Reference (optional)"
 msgstr "حوالہ (اختیاری)"
 
@@ -1249,8 +1247,7 @@ msgstr "حوالہ (اختیاری)"
 msgid "Show on the public donor wall (donor has consented)"
 msgstr "عوامی عطیہ دہندگان کی دیوار پر دکھائیں (عطیہ دہندہ نے رضامندی دی ہے)"
 
-#: templates/dues/record_donation.html:18
-#: templates/dues/record_payment.html:16
+#: templates/dues/record_donation.html:18 templates/dues/record_payment.html:16
 msgid "Record & issue receipt"
 msgstr "درج کریں اور رسید جاری کریں"
 
@@ -1354,8 +1351,8 @@ msgid "accepted"
 msgstr "قبول شدہ"
 
 #: templates/members/application_detail.html:30
-#: templates/members/apply_documents.html:8
-#: templates/members/apply_form.html:8 templates/members/apply_review.html:7
+#: templates/members/apply_documents.html:8 templates/members/apply_form.html:8
+#: templates/members/apply_review.html:7
 msgid "Documents"
 msgstr "دستاویزات"
 
@@ -1403,13 +1400,13 @@ msgstr "جائزہ درج کریں"
 msgid "Upload Documents"
 msgstr "دستاویزات اپ لوڈ کریں"
 
-#: templates/members/apply_documents.html:7
-#: templates/members/apply_form.html:7 templates/members/apply_review.html:6
+#: templates/members/apply_documents.html:7 templates/members/apply_form.html:7
+#: templates/members/apply_review.html:6
 msgid "Details"
 msgstr "تفصیلات"
 
-#: templates/members/apply_documents.html:9
-#: templates/members/apply_form.html:9 templates/members/apply_review.html:8
+#: templates/members/apply_documents.html:9 templates/members/apply_form.html:9
+#: templates/members/apply_review.html:8
 msgid "Submit"
 msgstr "جمع کریں"
 
@@ -1483,11 +1480,11 @@ msgstr "کیا آپ مالک ہیں یا کرایہ دار؟"
 
 #: templates/members/apply_form.html:33
 msgid ""
-"Tenants (Associate Members) must also upload a tenancy agreement in the next"
-" step."
+"Tenants (Associate Members) must also upload a tenancy agreement in the next "
+"step."
 msgstr ""
-"کرایہ داروں (ایسوسی ایٹ اراکین) کو اگلے مرحلے میں کرایہ نامہ بھی اپ لوڈ کرنا"
-" ہوگا۔"
+"کرایہ داروں (ایسوسی ایٹ اراکین) کو اگلے مرحلے میں کرایہ نامہ بھی اپ لوڈ کرنا "
+"ہوگا۔"
 
 #: templates/members/apply_form.html:37
 msgid "Continue to documents"
