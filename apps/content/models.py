@@ -97,6 +97,28 @@ class Event(TimeStampedModel):
         return self.title
 
 
+class GalleryPhoto(TimeStampedModel):
+    """A captioned photo from a community event, shown in the public gallery.
+    Uploaded by staff."""
+
+    image = models.ImageField(upload_to="gallery/%Y/%m/")
+    caption = models.CharField(max_length=300, blank=True)
+    event = models.ForeignKey(
+        Event, null=True, blank=True, on_delete=models.SET_NULL, related_name="photos"
+    )
+    taken_on = models.DateField(null=True, blank=True)
+    is_public = models.BooleanField(default=True)
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+",
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return self.caption or f"Photo #{self.pk}"
+
+
 class PublicDocument(TimeStampedModel):
     """A downloadable PDF in the public document library — bylaws, forms,
     audited accounts, meeting minutes. Uploaded by staff who hold

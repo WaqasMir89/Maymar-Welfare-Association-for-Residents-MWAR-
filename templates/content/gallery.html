@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Gallery" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="row-between">
+    <h1>{% trans "Photo Gallery" %}</h1>
+    {% if can_manage %}<a class="btn" href="{% url 'content:gallery_upload' %}">{% trans "+ Upload photo" %}</a>{% endif %}
+  </div>
+  <p class="muted">{% trans "Moments from our community events and projects." %}</p>
+
+  {% if photos %}
+  <div class="gallery-grid">
+    {% for p in photos %}
+    <figure class="gallery-item">
+      <img src="{{ p.image.url }}" alt="{{ p.caption|default:'Event photo' }}" loading="lazy">
+      <figcaption>
+        {% if p.caption %}<span>{{ p.caption }}</span>{% endif %}
+        <span class="muted">
+          {% if p.event %}{{ p.event.title }}{% endif %}
+          {% if p.taken_on %} · {{ p.taken_on|date:"d M Y" }}{% endif %}
+          {% if not p.is_public %}<span class="badge gray">{% trans "Hidden" %}</span>{% endif %}
+        </span>
+        {% if can_manage %}
+        <form method="post" action="{% url 'content:gallery_delete' p.pk %}" class="inline-form"
+              onsubmit="return confirm('{% trans "Remove this photo?" %}')">
+          {% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">{% trans "Remove" %}</button>
+        </form>
+        {% endif %}
+      </figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+
+  {% if photos.paginator.num_pages > 1 %}
+  <nav class="pagination">
+    {% if photos.has_previous %}<a class="btn btn-ghost" href="?page={{ photos.previous_page_number }}">{% trans "Previous" %}</a>{% endif %}
+    <span>{% blocktrans with n=photos.number total=photos.paginator.num_pages %}Page {{ n }} of {{ total }}{% endblocktrans %}</span>
+    {% if photos.has_next %}<a class="btn btn-ghost" href="?page={{ photos.next_page_number }}">{% trans "Next" %}</a>{% endif %}
+  </nav>
+  {% endif %}
+  {% else %}
+  <p class="muted" style="margin-top:24px">{% trans "No photos have been added yet." %}</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -25,6 +25,7 @@ from apps.accounts.models import StaffProfile, User
 from apps.accounts.permissions import CHAIRMAN, FINANCE, MEMBER, SECRETARY
 from apps.content.models import (
     Event,
+    GalleryPhoto,
     Notice,
     OrganizationAsset,
     OrganizationProfile,
@@ -327,6 +328,36 @@ class Command(BaseCommand):
                     is_public=True, added_by=chairman,
                 )
             self.stdout.write(self.style.SUCCESS("  6 organization assets registered"))
+
+        # ---- Gallery photos (generated placeholders) ----
+        if not GalleryPhoto.objects.exists():
+            import io
+
+            from django.core.files.base import ContentFile
+
+            def _swatch(color: tuple) -> bytes:
+                from PIL import Image
+
+                img = Image.new("RGB", (800, 540), color)
+                buf = io.BytesIO()
+                img.save(buf, "JPEG", quality=80)
+                return buf.getvalue()
+
+            cleanliness = Event.objects.filter(title="Neighbourhood Cleanliness Drive").first()
+            eid = Event.objects.filter(title="Eid Milan Community Gathering").first()
+            shots = [
+                ("Volunteers cleaning Sector W park", cleanliness, (34, 139, 90)),
+                ("New saplings planted along the main road", cleanliness, (46, 125, 50)),
+                ("Families gathered for Eid Milan", eid, (20, 67, 158)),
+                ("Children's prize distribution", eid, (200, 130, 10)),
+            ]
+            for caption, event, color in shots:
+                p = GalleryPhoto(caption=caption, event=event, is_public=True,
+                                 uploaded_by=secretary,
+                                 taken_on=(event.starts_at.date() if event else None))
+                p.image.save(f"seed-{abs(hash(caption)) % 9999}.jpg",
+                             ContentFile(_swatch(color)), save=True)
+            self.stdout.write(self.style.SUCCESS("  4 gallery photos added"))
 
         members_qs = list(User.objects.filter(member_profile__isnull=False)[:5])
         ticket_data = [

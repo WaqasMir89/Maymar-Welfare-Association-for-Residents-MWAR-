@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Upload photo" %} — {{ brand.short }}{% endblock %}
+{% block content %}
+<div class="container narrow page">
+  <div class="card">
+    <h1>{% trans "Upload a gallery photo" %}</h1>
+    <p class="muted">{% trans "Published photos appear on the public gallery." %}</p>
+    <form method="post" enctype="multipart/form-data" class="stack">
+      {% csrf_token %}
+      <div class="field"><label>{% trans "Photo" %}</label><input type="file" name="image" accept="image/*" required></div>
+      <div class="field"><label>{% trans "Caption" %}</label><input type="text" name="caption" maxlength="300" placeholder="{% trans 'e.g. Cleanliness drive at Sector W park' %}"></div>
+      <div class="field">
+        <label>{% trans "Related event (optional)" %}</label>
+        <select name="event">
+          <option value="">{% trans "— None —" %}</option>
+          {% for e in events %}<option value="{{ e.pk }}">{{ e.title }} ({{ e.starts_at|date:"M Y" }})</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>{% trans "Date taken (optional)" %}</label><input type="date" name="taken_on"></div>
+      <label><input type="checkbox" name="is_public" checked> {% trans "Show on the public gallery" %}</label>
+      <button class="btn" type="submit">{% trans "Upload photo" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Event,
+    GalleryPhoto,
     Notice,
     OrganizationAsset,
     OrganizationGoal,
@@ -62,6 +63,12 @@ class OrganizationProfileAdmin(admin.ModelAdmin):
 class OrganizationAssetAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "quantity", "estimated_value", "is_public", "added_by")
     list_filter = ("category", "is_public")
+
+
+@admin.register(GalleryPhoto)
+class GalleryPhotoAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "event", "taken_on", "is_public", "uploaded_by")
+    list_filter = ("is_public",)
 
 
 admin.site.register(Event)

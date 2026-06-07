@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:04+0500\n"
+"POT-Creation-Date: 2026-06-07 19:32+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -79,8 +79,8 @@ msgstr "پروجیکٹ مینیجر"
 msgid "Administrator"
 msgstr "ایڈمنسٹریٹر"
 
-#: apps/accounts/models.py:87 apps/content/models.py:110
-#: apps/content/models.py:217 apps/members/models.py:272
+#: apps/accounts/models.py:87 apps/content/models.py:132
+#: apps/content/models.py:239 apps/members/models.py:272
 #: apps/tickets/models.py:24
 msgid "Other"
 msgstr "دیگر"
@@ -97,7 +97,7 @@ msgstr "اکاؤنٹ بن گیا۔ M.W.A.R میں خوش آمدید۔"
 msgid "You have been signed out."
 msgstr "آپ سائن آؤٹ ہو گئے ہیں۔"
 
-#: apps/content/models.py:18 apps/content/models.py:186
+#: apps/content/models.py:18 apps/content/models.py:208
 msgid "Planned"
 msgstr "منصوبہ بند"
 
@@ -126,118 +126,134 @@ msgstr "تمام اراکین"
 msgid "Specific sector"
 msgstr "مخصوص سیکٹر"
 
-#: apps/content/models.py:106
+#: apps/content/models.py:128
 msgid "Constitution & bylaws"
 msgstr "آئین و ضوابط"
 
-#: apps/content/models.py:107
+#: apps/content/models.py:129
 msgid "Forms"
 msgstr "فارمز"
 
-#: apps/content/models.py:108
+#: apps/content/models.py:130
 msgid "Financial reports"
 msgstr "مالیاتی رپورٹس"
 
-#: apps/content/models.py:109
+#: apps/content/models.py:131
 msgid "Meeting minutes"
 msgstr "اجلاس کی کارروائی"
 
-#: apps/content/models.py:187 apps/tickets/models.py:35
+#: apps/content/models.py:209 apps/tickets/models.py:35
 msgid "In progress"
 msgstr "زیر عمل"
 
-#: apps/content/models.py:188
+#: apps/content/models.py:210
 msgid "Done"
 msgstr "مکمل"
 
-#: apps/content/models.py:211
+#: apps/content/models.py:233
 msgid "Land & plots"
 msgstr "زمین و پلاٹ"
 
-#: apps/content/models.py:212
+#: apps/content/models.py:234
 msgid "Buildings"
 msgstr "عمارتیں"
 
-#: apps/content/models.py:213
+#: apps/content/models.py:235
 msgid "Vehicles"
 msgstr "گاڑیاں"
 
-#: apps/content/models.py:214
+#: apps/content/models.py:236
 msgid "Equipment"
 msgstr "سازوسامان"
 
-#: apps/content/models.py:215
+#: apps/content/models.py:237
 msgid "Furniture & fixtures"
 msgstr "فرنیچر و فکسچر"
 
-#: apps/content/models.py:216
+#: apps/content/models.py:238
 msgid "Funds & reserves"
 msgstr "فنڈز و ذخائر"
 
-#: apps/content/models.py:244
+#: apps/content/models.py:266
 msgid "Info"
 msgstr "معلومات"
 
-#: apps/content/models.py:245
+#: apps/content/models.py:267
 msgid "Success"
 msgstr "کامیاب"
 
-#: apps/content/models.py:246
+#: apps/content/models.py:268
 msgid "Warning"
 msgstr "انتباہ"
 
-#: apps/content/views.py:62
+#: apps/content/views.py:70
 #, python-format
 msgid " Delivered in-app to %(n)d."
 msgstr " ایپ میں %(n)d تک پہنچا دیا گیا۔"
 
-#: apps/content/views.py:64
+#: apps/content/views.py:72
 #, python-format
 msgid " SMS sent to %(n)d."
 msgstr " %(n)d کو ایس ایم ایس بھیجا گیا۔"
 
-#: apps/content/views.py:65
+#: apps/content/views.py:73
 msgid "Notice published."
 msgstr "نوٹس شائع کر دیا گیا۔"
 
-#: apps/content/views.py:93
+#: apps/content/views.py:101
 msgid "All notifications marked as read."
 msgstr "تمام اطلاعات کو پڑھا ہوا نشان زد کر دیا گیا۔"
 
-#: apps/content/views.py:161
+#: apps/content/views.py:169
 msgid "You don't have permission to upload documents."
 msgstr "آپ کو دستاویزات اپ لوڈ کرنے کی اجازت نہیں ہے۔"
 
-#: apps/content/views.py:167
+#: apps/content/views.py:175
 msgid "A title and a PDF file are required."
 msgstr "عنوان اور ایک پی ڈی ایف فائل درکار ہے۔"
 
-#: apps/content/views.py:173 apps/content/views.py:186
+#: apps/content/views.py:181 apps/content/views.py:194
 msgid "Only PDF files can be uploaded."
 msgstr "صرف پی ڈی ایف فائلیں اپ لوڈ کی جا سکتی ہیں۔"
 
-#: apps/content/views.py:189 apps/members/views.py:86
+#: apps/content/views.py:197 apps/members/views.py:86
 msgid "Document uploaded."
 msgstr "دستاویز اپ لوڈ ہو گئی۔"
 
-#: apps/content/views.py:221
+#: apps/content/views.py:223
+msgid "Please choose a photo to upload."
+msgstr "براہِ کرم اپ لوڈ کرنے کے لیے تصویر منتخب کریں۔"
+
+#: apps/content/views.py:227 apps/content/views.py:240
+msgid "Photos must be an image (JPG, PNG, WEBP or GIF)."
+msgstr "تصویر ایک امیج (JPG, PNG, WEBP یا GIF) ہونی چاہیے۔"
+
+#: apps/content/views.py:243
+msgid "Photo added to the gallery."
+msgstr "تصویر گیلری میں شامل کر دی گئی۔"
+
+#: apps/content/views.py:256
+msgid "Photo removed."
+msgstr "تصویر ہٹا دی گئی۔"
+
+#: apps/content/views.py:283
 msgid "An asset name is required."
 msgstr "اثاثے کا نام درکار ہے۔"
 
-#: apps/content/views.py:239
+#: apps/content/views.py:301
 #, python-format
 msgid "Please check the asset details: %(e)s"
 msgstr "براہِ کرم اثاثے کی تفصیلات چیک کریں: %(e)s"
 
-#: apps/content/views.py:242
+#: apps/content/views.py:304
 msgid "Asset added to the register."
 msgstr "اثاثہ رجسٹر میں شامل کر دیا گیا۔"
 
-#: apps/content/views.py:254
+#: apps/content/views.py:316
 msgid "A title and start time are required."
 msgstr "عنوان اور آغاز کا وقت درکار ہے۔"
 
-#: apps/content/views.py:264
+#: apps/content/views.py:326
 msgid "Event created."
 msgstr "تقریب بنا دی گئی۔"
 
@@ -755,7 +771,7 @@ msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
 #: templates/accounts/login.html:19
 #: templates/accounts/password_reset_complete.html:9
-#: templates/accounts/register.html:20 templates/base.html:47
+#: templates/accounts/register.html:20 templates/base.html:48
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -900,7 +916,7 @@ msgstr "اپنا اکاؤنٹ بنائیں"
 msgid "Already registered?"
 msgstr "پہلے سے رجسٹرڈ ہیں؟"
 
-#: templates/base.html:21 templates/base.html:76 templates/core/about.html:8
+#: templates/base.html:21 templates/base.html:77 templates/core/about.html:8
 #: templates/core/contact.html:8 templates/core/home.html:12
 #: templates/members/card.html:10
 msgid "Reg. No."
@@ -927,43 +943,47 @@ msgstr "نوٹس"
 msgid "Events"
 msgstr "تقریبات"
 
-#: templates/base.html:33 templates/content/document_list.html:3
+#: templates/base.html:33 templates/content/gallery.html:3
+msgid "Gallery"
+msgstr "گیلری"
+
+#: templates/base.html:34 templates/content/document_list.html:3
 #: templates/members/application_detail.html:30
 #: templates/members/apply_documents.html:8
 #: templates/members/apply_form.html:8 templates/members/apply_review.html:7
 msgid "Documents"
 msgstr "دستاویزات"
 
-#: templates/base.html:34 templates/content/asset_list.html:3
+#: templates/base.html:35 templates/content/asset_list.html:3
 msgid "Assets"
 msgstr "اثاثے"
 
-#: templates/base.html:35 templates/dues/_finance_nav.html:9
+#: templates/base.html:36 templates/dues/_finance_nav.html:9
 msgid "Transparency"
 msgstr "شفافیت"
 
-#: templates/base.html:36 templates/core/home.html:9
+#: templates/base.html:37 templates/core/home.html:9
 msgid "Become a Member"
 msgstr "رکن بنیں"
 
-#: templates/base.html:39
+#: templates/base.html:40
 msgid "Staff"
 msgstr "عملہ"
 
-#: templates/base.html:41 templates/members/dashboard.html:3
+#: templates/base.html:42 templates/members/dashboard.html:3
 msgid "My Dashboard"
 msgstr "میرا ڈیش بورڈ"
 
-#: templates/base.html:42 templates/content/notifications.html:3
+#: templates/base.html:43 templates/content/notifications.html:3
 #: templates/content/notifications.html:7
 msgid "Notifications"
 msgstr "اطلاعات"
 
-#: templates/base.html:45
+#: templates/base.html:46
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:78
+#: templates/base.html:79
 msgid "Built by"
 msgstr "تیار کردہ"
 
@@ -1041,7 +1061,7 @@ msgstr "ایسوسی ایشن کی ملکیت کا عوامی رجسٹر — ت�
 msgid "Estimated total value"
 msgstr "تخمینی کل مالیت"
 
-#: templates/content/asset_list.html:28
+#: templates/content/asset_list.html:28 templates/content/gallery.html:22
 msgid "Hidden"
 msgstr "پوشیدہ"
 
@@ -1164,6 +1184,87 @@ msgstr "کوئی آئندہ تقریب نہیں۔"
 msgid "Past events"
 msgstr "گزشتہ تقریبات"
 
+#: templates/content/gallery.html:7
+msgid "Photo Gallery"
+msgstr "تصویری گیلری"
+
+#: templates/content/gallery.html:8
+msgid "+ Upload photo"
+msgstr "+ تصویر اپ لوڈ کریں"
+
+#: templates/content/gallery.html:10
+msgid "Moments from our community events and projects."
+msgstr "ہماری کمیونٹی کی تقریبات اور منصوبوں کی جھلکیاں۔"
+
+#: templates/content/gallery.html:26
+msgid "Remove this photo?"
+msgstr "کیا یہ تصویر ہٹائیں؟"
+
+#: templates/content/gallery.html:27
+msgid "Remove"
+msgstr "ہٹائیں"
+
+#: templates/content/gallery.html:37 templates/core/_pagination.html:5
+#: templates/dues/transactions.html:72
+msgid "Previous"
+msgstr "پچھلا"
+
+#: templates/content/gallery.html:38 templates/core/_pagination.html:7
+#: templates/dues/transactions.html:73
+#, python-format
+msgid "Page %(n)s of %(total)s"
+msgstr "صفحہ %(n)s از %(total)s"
+
+#: templates/content/gallery.html:39 templates/core/_pagination.html:9
+#: templates/dues/transactions.html:74
+msgid "Next"
+msgstr "اگلا"
+
+#: templates/content/gallery.html:43
+msgid "No photos have been added yet."
+msgstr "ابھی تک کوئی تصویر شامل نہیں کی گئی۔"
+
+#: templates/content/gallery_form.html:3
+#: templates/content/gallery_form.html:22
+msgid "Upload photo"
+msgstr "تصویر اپ لوڈ کریں"
+
+#: templates/content/gallery_form.html:7
+msgid "Upload a gallery photo"
+msgstr "گیلری میں تصویر اپ لوڈ کریں"
+
+#: templates/content/gallery_form.html:8
+msgid "Published photos appear on the public gallery."
+msgstr "شائع شدہ تصاویر عوامی گیلری پر ظاہر ہوتی ہیں۔"
+
+#: templates/content/gallery_form.html:11
+msgid "Photo"
+msgstr "تصویر"
+
+#: templates/content/gallery_form.html:12
+msgid "Caption"
+msgstr "کیپشن"
+
+#: templates/content/gallery_form.html:12
+msgid "e.g. Cleanliness drive at Sector W park"
+msgstr "مثلاً سیکٹر W پارک میں صفائی مہم"
+
+#: templates/content/gallery_form.html:14
+msgid "Related event (optional)"
+msgstr "متعلقہ تقریب (اختیاری)"
+
+#: templates/content/gallery_form.html:16
+msgid "— None —"
+msgstr "— کوئی نہیں —"
+
+#: templates/content/gallery_form.html:20
+msgid "Date taken (optional)"
+msgstr "تصویر کی تاریخ (اختیاری)"
+
+#: templates/content/gallery_form.html:21
+msgid "Show on the public gallery"
+msgstr "عوامی گیلری پر دکھائیں"
+
 #: templates/content/notice_create.html:6
 msgid "Broadcast a notice"
 msgstr "نوٹس نشر کریں"
@@ -1228,19 +1329,6 @@ msgstr "کمیونٹی منصوبے"
 #: templates/content/project_list.html:15
 msgid "No projects published."
 msgstr "کوئی منصوبہ شائع نہیں ہوا۔"
-
-#: templates/core/_pagination.html:5 templates/dues/transactions.html:72
-msgid "Previous"
-msgstr "پچھلا"
-
-#: templates/core/_pagination.html:7 templates/dues/transactions.html:73
-#, python-format
-msgid "Page %(n)s of %(total)s"
-msgstr "صفحہ %(n)s از %(total)s"
-
-#: templates/core/_pagination.html:9 templates/dues/transactions.html:74
-msgid "Next"
-msgstr "اگلا"
 
 #: templates/core/about.html:6
 msgid "About the Association"

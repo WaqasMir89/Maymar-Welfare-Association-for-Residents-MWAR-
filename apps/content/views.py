@@ -14,7 +14,15 @@ from apps.accounts.permissions import is_staff_member, staff_member_test
 from apps.core.sms import send_sms
 from apps.members.models import MemberProfile
 
-from .models import Event, Notice, Notification, OrganizationAsset, Project, PublicDocument
+from .models import (
+    Event,
+    GalleryPhoto,
+    Notice,
+    Notification,
+    OrganizationAsset,
+    Project,
+    PublicDocument,
+)
 from .services import fan_out_notice
 
 
@@ -193,6 +201,60 @@ def document_upload(request: HttpRequest) -> HttpResponse:
         "content/document_form.html",
         {"categories": PublicDocument.Category.choices},
     )
+
+
+# ---------------------------------------------------------------------------
+# Event photo gallery — staff upload, public views
+# ---------------------------------------------------------------------------
+def gallery(request: HttpRequest) -> HttpResponse:
+    can_manage = is_staff_member(request.user)
+    photos = GalleryPhoto.objects.select_related("event")
+    if not can_manage:
+        photos = photos.filter(is_public=True)
+    page = Paginator(photos, 24).get_page(request.GET.get("page"))
+    return render(request, "content/gallery.html", {"photos": page, "can_manage": can_manage})
+
+
+@staff_member_test
+def gallery_upload(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        if not image:
+            messages.error(request, _("Please choose a photo to upload."))
+            return redirect("content:gallery_upload")
+        name = (image.name or "").lower()
+        if not name.endswith((".jpg", ".jpeg", ".png", ".webp", ".gif")):
+            messages.error(request, _("Photos must be an image (JPG, PNG, WEBP or GIF)."))
+            return redirect("content:gallery_upload")
+        photo = GalleryPhoto(
+            image=image,
+            caption=request.POST.get("caption", "").strip(),
+            event_id=request.POST.get("event") or None,
+            taken_on=request.POST.get("taken_on") or None,
+            is_public=bool(request.POST.get("is_public")),
+            uploaded_by=request.user,
+        )
+        try:
+            photo.full_clean()
+        except Exception:
+            messages.error(request, _("Photos must be an image (JPG, PNG, WEBP or GIF)."))
+            return redirect("content:gallery_upload")
+        photo.save()
+        messages.success(request, _("Photo added to the gallery."))
+        return redirect("content:gallery")
+    return render(request, "content/gallery_form.html", {
+        "events": Event.objects.order_by("-starts_at")[:50],
+    })
+
+
+@staff_member_test
+def gallery_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    photo = get_object_or_404(GalleryPhoto, pk=pk)
+    if request.method == "POST":
+        photo.image.delete(save=False)
+        photo.delete()
+        messages.success(request, _("Photo removed."))
+    return redirect("content:gallery")
 
 
 # ---------------------------------------------------------------------------

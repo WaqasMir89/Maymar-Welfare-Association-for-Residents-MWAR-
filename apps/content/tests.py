@@ -227,3 +227,61 @@ class OrganizationAssetTests(TestCase):
         plain = User.objects.create_user("plain2@x.pk", "password123")
         self.client.force_login(plain)
         self.assertEqual(self.client.get("/content/assets/add/").status_code, 403)
+
+
+class GalleryTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth.models import Group
+
+        staff = Group.objects.create(name="Secretary")
+        self.staff = User.objects.create_user("photo@x.pk", "password123")
+        self.staff.groups.add(staff)
+
+    def _img(self):
+        import io
+
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+
+        buf = io.BytesIO()
+        Image.new("RGB", (40, 30), (10, 67, 158)).save(buf, "JPEG")
+        return SimpleUploadedFile("shot.jpg", buf.getvalue(), content_type="image/jpeg")
+
+    def test_staff_can_upload_photo(self):
+        self.client.force_login(self.staff)
+        r = self.client.post("/content/gallery/upload/", {
+            "caption": "Cleanliness drive", "is_public": "on", "image": self._img(),
+        })
+        self.assertRedirects(r, "/content/gallery/")
+        from apps.content.models import GalleryPhoto
+
+        photo = GalleryPhoto.objects.get(caption="Cleanliness drive")
+        self.assertEqual(photo.uploaded_by, self.staff)
+        photo.image.delete(save=False)
+
+    def test_non_image_is_rejected(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from apps.content.models import GalleryPhoto
+
+        self.client.force_login(self.staff)
+        self.client.post("/content/gallery/upload/", {
+            "caption": "bad", "image": SimpleUploadedFile("x.txt", b"nope", content_type="text/plain"),
+        })
+        self.assertEqual(GalleryPhoto.objects.count(), 0)
+
+    def test_public_sees_only_public_photos(self):
+        from apps.content.models import GalleryPhoto
+
+        pub = GalleryPhoto.objects.create(caption="Public shot", is_public=True, image=self._img())
+        hidden = GalleryPhoto.objects.create(caption="Hidden shot", is_public=False, image=self._img())
+        r = self.client.get("/content/gallery/")
+        self.assertContains(r, "Public shot")
+        self.assertNotContains(r, "Hidden shot")
+        pub.image.delete(save=False)
+        hidden.image.delete(save=False)
+
+    def test_member_cannot_upload(self):
+        member = User.objects.create_user("plain@x.pk", "password123")
+        self.client.force_login(member)
+        r = self.client.get("/content/gallery/upload/")
+        self.assertEqual(r.status_code, 302)   # staff gate redirects to login
