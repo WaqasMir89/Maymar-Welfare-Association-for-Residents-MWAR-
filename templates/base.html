@@ -12,7 +12,7 @@
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar" x-data="{ navOpen: false }">
     <div class="container">
       <a href="{% url 'core:home' %}" class="brand-mark">
         <span class="brand-logo">🏘️</span>
@@ -21,7 +21,11 @@
           <small>{% trans "Reg. No." %} {{ brand.reg_no }} · {{ brand.locality }}</small>
         </span>
       </a>
-      <nav class="nav-links">
+      <button class="nav-toggle" type="button" @click="navOpen = !navOpen"
+              :aria-expanded="navOpen" aria-label="{% trans 'Toggle menu' %}">
+        <span x-show="!navOpen">☰</span><span x-show="navOpen" x-cloak>✕</span>
+      </button>
+      <nav class="nav-links" :class="{ open: navOpen }">
         <a href="{% url 'core:about' %}">{% trans "About" %}</a>
         <a href="{% url 'content:project_list' %}">{% trans "Projects" %}</a>
         <a href="{% url 'content:notice_list' %}">{% trans "Notices" %}</a>

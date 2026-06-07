@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 18:47+0500\n"
+"POT-Creation-Date: 2026-06-07 18:54+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: M.W.A.R Platform <noreply@mwar.org.pk>\n"
 "Language-Team: Urdu\n"
@@ -738,7 +738,7 @@ msgstr "اسٹیٹس اپ ڈیٹ ہو گیا۔"
 #: templates/accounts/login.html:3 templates/accounts/login.html:7
 #: templates/accounts/login.html:19
 #: templates/accounts/password_reset_complete.html:9
-#: templates/accounts/register.html:20 templates/base.html:43
+#: templates/accounts/register.html:20 templates/base.html:47
 msgid "Sign in"
 msgstr "سائن اِن"
 
@@ -883,66 +883,70 @@ msgstr "اپنا اکاؤنٹ بنائیں"
 msgid "Already registered?"
 msgstr "پہلے سے رجسٹرڈ ہیں؟"
 
-#: templates/base.html:21 templates/base.html:72 templates/core/about.html:8
+#: templates/base.html:21 templates/base.html:76 templates/core/about.html:8
 #: templates/core/contact.html:8 templates/core/home.html:12
 #: templates/members/card.html:10
 msgid "Reg. No."
 msgstr "رجسٹریشن نمبر"
 
-#: templates/base.html:25 templates/core/about.html:3
+#: templates/base.html:25
+msgid "Toggle menu"
+msgstr "مینو کھولیں/بند کریں"
+
+#: templates/base.html:29 templates/core/about.html:3
 msgid "About"
 msgstr "تعارف"
 
-#: templates/base.html:26 templates/content/project_list.html:3
+#: templates/base.html:30 templates/content/project_list.html:3
 msgid "Projects"
 msgstr "منصوبے"
 
-#: templates/base.html:27 templates/content/notice_list.html:3
+#: templates/base.html:31 templates/content/notice_list.html:3
 #: templates/content/notice_list.html:7 templates/core/home.html:34
 msgid "Notices"
 msgstr "نوٹس"
 
-#: templates/base.html:28 templates/content/event_list.html:3
+#: templates/base.html:32 templates/content/event_list.html:3
 msgid "Events"
 msgstr "تقریبات"
 
-#: templates/base.html:29 templates/content/document_list.html:3
+#: templates/base.html:33 templates/content/document_list.html:3
 #: templates/members/application_detail.html:30
 #: templates/members/apply_documents.html:8
 #: templates/members/apply_form.html:8 templates/members/apply_review.html:7
 msgid "Documents"
 msgstr "دستاویزات"
 
-#: templates/base.html:30 templates/content/asset_list.html:3
+#: templates/base.html:34 templates/content/asset_list.html:3
 msgid "Assets"
 msgstr "اثاثے"
 
-#: templates/base.html:31 templates/dues/_finance_nav.html:8
+#: templates/base.html:35 templates/dues/_finance_nav.html:8
 msgid "Transparency"
 msgstr "شفافیت"
 
-#: templates/base.html:32 templates/core/home.html:9
+#: templates/base.html:36 templates/core/home.html:9
 msgid "Become a Member"
 msgstr "رکن بنیں"
 
-#: templates/base.html:35
+#: templates/base.html:39
 msgid "Staff"
 msgstr "عملہ"
 
-#: templates/base.html:37 templates/members/dashboard.html:3
+#: templates/base.html:41 templates/members/dashboard.html:3
 msgid "My Dashboard"
 msgstr "میرا ڈیش بورڈ"
 
-#: templates/base.html:38 templates/content/notifications.html:3
+#: templates/base.html:42 templates/content/notifications.html:3
 #: templates/content/notifications.html:7
 msgid "Notifications"
 msgstr "اطلاعات"
 
-#: templates/base.html:41
+#: templates/base.html:45
 msgid "Sign out"
 msgstr "سائن آؤٹ"
 
-#: templates/base.html:74
+#: templates/base.html:78
 msgid "Built by"
 msgstr "تیار کردہ"
 

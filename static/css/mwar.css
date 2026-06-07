@@ -23,8 +23,10 @@
 }
 
 * { box-sizing: border-box; }
+[x-cloak] { display: none !important; }
+img { max-width: 100%; height: auto; }
 
-html { font-size: 16px; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -64,6 +66,9 @@ h1, h2, h3 { color: var(--brand-900); line-height: 1.25; margin: 0 0 0.5em; }
 .nav-links { display: flex; gap: calc(var(--space) * 2); margin-inline-start: auto; align-items: center; flex-wrap: wrap; }
 .nav-links a { color: #dce6f7; font-size: 14px; }
 .nav-links a:hover { color: #fff; text-decoration: none; }
+.nav-toggle { display: none; margin-inline-start: auto; background: rgba(255,255,255,0.12); color: #fff;
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 6px 12px; font-size: 20px;
+  line-height: 1; cursor: pointer; }
 .lang-switch button {
   background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.25);
   padding: 4px 10px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 13px;
@@ -139,7 +144,9 @@ input[type=tel], input[type=date], select, textarea {
 .table th, .table td { text-align: start; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
 .table th { background: var(--brand-050); color: var(--brand-900); font-weight: 700; }
 .table tbody tr:hover { background: var(--surface-alt); }
-.table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+/* overflow-x lets wide tables scroll horizontally on small screens instead of
+   being clipped; overflow-y hidden preserves the rounded corners. */
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; overflow-y: hidden; box-shadow: var(--shadow); -webkit-overflow-scrolling: touch; }
 
 /* ---- Badges ---- */
 .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
@@ -266,3 +273,58 @@ footer.site .footer-credit a { font-weight: 600; }
 .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-inline-end: 5px; vertical-align: middle; }
 .legend-dot.in { background: var(--success, #1E8E5A); }
 .legend-dot.out { background: #d9744a; }
+
+/* ============================================================
+   Mobile — most members visit from a phone
+   ============================================================ */
+
+/* Collapsible top navigation (hamburger) */
+@media (max-width: 880px) {
+  .topbar .container { flex-wrap: wrap; gap: var(--space); }
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .nav-links {
+    flex-basis: 100%; margin-inline-start: 0; flex-direction: column;
+    align-items: stretch; gap: 0; display: none;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    font-size: 16px; padding: 12px 6px; border-top: 1px solid rgba(255,255,255,0.10);
+  }
+  .nav-links a:first-child { border-top: 0; }
+  .nav-bell { align-self: flex-start; }
+  .bell-badge { position: static; display: inline-block; margin-inline-start: 6px; }
+  .lang-switch { padding: 12px 0 4px; }
+  .lang-switch button { padding: 8px 14px; font-size: 14px; }
+}
+
+/* Comfortable spacing & typography on small screens */
+@media (max-width: 640px) {
+  .page { padding: calc(var(--space) * 3) 0; }
+  .card { padding: calc(var(--space) * 2); }
+  .hero { padding: calc(var(--space) * 6) 0; }
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 16px; }
+  .kpi .value { font-size: 24px; }
+  h1 { font-size: 26px; }
+
+  /* Wide multi-column tables: give them a min width so cells stay readable and
+     the .table-wrap scrolls horizontally rather than crushing the text. */
+  .table-wrap .table { min-width: 560px; }
+
+  /* Full-width primary actions are easier to tap. */
+  .row-between .btn, .section-title .btn { flex: 1 1 auto; }
+
+  /* Wizard steps stack two-per-row instead of squeezing into one line. */
+  .steps { flex-wrap: wrap; }
+  .steps .step { flex: 1 1 calc(50% - 4px); }
+
+  /* Horizontal pill tabs scroll instead of stacking into many rows. */
+  .pill-nav { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .pill-nav a { white-space: nowrap; }
+}
+
+/* Generous tap targets on touch devices (WCAG ~44px). */
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .nav-links a { min-height: 40px; display: flex; align-items: center; }
+}
