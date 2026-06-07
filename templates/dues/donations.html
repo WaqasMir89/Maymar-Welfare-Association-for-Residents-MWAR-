@@ -15,7 +15,7 @@
     <div class="kpi"><div class="value">{{ donations.paginator.count }}</div><div class="label">{% trans "Donations" %}</div></div>
   </div>
   <div class="table-wrap" style="margin-top:18px"><table class="table">
-    <thead><tr><th>{% trans "Receipt" %}</th><th>{% trans "Donor" %}</th><th>{% trans "Purpose" %}</th><th>{% trans "Method" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Date" %}</th><th>{% trans "Public" %}</th></tr></thead>
+    <thead><tr><th>{% trans "Receipt" %}</th><th>{% trans "Donor" %}</th><th>{% trans "Purpose" %}</th><th>{% trans "Method" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Date" %}</th><th>{% trans "Public" %}</th><th></th></tr></thead>
     <tbody>
     {% for d in donations %}
       <tr>
@@ -26,8 +26,9 @@
         <td>Rs {{ d.amount|floatformat:0|intcomma }}</td>
         <td>{{ d.donated_at|date:"d M Y" }}</td>
         <td>{% if d.is_public %}<span class="badge green">{% trans "Yes" %}</span>{% else %}<span class="muted">{% trans "No" %}</span>{% endif %}</td>
+        <td><a class="btn btn-ghost btn-sm" href="{% url 'dues:donation_receipt_pdf' d.pk %}" target="_blank">{% trans "Receipt" %}</a></td>
       </tr>
-    {% empty %}<tr><td colspan="7" class="muted">{% trans "No donations recorded yet." %}</td></tr>{% endfor %}
+    {% empty %}<tr><td colspan="8" class="muted">{% trans "No donations recorded yet." %}</td></tr>{% endfor %}
     </tbody>
   </table></div>
   {% include "core/_pagination.html" with page=donations %}

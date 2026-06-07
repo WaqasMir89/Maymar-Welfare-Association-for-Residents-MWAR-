@@ -5,13 +5,14 @@
 <div class="container page">
   <h1>{% trans "My Dues" %}</h1>
   <div class="table-wrap"><table class="table">
-    <thead><tr><th>{% trans "Period" %}</th><th>{% trans "Plan" %}</th><th>{% trans "Due" %}</th><th>{% trans "Paid" %}</th><th>{% trans "Status" %}</th></tr></thead>
+    <thead><tr><th>{% trans "Period" %}</th><th>{% trans "Plan" %}</th><th>{% trans "Due" %}</th><th>{% trans "Paid" %}</th><th>{% trans "Status" %}</th><th></th></tr></thead>
     <tbody>
     {% for inv in invoices %}
       <tr><td>{{ inv.period_start|date:"M Y" }}</td><td>{{ inv.plan.name }}</td>
       <td>Rs {{ inv.amount_due|floatformat:0 }}</td><td>Rs {{ inv.amount_paid|floatformat:0 }}</td>
-      <td><span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></td></tr>
-    {% empty %}<tr><td colspan="5" class="muted">{% trans "No dues on record." %}</td></tr>{% endfor %}
+      <td><span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></td>
+      <td>{% with pay=inv.payments.last %}{% if pay %}<a class="btn btn-ghost btn-sm" href="{% url 'dues:dues_receipt_pdf' pay.pk %}?download=1">{% trans "Receipt" %}</a>{% endif %}{% endwith %}</td></tr>
+    {% empty %}<tr><td colspan="6" class="muted">{% trans "No dues on record." %}</td></tr>{% endfor %}
     </tbody>
   </table></div>
 </div>

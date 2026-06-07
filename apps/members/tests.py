@@ -94,3 +94,44 @@ class ApprovalFlowTests(TestCase):
         chairman_approve(app, self.chairman)
         self.assertTrue(AuditLog.objects.filter(action="approve").exists())
         self.assertTrue(AuditLog.objects.filter(action="payment").exists())
+
+
+class PdfTests(TestCase):
+    """The branded receipt/card generators produce valid, glyph-safe PDFs."""
+
+    def test_clean_strips_urdu_and_tidies_parens(self):
+        from apps.core.pdf import _clean
+
+        # The membership-class label carries Urdu the built-in font can't draw.
+        self.assertEqual(_clean("Permanent Member (مستقل ممبر)"), "Permanent Member")
+        self.assertEqual(_clean("Owner (مالک)"), "Owner")
+
+    def test_receipt_pdf_is_valid(self):
+        from datetime import date
+        from decimal import Decimal
+
+        from apps.core.pdf import receipt_pdf
+
+        pdf = receipt_pdf(
+            title="Donation Receipt", receipt_number="DON-2026-00001",
+            amount=Decimal("5000"), currency="PKR",
+            payer_label="Donor", payer_value="Abdul Karim",
+            rows=[("Purpose", "Ramzan drive")], issued_on=date(2026, 6, 7),
+            received_by="Imran Chairman",
+        )
+        self.assertTrue(pdf.startswith(b"%PDF-"))
+        self.assertGreater(len(pdf), 1000)
+
+    def test_id_card_pdf_is_valid(self):
+        from datetime import date
+
+        from apps.core.pdf import id_card_pdf
+
+        pdf = id_card_pdf(
+            member_name="Fatima Khan", member_number="MWAR-000019",
+            membership_class="Permanent Member (مستقل ممبر)", residency="Owner (مالک)",
+            issued_on=date(2026, 6, 6), expires_on=None,
+            verify_url="http://example/members/verify/abc/", status="Active",
+        )
+        self.assertTrue(pdf.startswith(b"%PDF-"))
+        self.assertGreater(len(pdf), 1000)

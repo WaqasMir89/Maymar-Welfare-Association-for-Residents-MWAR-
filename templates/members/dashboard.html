@@ -20,7 +20,10 @@
         <p><strong>{{ residency.property }}</strong></p>
         <p class="muted">{{ residency.get_residency_type_display }}</p>
       {% else %}<p class="muted">{% trans "No linked property." %}</p>{% endif %}
-      {% if card %}<a class="btn btn-ghost" href="{% url 'members:my_card' %}">{% trans "View my ID card" %}</a>{% endif %}
+      <div class="stack" style="margin-top:12px">
+        {% if card %}<a class="btn btn-ghost btn-block" href="{% url 'members:my_card' %}">{% trans "View my ID card" %}</a>{% endif %}
+        {% with fee=profile.fee_payments.first %}{% if fee %}<a class="btn btn-ghost btn-block" href="{% url 'members:fee_receipt_pdf' fee.pk %}?download=1">{% trans "Download fee receipt (PDF)" %}</a>{% endif %}{% endwith %}
+      </div>
     </div>
     <div class="card">
       <h3>{% trans "Recent dues" %}</h3>

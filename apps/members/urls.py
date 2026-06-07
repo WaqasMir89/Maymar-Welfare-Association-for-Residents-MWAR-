@@ -13,6 +13,8 @@ urlpatterns = [
     # Member self-service
     path("dashboard/", views.dashboard, name="dashboard"),
     path("card/", views.my_card, name="my_card"),
+    path("card/print.pdf", views.card_pdf, name="card_pdf"),
+    path("fee-receipt/<int:pk>.pdf", views.fee_receipt_pdf, name="fee_receipt_pdf"),
     # Public verification + QR image
     path("verify/<uuid:qr_token>/", views.verify_card, name="verify_card"),
     path("card/<uuid:qr_token>/qr.png", views.card_qr, name="qr"),

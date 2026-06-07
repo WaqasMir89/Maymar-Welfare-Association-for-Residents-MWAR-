@@ -25,7 +25,10 @@
         <td>Rs {{ inv.amount_due|floatformat:0 }}</td>
         <td>Rs {{ inv.amount_paid|floatformat:0 }}</td>
         <td><span class="badge {% if inv.status == 'paid' %}green{% elif inv.status == 'overdue' %}red{% else %}amber{% endif %}">{{ inv.get_status_display }}</span></td>
-        <td>{% if inv.status != 'paid' %}<a class="btn btn-ghost" href="{% url 'dues:record_payment' inv.pk %}">{% trans "Record payment" %}</a>{% endif %}</td>
+        <td>
+          {% if inv.status != 'paid' %}<a class="btn btn-ghost btn-sm" href="{% url 'dues:record_payment' inv.pk %}">{% trans "Record payment" %}</a>{% endif %}
+          {% with pay=inv.payments.last %}{% if pay %}<a class="btn btn-ghost btn-sm" href="{% url 'dues:dues_receipt_pdf' pay.pk %}" target="_blank">{% trans "Receipt" %}</a>{% endif %}{% endwith %}
+        </td>
       </tr>
     {% empty %}<tr><td colspan="7" class="muted">{% trans "No invoices. Generate a billing run from the admin or seed data." %}</td></tr>{% endfor %}
     </tbody>

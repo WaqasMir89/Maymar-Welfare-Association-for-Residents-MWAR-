@@ -14,11 +14,19 @@ from apps.accounts.permissions import staff_member_test
 from .forms import ApplicationForm, DocumentUploadForm, ReviewForm
 from .models import (
     ApplicationDocument,
+    FeePayment,
     MemberCard,
     MemberProfile,
     MembershipApplication,
 )
 from .services import ApprovalError, chairman_approve, log_pii_access, secretary_review, submit_application
+
+
+def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> HttpResponse:
+    response = HttpResponse(data, content_type="application/pdf")
+    disp = "attachment" if download else "inline"
+    response["Content-Disposition"] = f'{disp}; filename="{filename}"'
+    return response
 
 
 # ---------------------------------------------------------------------------
@@ -221,3 +229,73 @@ def verify_card(request: HttpRequest, qr_token) -> HttpResponse:
         and card.member.status == MemberProfile.Status.ACTIVE
     )
     return render(request, "members/verify.html", {"card": card, "valid": valid})
+
+
+# ---------------------------------------------------------------------------
+# PDF documents — fee receipt and the printable ID card
+# ---------------------------------------------------------------------------
+def _may_access_member(user, profile: MemberProfile) -> bool:
+    """A member may fetch their own documents; staff may fetch anyone's."""
+    if not user.is_authenticated:
+        return False
+    from apps.accounts.permissions import is_staff_member
+
+    return is_staff_member(user) or (profile.user_id and user.id == profile.user_id)
+
+
+@login_required
+def fee_receipt_pdf(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.core.pdf import receipt_pdf
+
+    payment = get_object_or_404(
+        FeePayment.objects.select_related("member", "received_by"), pk=pk
+    )
+    if not payment.member or not _may_access_member(request.user, payment.member):
+        from django.core.exceptions import PermissionDenied
+
+        raise PermissionDenied
+    pdf = receipt_pdf(
+        title=_("Registration Fee Receipt"),
+        receipt_number=payment.receipt_number,
+        amount=payment.amount,
+        currency=payment.currency,
+        payer_label=_("Member"),
+        payer_value=f"{payment.member.full_name} ({payment.member.member_number})",
+        rows=[
+            (_("Purpose"), _("One-time membership registration fee")),
+            (_("Payment method"), payment.get_method_display()),
+            (_("Reference"), payment.reference or "—"),
+        ],
+        issued_on=payment.paid_at,
+        received_by=payment.received_by.get_full_name() if payment.received_by else "",
+        verify_note=_("M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."),
+    )
+    return _pdf_response(pdf, f"fee-receipt-{payment.receipt_number}.pdf",
+                         download=request.GET.get("download") == "1")
+
+
+@login_required
+def card_pdf(request: HttpRequest) -> HttpResponse:
+    from apps.core.pdf import id_card_pdf
+
+    profile = getattr(request.user, "member_profile", None)
+    if not profile or not hasattr(profile, "card"):
+        messages.info(request, _("No member card yet — your membership may still be pending."))
+        return redirect("members:dashboard")
+
+    card = profile.card
+    membership = profile.current_membership
+    residency = profile.current_residency
+    verify_url = request.build_absolute_uri(f"/members/verify/{card.qr_token}/")
+    pdf = id_card_pdf(
+        member_name=profile.full_name,
+        member_number=card.member_number,
+        membership_class=membership.get_membership_class_display() if membership else "—",
+        residency=residency.get_residency_type_display() if residency else "—",
+        issued_on=card.issued_at,
+        expires_on=card.expires_at,
+        verify_url=verify_url,
+        status=card.get_status_display(),
+    )
+    return _pdf_response(pdf, f"mwar-card-{card.member_number}.pdf",
+                         download=request.GET.get("download") == "1")

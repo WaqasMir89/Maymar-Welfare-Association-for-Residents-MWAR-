@@ -14,13 +14,22 @@ from django.utils.translation import gettext as _
 
 from apps.accounts.permissions import staff_member_test
 
-from .models import Donation, DuesInvoice, Expense
+from .models import Donation, DuesInvoice, DuesPayment, Expense
 from .services import create_expense, decide_expense, record_donation, record_dues_payment
+
+
+def _pdf_response(data: bytes, filename: str, *, download: bool = False) -> HttpResponse:
+    response = HttpResponse(data, content_type="application/pdf")
+    disp = "attachment" if download else "inline"
+    response["Content-Disposition"] = f'{disp}; filename="{filename}"'
+    return response
 
 
 @staff_member_test
 def billing_board(request: HttpRequest) -> HttpResponse:
-    qs = DuesInvoice.objects.select_related("property__sub_sector", "member", "plan")
+    qs = DuesInvoice.objects.select_related(
+        "property__sub_sector", "member", "plan"
+    ).prefetch_related("payments")
     status = request.GET.get("status")
     if status:
         qs = qs.filter(status=status)
@@ -64,7 +73,8 @@ def record_payment(request: HttpRequest, pk: int) -> HttpResponse:
 def my_dues(request: HttpRequest) -> HttpResponse:
     profile = getattr(request.user, "member_profile", None)
     invoices = (
-        DuesInvoice.objects.filter(member=profile).select_related("plan", "property")
+        DuesInvoice.objects.filter(member=profile)
+        .select_related("plan", "property").prefetch_related("payments")
         if profile else DuesInvoice.objects.none()
     )
     return render(request, "dues/my_dues.html", {"invoices": invoices.order_by("-period_start")})
@@ -160,3 +170,68 @@ def expense_decide(request: HttpRequest, pk: int) -> HttpResponse:
             _("Expense #%(id)s %(d)s.") % {"id": expense.pk, "d": expense.get_status_display().lower()},
         )
     return redirect("dues:expense_list")
+
+
+# ------------------------------------------------------------ PDF receipts --
+@login_required
+def dues_receipt_pdf(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.core.pdf import receipt_pdf
+
+    payment = get_object_or_404(
+        DuesPayment.objects.select_related("invoice__property", "invoice__member", "received_by"),
+        pk=pk,
+    )
+    member = payment.invoice.member
+    from apps.accounts.permissions import is_staff_member
+
+    owns = member and member.user_id and request.user.id == member.user_id
+    if not (is_staff_member(request.user) or owns):
+        from django.core.exceptions import PermissionDenied
+
+        raise PermissionDenied
+    inv = payment.invoice
+    pdf = receipt_pdf(
+        title=_("Maintenance Dues Receipt"),
+        receipt_number=payment.receipt_number,
+        amount=payment.amount,
+        currency="PKR",
+        payer_label=_("Property"),
+        payer_value=str(inv.property),
+        rows=[
+            (_("Member"), member.full_name if member else "—"),
+            (_("Billing period"), inv.period_start.strftime("%B %Y")),
+            (_("Payment method"), payment.get_method_display()),
+            (_("Reference"), payment.reference or "—"),
+            (_("Invoice balance"), f"PKR {inv.balance:,.0f}"),
+        ],
+        issued_on=payment.paid_at,
+        received_by=payment.received_by.get_full_name() if payment.received_by else "",
+        verify_note=_("M.W.A.R — Reg. No. 0060, Gulshan-e-Maymar, Karachi."),
+    )
+    return _pdf_response(pdf, f"dues-receipt-{payment.receipt_number}.pdf",
+                         download=request.GET.get("download") == "1")
+
+
+@staff_member_test
+def donation_receipt_pdf(request: HttpRequest, pk: int) -> HttpResponse:
+    from apps.core.pdf import receipt_pdf
+
+    donation = get_object_or_404(Donation.objects.select_related("received_by"), pk=pk)
+    pdf = receipt_pdf(
+        title=_("Donation Receipt"),
+        receipt_number=donation.receipt_number,
+        amount=donation.amount,
+        currency=donation.currency,
+        payer_label=_("Donor"),
+        payer_value=donation.donor_name,
+        rows=[
+            (_("Purpose"), donation.purpose or _("General fund")),
+            (_("Payment method"), donation.get_method_display()),
+            (_("Reference"), donation.reference or "—"),
+        ],
+        issued_on=donation.donated_at,
+        received_by=donation.received_by.get_full_name() if donation.received_by else "",
+        verify_note=_("Thank you for supporting M.W.A.R — “Hands of Hope”."),
+    )
+    return _pdf_response(pdf, f"donation-receipt-{donation.receipt_number}.pdf",
+                         download=request.GET.get("download") == "1")

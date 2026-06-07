@@ -24,6 +24,9 @@
       <div class="help">{% trans "Scan to verify at" %} /members/verify/</div>
     </div>
   </div>
-  <p style="margin-top:18px"><a class="btn btn-ghost" href="javascript:print()">{% trans "Print card" %}</a></p>
+  <p style="margin-top:18px">
+    <a class="btn" href="{% url 'members:card_pdf' %}?download=1">{% trans "Download PDF card" %}</a>
+    <a class="btn btn-ghost" href="javascript:print()">{% trans "Print card" %}</a>
+  </p>
 </div>
 {% endblock %}
